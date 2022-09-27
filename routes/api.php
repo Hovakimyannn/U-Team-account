@@ -22,7 +22,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->middleware('auth:api')->name('logout');
     Route::post('/refresh', 'refresh')->middleware('auth:api')->name('refresh');
     Route::get('/index', 'index')->middleware('auth:api')->name('index');
+    Route::post('/download', 'download')->middleware('auth:api');
 });
+
 
 Route::controller(RoleController::class)->group(function () {
 
