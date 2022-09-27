@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\FileManager\ExcelFileManager;
+use App\Services\FileManager\FileManagerVisitor;
+use App\Visitors\FileConverterVisitor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -46,6 +50,24 @@ class AuthController extends Controller
                 'type'  => 'bearer',
             ]
         ]);
+    }
+
+    public function download(Request $request)
+    {
+        /**
+         * @var \Illuminate\Http\UploadedFile $file
+         */
+        $file = $request->file;
+
+        $path = Storage::path($file->getClientOriginalName());
+        $file->storeAs(null, $file->getClientOriginalName());
+
+        $fileManagerVisitor = new FileManagerVisitor(new ExcelFileManager($path));
+
+        $fileManager = $fileManagerVisitor->visitor;
+        $data = $fileManager->read();
+
+        $fileManager->convertToJson($data);
     }
 
 //    public function register(Request $userData) : bool
