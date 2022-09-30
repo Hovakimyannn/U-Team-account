@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TeacherDepartment extends Model
 {
     use HasFactory;
+
+    /**
+     * @var bool
+     */
+    public $timestamps = true;
 }

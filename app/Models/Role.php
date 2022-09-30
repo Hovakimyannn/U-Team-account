@@ -14,11 +14,30 @@ class Role extends Model
 {
     use HasFactory;
 
+    /**
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+       'name',
+   ];
+
+    /**
+     * @return HasMany
+     */
     public function users() : HasMany
     {
         return $this->hasMany(User::class);
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getRoleByName(string $name)
     {
         return $this->where('name', $name)->first();

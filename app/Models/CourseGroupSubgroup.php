@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Teacher extends Model
+class CourseGroupSubgroup extends Model
 {
     use HasFactory;
 
@@ -16,17 +16,15 @@ class Teacher extends Model
     public $timestamps = true;
 
     /**
-     * @var string[]
+     * @var string
      */
-    protected $fillable = [
-        'user_id'
-    ];
+    public $table = 'course_group_subgroups';
 
     /**
      * @return BelongsToMany
      */
-    public function fullCourseName() : BelongsToMany
+    public function users() : BelongsToMany
     {
-        return $this->belongsToMany(CourseGroupSubgroup::class, 'teacher_full_course_names', 'teacher_id', 'fullName_id');
+        return $this->belongsToMany(User::class);
     }
 }

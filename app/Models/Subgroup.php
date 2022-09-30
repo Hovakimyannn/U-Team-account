@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Course extends Model
+/**
+ * @method static where(string $string, $number)
+ */
+class Subgroup extends Model
 {
     use HasFactory;
 
@@ -25,17 +28,16 @@ class Course extends Model
     /**
      * @return BelongsToMany
      */
-    public function group() :BelongsToMany
+    public function course() : BelongsToMany
     {
-        return $this->belongsToMany(Group::class, 'course_group_subgroups');
+        return $this->belongsToMany(Course::class, 'course_group_subgroups');
     }
 
     /**
      * @return BelongsToMany
      */
-    public function subgroup() : BelongsToMany
+    public function group(): BelongsToMany
     {
-        return $this->belongsToMany(Subgroup::class, 'course_group_subgroups');
+        return $this->belongsToMany(Group::class, 'course_group_subgroups');
     }
-
 }

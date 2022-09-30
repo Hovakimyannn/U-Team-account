@@ -98,31 +98,32 @@ class AuthController extends Controller
 //        return true;
 //    }
 
-    public function register(array $userData) : bool
+    public function register(mixed $userData)
     {
-        $validator = Validator::make($userData, [
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'fatherName' => 'required|string|max:255',
-            'role'       => 'required|string|max:255',
-            'email'      => 'required|string|email|max:255|unique:users',
-            'password'   => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return false;
-        }
-
+//        $validator = Validator::make($userData, [
+//            'firstName'  => 'required|string|max:255',
+//            'lastName'   => 'required|string|max:255',
+//            'fatherName' => 'required|string|max:255',
+//            'role'       => 'required|string|max:255',
+//            'department' => 'required|string|max:255',
+//            'email'      => 'required|string|email|max:255|unique:users',
+//            'password'   => 'required|string|min:6',
+//        ]);
+//
+//        if ($validator->fails()) {
+//            return false;
+//        }
         $user = new User();
-        $user->firstName = $userData['firstName'];
-        $user->lastName = $userData['lastName'];
-        $user->fatherName = $userData['fatherName'];
-        $user->email = $userData['email'];
-        $user->password = Hash::make($userData['password']);
-        $user->assignRole($userData['role']);
+        $user->firstName = $userData->firstName;
+        $user->lastName = $userData->lastName;
+        $user->fatherName = $userData->fatherName;
+        $user->email = $userData->email;
+        $user->password = Hash::make($userData->password);
+        $user->assignRole($userData->role);
+        $user->assignDepartment($userData->department);
         $user->save();
 
-        return true;
+        return $user;
     }
 
     public function logout() : JsonResponse

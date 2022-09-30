@@ -11,11 +11,12 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up() : void
+    public function up()
     {
-        Schema::create('sub_groups', function (Blueprint $table) {
+        Schema::create('subgroups', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +25,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down() : void
+    public function down()
     {
-        Schema::dropIfExists('sub_groups');
+        Schema::dropIfExists('subgroups');
     }
 };
