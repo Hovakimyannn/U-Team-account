@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
-use App\Visitors\FileConverterVisitor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -31,25 +29,26 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
-        $token = Auth::attempt($credentials);
 
-        if (!$token) {
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            dd($request->session());
+            $user = Auth::user();
             return new JsonResponse([
-                'status'  => 'error',
-                'message' => 'Unauthorized'
-            ], 401);
+                'status'        => 'success',
+                'user'          => $user,
+                'authorisation' => [
+                    'accessToken' => $request->session()->token(),
+                    'type'        => 'bearer',
+                ]
+            ]);
+
         }
 
-        $user = Auth::user();
-
         return new JsonResponse([
-            'status'        => 'success',
-            'user'          => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type'  => 'bearer',
-            ]
-        ]);
+            'status'  => 'error',
+            'message' => 'Unauthorized'
+        ], 401);
     }
 
     public function download(Request $request)
@@ -70,49 +69,8 @@ class AuthController extends Controller
         $fileManager->convertToJson($data);
     }
 
-//    public function register(Request $userData) : bool
-//    {
-//        $validator = Validator::make($userData, [
-//            'firstName'  => 'required|string|max:255',
-//            'lastName'   => 'required|string|max:255',
-//            'fatherName' => 'required|string|max:255',
-//            'role'       => 'required|string|max:255',
-//            'email'      => 'required|string|email|max:255|unique:users',
-//            'password'   => 'required|string|min:6',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return false;
-//        }
-//
-//        $user = new User();
-//        $user->firstName = $userData['firstName'];
-//        $user->lastName = $userData['lastName'];
-//        $user->fatherName = $userData['fatherName'];
-//        $user->email = $userData['email'];
-//        $user->password = Hash::make($userData['password']);
-//        $user->assignRole($userData['role']);
-//        $user->save();
-//
-//
-//        return true;
-//    }
-
     public function register(mixed $userData)
     {
-//        $validator = Validator::make($userData, [
-//            'firstName'  => 'required|string|max:255',
-//            'lastName'   => 'required|string|max:255',
-//            'fatherName' => 'required|string|max:255',
-//            'role'       => 'required|string|max:255',
-//            'department' => 'required|string|max:255',
-//            'email'      => 'required|string|email|max:255|unique:users',
-//            'password'   => 'required|string|min:6',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return false;
-//        }
         $user = new User();
         $user->firstName = $userData->firstName;
         $user->lastName = $userData->lastName;
@@ -126,9 +84,13 @@ class AuthController extends Controller
         return $user;
     }
 
-    public function logout() : JsonResponse
+    public function logout(Request $request) : JsonResponse
     {
         Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         return new JsonResponse([
             'status'  => 'success',

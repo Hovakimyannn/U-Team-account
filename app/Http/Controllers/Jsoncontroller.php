@@ -9,9 +9,7 @@ use App\Models\Student;
 use App\Models\Subgroup;
 use App\Models\Teacher;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\GroupController;
 
 class Jsoncontroller extends Controller
 {
@@ -98,5 +96,11 @@ class Jsoncontroller extends Controller
 
     public function getUserId($user) {
         return User::where('email', $user->email)->get('id');
+    }
+
+
+    public function produce()
+    {
+
     }
 }
