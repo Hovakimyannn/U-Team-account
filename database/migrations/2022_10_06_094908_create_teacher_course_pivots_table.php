@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('teacher_course_pivots', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('teacherId');
+            $table->unsignedBigInteger('teacher_id');
             $table->morphs('model');
             $table->timestamps();
         });

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('student_group_pivots', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('studentId');
-            $table->unsignedBigInteger('groupId');
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('group_id');
             $table->timestamps();
         });
     }

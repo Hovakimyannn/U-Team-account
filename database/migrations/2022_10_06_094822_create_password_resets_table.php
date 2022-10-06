@@ -14,12 +14,12 @@ return new class extends Migration
     public function up() : void
     {
         Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('adminEmail')->index();
-            $table->string('studentEmail')->index();
-            $table->string('teacherEmail')->index();
-            $table->foreign('adminEmail')->references('email')->on('admins');
-            $table->foreign('studentEmail')->references('email')->on('students');
-            $table->foreign('teacherEmail')->references('email')->on('teachers');
+            $table->string('admin_email')->index();
+            $table->string('student_email')->index();
+            $table->string('teacher_email')->index();
+            $table->foreign('admin_email')->references('email')->on('admins');
+            $table->foreign('student_email')->references('email')->on('students');
+            $table->foreign('teacher_email')->references('email')->on('teachers');
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
