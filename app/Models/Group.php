@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Group extends Model
 {
-<<<<<<< HEAD
     use HasFactory;
 
     /**
@@ -31,9 +30,4 @@ class Group extends Model
     {
         return $this->morphMany(TeacherCoursePivot::class, 'model');
     }
-=======
-    use
-        HasFactory,
-        AttributesModifier;
->>>>>>> 9323ff065b1873e2e9f509a8b4b3159a5e623198
 }

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
 {
-<<<<<<< HEAD
     use HasFactory;
 
     /**
@@ -43,9 +42,4 @@ class Course extends Model
     {
         return $this->belongsTo(Department::class);
     }
-=======
-    use
-        HasFactory,
-        AttributesModifier;
->>>>>>> 9323ff065b1873e2e9f509a8b4b3159a5e623198
 }
