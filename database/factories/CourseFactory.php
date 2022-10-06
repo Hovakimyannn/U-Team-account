@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\Institute;
+use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
  */
-class DepartmentFactory extends Factory
+class CourseFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,8 +19,10 @@ class DepartmentFactory extends Factory
     public function definition() : array
     {
         return [
-            'name' => 'programming',
-            'institute_id' => Institute::first()->id,
+            'name' => '924',
+            'degree' => 'master',
+            'type' => 'available',
+            'department_id' => Department::first()->id,
         ];
     }
 

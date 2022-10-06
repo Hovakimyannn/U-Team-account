@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class TeacherCoursePivot extends Model
 {
+<<<<<<< HEAD
     use HasFactory;
 
     /**
@@ -27,4 +29,9 @@ class TeacherCoursePivot extends Model
     {
         return $this->morphTo();
     }
+=======
+    use
+        HasFactory,
+        AttributesModifier;
+>>>>>>> 9323ff065b1873e2e9f509a8b4b3159a5e623198
 }

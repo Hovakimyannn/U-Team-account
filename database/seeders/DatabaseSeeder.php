@@ -4,6 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Admin;
+use App\Models\Course;
+use App\Models\Department;
+use App\Models\Institute;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,9 +24,23 @@ class DatabaseSeeder extends Seeder
             // password => 'password'
             Admin::factory(1)->create();
         }
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+
+        if (!Institute::exists()) {
+            Institute::factory(1)->create();
+        }
+
+        if (!Department::exists()) {
+            Department::factory(1)->create();
+        }
+
+        if (!Course::exists()) {
+            Course::factory(1)->create();
+        }
+
+        if (!Student::exists()) {
+            // email    => student@u_team.com
+            // password => 'password'
+            Student::factory(1)->create();
+        }
     }
 }
