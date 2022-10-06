@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('password');
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('course_id');
+            $table->foreign('course_id')->references('id')->on('courses');
             $table->timestamps();
         });
     }
