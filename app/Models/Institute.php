@@ -10,12 +10,21 @@ class Institute extends Model
 {
     use HasFactory;
 
+    /**
+     * @var bool
+     */
     public $timestamps = true;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name'
     ];
 
+    /**
+     * @return HasMany
+     */
     public function departments() : HasMany
     {
         return $this->hasMany(Department::class);
