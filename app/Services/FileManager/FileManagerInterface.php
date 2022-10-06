@@ -8,5 +8,5 @@ interface FileManagerInterface
 {
     public function read();
 
-    public function convertToJson(Collection $data);
+    public function moveToJson(Collection $data);
 }
