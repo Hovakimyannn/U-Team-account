@@ -13,9 +13,13 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() : void
     {
-        Admin::factory(10)->create();
+        if (!Admin::exists()) {
+            // email    => admin@u_team.com
+            // password => 'password'
+            Admin::factory(1)->create();
+        }
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
