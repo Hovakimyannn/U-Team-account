@@ -22,6 +22,7 @@ class Admin extends Authenticatable
         HasFactory,
         Notifiable,
         AttributesModifier;
+
     public $timestamps = true;
 
 
