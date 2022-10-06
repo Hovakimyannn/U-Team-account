@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class TeacherCoursePivot extends Model
 {
-    use HasFactory;
-    use AttributesModifier;
+    use
+        HasFactory,
+        AttributesModifier;
 
     /**
      * @var bool
