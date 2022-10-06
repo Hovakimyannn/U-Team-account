@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,10 +14,14 @@ use Illuminate\Notifications\Notifiable;
  * @property mixed        $firstName
  * @property mixed        $lastName
  * @property mixed        $fatherName
+ * @method static exists()
  */
 class Admin extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use
+        HasFactory,
+        Notifiable,
+        AttributesModifier;
     public $timestamps = true;
 
 
