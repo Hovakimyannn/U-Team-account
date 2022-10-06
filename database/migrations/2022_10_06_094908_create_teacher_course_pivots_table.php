@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up() : void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('teacher_course_pivots', function (Blueprint $table) {
             $table->id();
-            $table->string('firstName');
-            $table->string('lastName');
-            $table->string('fatherName');
-            $table->string('email')->unique();
-            $table->timestamp('emailVerifiedAt')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->unsignedBigInteger('teacherId');
+            $table->morphs('model');
             $table->timestamps();
         });
     }
@@ -31,8 +26,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down() : void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('teacher_course_pivots');
     }
 };
