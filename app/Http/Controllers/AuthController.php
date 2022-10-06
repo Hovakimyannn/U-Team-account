@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Admin;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use Illuminate\Http\JsonResponse;
@@ -10,12 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
     public function index(Request $request) : JsonResponse
     {
         $user = $request->user();
+
         return new JsonResponse([
             'username' => $user->firstName,
             'email'    => $user->email
@@ -32,23 +34,19 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            dd($request->session());
             $user = Auth::user();
+
             return new JsonResponse([
                 'status'        => 'success',
-                'user'          => $user,
-                'authorisation' => [
-                    'accessToken' => $request->session()->token(),
-                    'type'        => 'bearer',
-                ]
-            ]);
+                'user'          => $user
+            ], Response::HTTP_OK);
 
         }
 
         return new JsonResponse([
             'status'  => 'error',
             'message' => 'Unauthorized'
-        ], 401);
+        ], Response::HTTP_UNAUTHORIZED);
     }
 
     public function download(Request $request)
@@ -69,9 +67,9 @@ class AuthController extends Controller
         $fileManager->convertToJson($data);
     }
 
-    public function register(mixed $userData)
+    public function register(mixed $userData) : Admin
     {
-        $user = new User();
+        $user = new Admin();
         $user->firstName = $userData->firstName;
         $user->lastName = $userData->lastName;
         $user->fatherName = $userData->fatherName;

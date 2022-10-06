@@ -8,7 +8,7 @@ use App\Models\Group;
 use App\Models\Student;
 use App\Models\Subgroup;
 use App\Models\Teacher;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Storage;
 
 class Jsoncontroller extends Controller
@@ -95,7 +95,7 @@ class Jsoncontroller extends Controller
     }
 
     public function getUserId($user) {
-        return User::where('email', $user->email)->get('id');
+        return Admin::where('email', $user->email)->get('id');
     }
 
 
