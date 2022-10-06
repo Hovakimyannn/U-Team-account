@@ -11,18 +11,16 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up() : void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string('firstName');
-            $table->string('lastName');
-            $table->string('fatherName');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('father_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

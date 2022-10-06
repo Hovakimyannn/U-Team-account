@@ -11,11 +11,14 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up() : void
+    public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('institute_id');
+            $table->foreign('institute_id')->references('id')->on('institutes');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +27,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down() : void
+    public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('departments');
     }
 };

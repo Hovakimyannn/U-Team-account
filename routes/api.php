@@ -16,16 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AuthController::class)->group(function () {
+/*Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login')->name('login');
-    Route::post('/invitation', 'register')->name('invitation');
+    //Route::post('/invitation', 'register')->name('invitation');
     Route::post('/logout', 'logout')->middleware('auth:api')->name('logout');
     Route::post('/refresh', 'refresh')->middleware('auth:api')->name('refresh');
     Route::get('/index', 'index')->middleware('auth:api')->name('index');
     Route::post('/download', 'download')->middleware('auth:api');
-});
+});*/
 
 
 Route::controller(RoleController::class)->group(function () {
 
 });
+
+Route::get('/json', [\App\Http\Controllers\Jsoncontroller::class, 'store']);
+Route::get('/produce', [\App\Http\Controllers\Jsoncontroller::class, 'produce']);
