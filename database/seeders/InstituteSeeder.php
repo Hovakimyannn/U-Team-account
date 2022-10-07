@@ -21,7 +21,8 @@ class InstituteSeeder extends Seeder
                 ['name' => 'Mechanical Engineering, Transportation System and Design Institute'],
                 ['name' => 'Institute of Mining, Metallurgy and Chemical Technologies'],
                 ['name' => 'Faculty of Applied Mathematics and Physics'],
-                ['name' => 'Faculty of engineering economy and management']
+                ['name' => 'Faculty of engineering economy and management'],
+                ['name' => 'University Chairs']
             ]
         );
     }
