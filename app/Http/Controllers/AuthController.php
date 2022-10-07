@@ -26,13 +26,13 @@ class AuthController extends Controller
 
     public function login(Request $request) : JsonResponse
     {
+        $role = $request->role;
         $request->validate([
             'email'    => 'required|string',
             'password' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();
             return new JsonResponse([

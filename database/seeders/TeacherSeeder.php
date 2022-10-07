@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Teacher;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ class TeacherSeeder extends Seeder
      */
     public function run()
     {
-        //'password' => 'password',
+        if (!Teacher::exists()) {
+            // email    => admin@u_team.com
+            // password => 'password'
+            Teacher::factory(1)->create();
+        }
     }
 }

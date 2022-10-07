@@ -23,7 +23,8 @@ class Department extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name'
+        'name',
+        'institute_id'
     ];
 
     /**
