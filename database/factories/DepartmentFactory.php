@@ -20,7 +20,7 @@ class DepartmentFactory extends Factory
     {
         return [
             'name' => 'programming',
-            'institute_id' => Institute::first()->id,
+            'institute_id' => random_int(1,3),
         ];
     }
 
