@@ -24,3 +24,4 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/index', 'index')->middleware('auth')->name('index');
     Route::post('/download', 'download')->middleware('auth');
 });
+

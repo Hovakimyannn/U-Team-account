@@ -17,23 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run() : void
     {
-        /**
-         * email    => admin@u_team.com
-         * password => 'password'
-         */
-        if (!Admin::exists()) {
-            Admin::factory(1)->create();
-        }
-
         $this->call([
+            AdminSeeder::class,
             InstituteSeeder::class,
             DepartmentSeeder::class,
+            CourseSeeder::class,
+            GroupSeeder::class,
         ]);
-
-        /*if (!Student::exists()) {
-            // email    => student@u_team.com
-            // password => 'password'
-            Student::factory(1)->create();
-        }*/
     }
 }

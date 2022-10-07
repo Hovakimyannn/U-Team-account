@@ -51,14 +51,14 @@ class DepartmentSeeder extends Seeder
                 ['name' => 'Professional mathematical education', 'institute_id' => 5,],
                 ['name' => 'Physics', 'institute_id' => 5,],
 
-                ['name' => 'Physical Education and Sports'],
-                ['name' => 'Microelectronic Circuits and Systems'],
-                ['name' => 'Social Sciences'],
-                ['name' => 'General Economics (Sector)'],
-                ['name' => 'Scientific and Educational Center of Languages'],
-                ['name' => 'Armenian Language'],
-                ['name' => 'Russian Language'],
-                ['name' => 'Foreign Languages'],
+                ['name' => 'Physical Education and Sports', 'institute_id' => 6],
+                ['name' => 'Microelectronic Circuits and Systems', 'institute_id' => 6],
+                ['name' => 'Social Sciences', 'institute_id' => 6],
+                ['name' => 'General Economics', 'institute_id' => 6],
+                ['name' => 'Scientific and Educational Center of Languages', 'institute_id' => 6],
+                ['name' => 'Armenian Language', 'institute_id' => 6],
+                ['name' => 'Russian Language', 'institute_id' => 6],
+                ['name' => 'Foreign Languages', 'institute_id' => 6],
             ]
         );
     }
