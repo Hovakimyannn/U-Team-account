@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Group extends Model
 {
-    use HasFactory;
-    use AttributesModifier;
+    use
+        HasFactory,
+        AttributesModifier;
 
     /**
      * @var bool

@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
 {
-    use HasFactory;
-    use AttributesModifier;
+    use
+        HasFactory,
+        AttributesModifier;
 
     /**
      * @var bool
