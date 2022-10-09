@@ -4,9 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class StudentFactory extends Factory
 {
@@ -18,19 +16,18 @@ class StudentFactory extends Factory
     public function definition() : array
     {
         $courseIdAssociateDepartmentId = Course::all('department_id', 'id')->toArray();
-        $randomCourse = $courseIdAssociateDepartmentId[array_rand($courseIdAssociateDepartmentId)];
+        $randomCourse = $this->faker->randomElement($courseIdAssociateDepartmentId);
 
         return [
-            'firstName' => fake()->name(),
-            'lastName' => fake()->lastName(),
-            'patronymic' => fake()->firstNameMale(),
-            'email' => fake()->email(),
-            'birth_date' =>fake()->date(),
-            'emailVerifiedAt' => now(),
+            'firstName' => $this->faker->name(),
+            'lastName' => $this->faker->lastName(),
+            'patronymic' => $this->faker->firstNameMale(),
+            'email' => $this->faker->email(),
+            'birth_date' =>$this->faker->date(),
             'department_id' => $randomCourse['departmentId'],
             'course_id' => $randomCourse['id'],
             'password' => Hash::make('password'),
-            'rememberToken' => Str::random(10),
+            'rememberToken' => $this->faker->sha1(),
         ];
     }
 

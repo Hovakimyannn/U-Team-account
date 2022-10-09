@@ -27,8 +27,8 @@ return new class extends Migration {
                 [
                     'assistant',
                     'lecturer',
-                    'associateProfessor',
-                    'Professors'
+                    'associate_professor',
+                    'professors'
                 ]
             );
             $table->timestamps();

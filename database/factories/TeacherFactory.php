@@ -8,32 +8,33 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Teacher>
- */
 class TeacherFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array
-     *
-     * @throws \Exception
      */
-    public function definition() : array
+    public function definition(): array
     {
         return [
-            'first_name' => fake()->name(),
-            'last_name' => fake()->lastName(),
-            'patronymic' => fake()->name(),
-            'email' => fake()->email(),
-            'birth_date' =>fake()->date,
+            'first_name' => $this->faker->name(),
+            'last_name' => $this->faker->lastName(),
+            'patronymic' => $this->faker->firstNameMale(),
+            'birth_date' => $this->faker->date(),
+            'email' => $this->faker->email(),
             'email_verified_at' => now(),
-            'department_id' => random_int(1,5),
-            'course_id' => Course::first()->id,
             'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'position' => 'lecturer'
+            'remember_token' => $this->faker->sha1(),
+            'department_id' => $this->faker->randomNumber([1, 38]),
+            'position' => $this->faker->randomElement(
+                [
+                    'assistant',
+                    'lecturer',
+                    'associate_professor',
+                    'professors'
+                ]
+            ),
         ];
     }
 }
