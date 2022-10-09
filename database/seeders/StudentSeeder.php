@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin;
+use App\Models\Group;
+use App\Models\Student;
 use App\Models\StudentGroupPivot;
 use Illuminate\Database\Seeder;
 
@@ -16,22 +17,33 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        if (!Admin::exists()) {
-            // email    => admin@u_team.com
-            // password => 'password'
-            Admin::factory(1)->create();
-        }
+        $studentIds = [];
+
+        Student::factory(100)
+            ->create()
+            ->each(function ($student) use (&$studentIds) {
+                $studentIds[] = $student->id;
+            });
+
+        $this->insertStudentGroupPivot($studentIds);
     }
 
     /**
-     * @param $student_id
+     * @param $studentIds
      * @return void
      */
-    private function insertStudentGroupPivot($student_id) : void
+    private function insertStudentGroupPivot($studentIds) : void
     {
+        $max = Group::all('id')->last()->id;
+        $data = [];
 
-        StudentGroupPivot::factory(10)->create([
-            'student_id' => $student_id
-        ]);
+        foreach ($studentIds as $studentId) {
+            $data[] = [
+                'student_id' => $studentId,
+                'group_id' => rand(1,$max)
+            ];
+        }
+
+        StudentGroupPivot::insert($data);
     }
 }

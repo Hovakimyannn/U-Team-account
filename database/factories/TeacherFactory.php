@@ -16,9 +16,11 @@ class TeacherFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function definition()
+    public function definition() : array
     {
         return [
             'first_name' => fake()->name(),

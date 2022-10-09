@@ -3,14 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Course;
-use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
- */
 class StudentFactory extends Factory
 {
     /**
@@ -20,15 +17,18 @@ class StudentFactory extends Factory
      */
     public function definition() : array
     {
+        $courseIdAssociateDepartmentId = Course::all('department_id', 'id')->toArray();
+        $randomCourse = $courseIdAssociateDepartmentId[array_rand($courseIdAssociateDepartmentId)];
+
         return [
             'firstName' => fake()->name(),
             'lastName' => fake()->lastName(),
-            'patronymic' => fake()->name(),
-            'email' => 'student@u_team.com',
-            'birth_date' =>fake()->date,
+            'patronymic' => fake()->firstNameMale(),
+            'email' => fake()->email(),
+            'birth_date' =>fake()->date(),
             'emailVerifiedAt' => now(),
-            'department_id' => Department::first()->id,
-            'course_id' => Course::first()->id,
+            'department_id' => $randomCourse['departmentId'],
+            'course_id' => $randomCourse['id'],
             'password' => Hash::make('password'),
             'rememberToken' => Str::random(10),
         ];
