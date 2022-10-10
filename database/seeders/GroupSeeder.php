@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin;
 use App\Models\Course;
 use App\Models\Group;
 use Illuminate\Database\Seeder;
@@ -44,17 +43,16 @@ class GroupSeeder extends Seeder
             ['number' => 2, 'course_id' => 116],
         ];
         $filteredData = [];
-        array_filter($data, function($item) use (&$filteredData) {
+        array_filter($data, function ($item) use (&$filteredData) {
             $filteredData[] = $item['course_id'];
         });
 
-        $availableCourseIds = array_diff($ids,$filteredData);
+        $availableCourseIds = array_diff($ids, $filteredData);
 
         foreach ($availableCourseIds as $availableCourseId) {
             $data[] =
                 ['number' => 1, 'course_id' => $availableCourseId];
         }
         Group::insert($data);
-
     }
 }

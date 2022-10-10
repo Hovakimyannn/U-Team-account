@@ -19,14 +19,14 @@ class StudentFactory extends Factory
         $randomCourse = $this->faker->randomElement($courseIdAssociateDepartmentId);
 
         return [
-            'firstName' => $this->faker->name(),
-            'lastName' => $this->faker->lastName(),
-            'patronymic' => $this->faker->firstNameMale(),
-            'email' => $this->faker->email(),
-            'birth_date' =>$this->faker->date(),
+            'firstName'     => $this->faker->name(),
+            'lastName'      => $this->faker->lastName(),
+            'patronymic'    => $this->faker->firstNameMale(),
+            'email'         => $this->faker->email(),
+            'birth_date'    => $this->faker->date(),
             'department_id' => $randomCourse['departmentId'],
-            'course_id' => $randomCourse['id'],
-            'password' => Hash::make('password'),
+            'course_id'     => $randomCourse['id'],
+            'password'      => Hash::make('password'),
             'rememberToken' => $this->faker->sha1(),
         ];
     }
@@ -38,7 +38,7 @@ class StudentFactory extends Factory
      */
     public function unverified() : static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

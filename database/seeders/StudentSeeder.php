@@ -15,7 +15,7 @@ class StudentSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() : void
     {
         $studentIds = [];
 
@@ -30,6 +30,7 @@ class StudentSeeder extends Seeder
 
     /**
      * @param $studentIds
+     *
      * @return void
      */
     private function insertStudentGroupPivot($studentIds) : void
@@ -40,7 +41,7 @@ class StudentSeeder extends Seeder
         foreach ($studentIds as $studentId) {
             $data[] = [
                 'student_id' => $studentId,
-                'group_id' => rand(1,$max)
+                'group_id'   => rand(1, $max)
             ];
         }
 
