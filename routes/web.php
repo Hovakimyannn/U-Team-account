@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,7 @@ Route::group(['middleware' => 'auth:admin','prefix'=>'/admin'], function () {
 });
 
 Route::group(['middleware' => 'auth:student','prefix'=>'/student'], function () {
-    Route::get('/index', [StudentController::class, 'dashboard']);
+    Route::get('/index', [StudentController::class, 'index']);
 });
 
 Route::group(['middleware' => 'auth:teacher', 'prefix' => '/teacher'], function () {
