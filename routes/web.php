@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +21,20 @@ Route::get('/', function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/login/{role}', 'login')->name('login')->where('role','^(student|admin|teacher)');
-    Route::post('/logout', 'logout')->middleware('auth')->name('logout');
-    Route::get('/index', 'index')->middleware('auth')->name('index');
-    Route::post('/download', 'download')->middleware('auth');
+    Route::post('/{role}/login', 'login')->name('login')->where('role', '^(student|admin|teacher)');
+    Route::post('/{role}/logout', 'logout')->name('logout')->where('role', '^(student|admin|teacher)');
+});
+
+Route::group(['middleware' => 'auth:admin','prefix'=>'/admin'], function () {
+    Route::post('/download', [AuthController::class,'download'])->middleware('auth');
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+});
+
+Route::group(['middleware' => 'auth:student','prefix'=>'/student'], function () {
+    Route::get('/index', [StudentController::class, 'dashboard']);
+});
+
+Route::group(['middleware' => 'auth:teacher', 'prefix' => '/teacher'], function () {
+    Route::get('/teacher', [TeacherController::class, 'dashboard']);
 });
 
