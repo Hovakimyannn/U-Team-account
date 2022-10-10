@@ -27,15 +27,15 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::group(['middleware' => 'auth:admin','prefix'=>'/admin'], function () {
-    Route::post('/download', [AuthController::class,'download'])->middleware('auth');
-    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    Route::post('/download', [AuthController::class,'download'])->name('download');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 });
 
 Route::group(['middleware' => 'auth:student','prefix'=>'/student'], function () {
-    Route::get('/index', [StudentController::class, 'index']);
+    Route::get('/index', [StudentController::class, 'index'])->name('index');
 });
 
 Route::group(['middleware' => 'auth:teacher', 'prefix' => '/teacher'], function () {
-    Route::get('/teacher', [TeacherController::class, 'dashboard']);
+    Route::get('/index', [TeacherController::class, 'index'])->name('index');
 });
 
