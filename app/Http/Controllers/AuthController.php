@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Course;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use Illuminate\Http\JsonResponse;
@@ -26,16 +27,15 @@ class AuthController extends Controller
 
     public function login(Request $request) : JsonResponse
     {
+        $role = $request->role;
         $request->validate([
-            'email'    => 'required|string|email',
+            'email'    => 'required|string',
             'password' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();
-
             return new JsonResponse([
                 'status'        => 'success',
                 'user'          => $user

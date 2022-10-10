@@ -36,13 +36,17 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'admin' => [
             'driver'   => 'session',
-            'provider' => 'users',
+            'provider' => 'admins',
         ],
-        'api' => [
-            'driver'   => 'jwt',
-            'provider' => 'users'
+        'student' => [
+            'driver'   => 'session',
+            'provider' => 'students'
+        ],
+        'teacher' => [
+            'driver'   => 'session',
+            'provider' => 'teachers'
         ]
     ],
 
@@ -64,15 +68,20 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model'  => App\Models\Admin::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'students' => [
+             'driver' => 'eloquent',
+             'model' => \App\Models\Student::class,
+         ],
+
+         'teachers' => [
+             'driver' => 'eloquent',
+             'model' => \App\Models\Student::class,
+         ],
     ],
 
     /*
@@ -91,8 +100,20 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'students' => [
+            'provider' => 'students',
+            'table'    => 'password_resets',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+        'teachers' => [
+            'provider' => 'teachers',
+            'table'    => 'password_resets',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
             'table'    => 'password_resets',
             'expire'   => 60,
             'throttle' => 60,

@@ -6,26 +6,23 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
- */
-class UserFactory extends Factory
+class AdminFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function definition()
+    public function definition() : array
     {
         return [
-            'firstName' => fake()->name(),
-            'lastName' => fake()->lastName(),
-            'fatherName' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'firstName' => $this->faker->name(),
+            'lastName' => $this->faker->lastName(),
+            'patronymic' => $this->faker->name(),
+            'email' => 'admin@u_team.com',
+            'emailVerifiedAt' => now(),
             'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'rememberToken' => $this->faker->sha1(),
         ];
     }
 
@@ -34,7 +31,7 @@ class UserFactory extends Factory
      *
      * @return static
      */
-    public function unverified()
+    public function unverified() : static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,

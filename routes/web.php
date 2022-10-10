@@ -19,8 +19,9 @@ Route::get('/', function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/login', 'login')->name('login');
-    Route::post('/logout', 'logout')->middleware('auth:web')->name('logout');
-    Route::get('/index', 'index')->middleware('auth:web')->name('index');
-    Route::post('/download', 'download')->middleware('auth:web');
+    Route::post('/login/{role}', 'login')->name('login')->where('role','^(student|admin|teacher)');
+    Route::post('/logout', 'logout')->middleware('auth')->name('logout');
+    Route::get('/index', 'index')->middleware('auth')->name('index');
+    Route::post('/download', 'download')->middleware('auth');
 });
+
