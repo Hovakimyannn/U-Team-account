@@ -16,13 +16,13 @@ class AdminFactory extends Factory
     public function definition() : array
     {
         return [
-            'firstName' => fake()->name(),
-            'lastName' => fake()->lastName(),
-            'patronymic' => fake()->name(),
+            'firstName' => $this->faker->name(),
+            'lastName' => $this->faker->lastName(),
+            'patronymic' => $this->faker->name(),
             'email' => 'admin@u_team.com',
             'emailVerifiedAt' => now(),
             'password' => Hash::make('password'),
-            'rememberToken' => Str::random(10),
+            'rememberToken' => $this->faker->sha1(),
         ];
     }
 
