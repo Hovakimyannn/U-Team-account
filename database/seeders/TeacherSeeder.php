@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\StudentGroupPivot;
 use App\Models\Teacher;
+use App\Models\TeacherCoursePivot;
 use Illuminate\Database\Seeder;
 
 
@@ -18,15 +20,14 @@ class TeacherSeeder extends Seeder
      */
     public function run()
     {
-        $studentIds = [];
+        $teacherIds = [];
 
-        Teacher::factory(50)->create();
-       /*     ->create()
-            ->each(function ($student) use (&$studentIds) {
-                $studentIds[] = $student->id;
+           Teacher::factory(100)->create()
+            ->each(function ($teacher) use (&$teacherIds) {
+                $teacherIds[] = $teacher->id;
             });
 
-        $this->insertStudentGroupPivot($studentIds);*/
+        $this->insertStudentGroupPivot($teacherIds);
     }
 
     /**
@@ -35,16 +36,33 @@ class TeacherSeeder extends Seeder
      */
     private function insertStudentGroupPivot($teacherIds) : void
     {
-        $max = Group::all('id')->last()->id;
+        $maxGroup = Group::all('id')->last()->id;
+        $maxCourse = Course::all('id')->last()->id;
         $data = [];
 
-        foreach ($teacherIds as $studentId) {
-            $data[] = [
-                'student_id' => $studentId,
-                'group_id' => rand(1,$max)
+        foreach ($teacherIds as $teacherId) {
+            $index = 0;
+            while ($index < 3) {
+                $model = array_rand(['Course','Group']);
+
+                if($model === 0) {
+                    $model = 'Course';
+                    $modelId = rand(1, $maxCourse);
+                } else {
+                    $model = 'Group';
+                    $modelId = rand(1, $maxGroup);
+                }
+
+                $data[] = [
+                    'teacher_id' => $teacherId,
+                    'model_type' => $model,
+                    'model_id'   => $modelId,
             ];
+                $index++;
+            }
+
         }
 
-        StudentGroupPivot::insert($data);
+        TeacherCoursePivot::insert($data);
     }
 }
