@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\Course;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use Illuminate\Http\JsonResponse;
@@ -15,16 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function index(Request $request) : JsonResponse
-    {
-        $user = $request->user();
-
-        return new JsonResponse([
-            'username' => $user->firstName,
-            'email'    => $user->email
-        ]);
-    }
-
     public function login(Request $request) : JsonResponse
     {
         $role = $request->role;
@@ -35,10 +24,9 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
-            $user = Auth::user();
+
             return new JsonResponse([
                 'status'        => 'success',
-                'user'          => $user
             ], Response::HTTP_OK);
 
         }
