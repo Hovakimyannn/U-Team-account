@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/{role}/login', 'login')->name('login')->where('role', '^(student|admin|teacher)');
-    Route::post('/{role}/logout', 'logout')->name('logout')->where('role', '^(student|admin|teacher)');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
 Route::group(['middleware' => 'auth:admin','prefix'=>'/admin'], function () {
