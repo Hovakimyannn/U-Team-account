@@ -24,9 +24,16 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::guard($role)->user();
 
             return new JsonResponse([
-                'status'        => 'success',
+                'status' => 'success',
+                'user'   => [
+                    'data' => [
+                        $user
+                    ],
+                ],
+                'role'   => $role
             ], Response::HTTP_OK);
 
         }
