@@ -32,7 +32,7 @@ class StudentSeeder extends Seeder
     }
 
     /**
-     * @param $studentIds
+     * @param $students
      *
      * @return void
      */

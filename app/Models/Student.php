@@ -38,6 +38,8 @@ class Student extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'department_id',
+        'course_id',
         'password',
         'remember_token',
     ];
