@@ -26,16 +26,16 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
-Route::group(['middleware' => 'auth:admin','prefix'=>'/admin'], function () {
-    Route::post('/download', [AuthController::class,'download'])->name('download');
+Route::group(['middleware' => 'auth:admin', 'prefix' => '/admin'], function () {
+    Route::post('/download', [AuthController::class, 'download'])->name('download');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 });
 
-Route::group(['middleware' => 'auth:student','prefix'=>'/student'], function () {
-    Route::get('/index', [StudentController::class, 'index'])->name('index');
+Route::group(['middleware' => 'auth:student', 'prefix' => '/student'], function () {
+    Route::get('/index', [StudentController::class, 'index'])->name('studentIndex');
 });
 
 Route::group(['middleware' => 'auth:teacher', 'prefix' => '/teacher'], function () {
-    Route::get('/index', [TeacherController::class, 'index'])->name('index');
+    Route::get('/index', [TeacherController::class, 'index'])->name('teacherIndex');
 });
 
