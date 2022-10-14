@@ -6,26 +6,28 @@ use App\Models\Admin;
 use App\Repositories\StudentRepository;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
+use App\Services\SessionProvider\SessionProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
     protected StudentRepository $studentRepository;
+    protected SessionProvider $sessionProvider;
 
-    public function __construct(StudentRepository $studentRepository)
+    public function __construct(StudentRepository $studentRepository, SessionProvider $sessionProvider)
     {
+        $this->sessionProvider = $sessionProvider;
         $this->studentRepository = $studentRepository;
     }
 
     public function getCurrentUser(Request $request) : JsonResponse
     {
-        $role = $this->getRole();
+        $role = $this->sessionProvider->getUserRole();
 
         if ($role) {
             $user = $request->user($role);
@@ -51,18 +53,6 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
-    private function getRole() : string
-    {
-        $sessionData = Session::all();
-
-        foreach ($sessionData as $key => $sessionDatum) {
-            if (preg_match("/(?<=_)student|teacher|admin(?=_)/", $key, $role)) {
-                break;
-            }
-        }
-
-        return $role[0] ?? '';
-    }
 
     public function login(Request $request) : JsonResponse
     {
