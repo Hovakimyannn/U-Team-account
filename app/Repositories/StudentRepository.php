@@ -4,13 +4,14 @@ namespace App\Repositories;
 
 use App\Models\Student;
 
-class StudentRepository
+class StudentRepository extends BaseRepository
 {
-    protected Student $model;
-
+    /**
+     * @param \App\Models\Student $model
+     */
     public function __construct(Student $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 
     public function getCourseNumber(int $studentId) : array
