@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -22,9 +23,13 @@ Route::get('/', function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/user','getCurrentUser')->name('getUser');
+    Route::get('/user', 'getCurrentUser')->name('getUser');
     Route::post('/{role}/login', 'login')->name('login')->where('role', '^(student|admin|teacher)');
     Route::post('/logout', 'logout')->name('logout');
+});
+
+Route::controller(InstituteController::class)->prefix('/institute')->group(function () {
+    Route::get('/getAll', 'getAll')->name('instituteGetAll');
 });
 
 Route::group(['middleware' => 'auth:admin', 'prefix' => '/admin'], function () {
