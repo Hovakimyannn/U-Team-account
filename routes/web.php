@@ -22,6 +22,7 @@ Route::get('/', function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
+    Route::get('/user','getCurrentUser')->name('getUser');
     Route::post('/{role}/login', 'login')->name('login')->where('role', '^(student|admin|teacher)');
     Route::post('/logout', 'logout')->name('logout');
 });

@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,14 +23,57 @@ class AuthController extends Controller
         $this->studentRepository = $studentRepository;
     }
 
+    public function getCurrentUser(Request $request) : JsonResponse
+    {
+        $role = $this->getRole();
+
+        if ($role) {
+            $user = $request->user($role);
+
+            return new JsonResponse([
+                'status' => 'success',
+                'user'   => [
+                    'data' => [
+                        array_merge(
+                            $user->toArray(),
+                            $this->studentRepository->getCourseNumber($user->id),
+                            $this->studentRepository->getGroupName($user->id)
+                        )
+                    ],
+                ],
+                'role'   => $role
+            ], Response::HTTP_OK);
+        }
+
+        return new JsonResponse([
+            'status'  => 'error',
+            'message' => 'Unauthorized'
+        ], Response::HTTP_UNAUTHORIZED);
+    }
+
+    private function getRole() : string
+    {
+        $sessionData = Session::all();
+
+        foreach ($sessionData as $key => $sessionDatum) {
+            if (preg_match("/(?<=_)student|teacher|admin(?=_)/", $key, $role)) {
+                break;
+            }
+        }
+
+        return $role[0] ?? '';
+    }
+
     public function login(Request $request) : JsonResponse
     {
-        $role = $request->role;
         $request->validate([
             'email'    => 'required|string',
             'password' => 'required|string',
         ]);
+
+        $role = $request->role;
         $credentials = $request->only('email', 'password');
+
         if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::guard($role)->user();
@@ -45,10 +89,8 @@ class AuthController extends Controller
                         )
                     ],
                 ],
-                'sessionId' => $request->cookie(),
                 'role'   => $role
             ], Response::HTTP_OK);
-
         }
 
         return new JsonResponse([
@@ -103,17 +145,4 @@ class AuthController extends Controller
             'message' => 'Successfully logged out',
         ]);
     }
-
-    public function refresh() : JsonResponse
-    {
-        return new JsonResponse([
-            'status'        => 'success',
-            'user'          => Auth::user(),
-            'authorisation' => [
-                'token' => Auth::refresh(),
-                'type'  => 'bearer',
-            ]
-        ]);
-    }
-
 }
