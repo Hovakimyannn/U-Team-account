@@ -32,7 +32,7 @@ Route::controller(InstituteController::class)->prefix('/institute')->group(funct
     Route::get('/getAll', 'getAll')->name('instituteGetAll');
 });
 
-Route::group(['middleware' => 'auth:admin', 'prefix' => '/admin'], function () {
+Route::group(['middleware' => 'auth.session', 'prefix' => '/admin'], function () {
     Route::post('/download', [AuthController::class, 'download'])->name('download');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 });
