@@ -63,12 +63,13 @@ class AuthController extends Controller
         ]);
 
         $role = $request->role;
+        auth()->setDefaultDriver($role);
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::guard($role)->user();
-
+            $request->session()->role = $role;
             return new JsonResponse([
                 'status' => 'success',
                 'user'   => [

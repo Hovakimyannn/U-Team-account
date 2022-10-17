@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard'     => 'student',
+        'guard'     => 'admin',
         'passwords' => 'students',
     ],
 
@@ -80,7 +80,7 @@ return [
 
          'teachers' => [
              'driver' => 'eloquent',
-             'model' => \App\Models\Student::class,
+             'model' => \App\Models\Teacher::class,
          ],
     ],
 
