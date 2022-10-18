@@ -9,7 +9,7 @@ class StudentController
 {
     public function index(Request $request) : JsonResponse
     {
-        $student = $request->user('student');
+        $student = $request->user();
         return new JsonResponse([
             'username' => $student->firstName,
             'email'    => $student->email

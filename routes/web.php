@@ -37,11 +37,7 @@ Route::group(['middleware' => 'auth.session', 'prefix' => '/admin'], function ()
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 });
 
-Route::group(['middleware' => 'auth:student', 'prefix' => '/student'], function () {
-    Route::get('/index', [StudentController::class, 'index'])->name('studentIndex');
-});
-
-Route::group(['middleware' => 'auth:teacher', 'prefix' => '/teacher'], function () {
-    Route::get('/index', [TeacherController::class, 'index'])->name('teacherIndex');
+Route::group(['middleware' => 'auth.session'], function () {
+    Route::get('/index', [StudentController::class, 'index'])->name('index');
 });
 
