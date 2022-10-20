@@ -8,27 +8,58 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
-    public function create(mixed $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAll()
     {
-    /*    $validator = Validator::make($request, [
-            'number' => 'required|numeric|min:3',
-        ]);
+        //
+    }
 
-        if ($validator->failed()) {
-            return false;
-        }*/
-
-        if(!($course = Course::where('number', $request->course)->first())) {
-            $course = new Course();
-            $course->number = $request->course;
-            $course->save();
-        }
-
-        return $course;
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
 
-    public function update(){}
-    public function read() {}
-    public function delete(){}
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 }

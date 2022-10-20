@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up() : void
     {
-        Schema::create('teacher_course_pivots', function (Blueprint $table) {
+        Schema::create('teachables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('teacher_id');
-            $table->morphs('model');
+            $table->morphs('teachable');
             $table->timestamps();
         });
     }

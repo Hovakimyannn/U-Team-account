@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,8 +54,21 @@ class Student extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $with = [
+        'groups',
+        'course',
+    ];
+
     public function groups() : BelongsToMany
     {
         return $this->belongsToMany(Group::class);
     }
+
+    public function course() : BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+
+
 }

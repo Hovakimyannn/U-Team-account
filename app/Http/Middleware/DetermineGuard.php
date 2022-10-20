@@ -18,17 +18,24 @@ class DetermineGuard
      */
     public function handle(Request $request, Closure $next)
     {
-        $role = $request->role;
+        $role = DB::query()
+            ->select('role')
+            ->from('sessions')
+            ->where('id', '=', $request->session()->getId())
+            ->value('role');
 
-        if (!$role) {
-            $role = DB::query()
-                ->select('role')
-                ->from('sessions')
-                ->where('id', '=', $request->session()->getId())
-                ->value('role');
+        if ($role) {
+            auth()->setDefaultDriver($role);
+
+            return $next($request);
         }
 
-        auth()->setDefaultDriver($role);
+
+        $role = $request->role;
+
+        if ($role) {
+            auth()->setDefaultDriver($role);
+        }
 
         return $next($request);
     }

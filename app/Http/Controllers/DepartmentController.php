@@ -8,29 +8,58 @@ use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
-
-    public function create(mixed $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAll()
     {
-//        $validator = Validator::make($request, [
-//            'name' => 'required|string|max:100'
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return false;
-//        }
+        //
+    }
 
-        $department = new Department();
-
-        if(!(Department::where('name', $request->department)->first())) {
-            $department->name = $request->department;
-            $department->save();
-        }
-
-        return true;
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
 
-    public function read(){}
-    public function update(){}
-    public function delete(){}
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 }
