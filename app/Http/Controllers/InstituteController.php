@@ -7,34 +7,31 @@ use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class InstituteController
+class InstituteController extends Controller
 {
-    protected InstituteRepository $repository;
-
-    public function __construct(InstituteRepository $repository)
-    {
-        $this->repository = $repository;
-    }
+    protected InstituteRepository $instituteRepository;
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @param \App\Repositories\InstituteRepository $instituteRepository
      */
-    public function getAll() : JsonResponse
+    public function __construct(InstituteRepository $instituteRepository)
     {
-        return new JsonResponse($this->repository->findAll());
+        $this->instituteRepository = $instituteRepository;
     }
 
     /**
-     * @param int $id
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get(int $id) : JsonResponse
+    public function index() : JsonResponse
     {
-        return new JsonResponse($this->repository->find($id));
+        return new JsonResponse($this->instituteRepository->findAll());
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -51,20 +48,35 @@ class InstituteController
         return new JsonResponse($institute, JsonResponse::HTTP_CREATED);
     }
 
+
     /**
-     * @param int                      $id
-     * @param \Illuminate\Http\Request $request
+     * Display the specified resource.
+     *
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(int $id, Request $request) : JsonResponse
+    public function show(int $id) : JsonResponse
+    {
+        return new JsonResponse($this->instituteRepository->find($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, int $id) : JsonResponse
     {
         $request->validate([
             'name' => 'nullable|string|max:255'
         ]);
 
         /** @type  Institute $institute */
-        $institute = $this->repository->find($id);
+        $institute = $this->instituteRepository->find($id);
         $institute->name = $request->get('name');
         $institute->save();
 
@@ -72,14 +84,16 @@ class InstituteController
     }
 
     /**
+     * Remove the specified resource from storage.
+     *
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(int $id) : JsonResponse
+    public function destroy(int $id) : JsonResponse
     {
         /** @var Institute $institute */
-        $institute = $this->repository->find($id);
+        $institute = $this->instituteRepository->find($id);
         $institute->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);

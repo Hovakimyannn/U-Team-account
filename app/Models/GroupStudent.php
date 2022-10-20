@@ -6,9 +6,11 @@ use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentGroupPivot extends Model
+class GroupStudent extends Model
 {
     use
         HasFactory,
         AttributesModifier;
+
+    protected $table = 'group_student';
 }

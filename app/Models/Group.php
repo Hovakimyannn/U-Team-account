@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Group extends Model
 {
@@ -29,11 +29,11 @@ class Group extends Model
     ];
 
     /**
-     * @return MorphMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function teacherCourse() : MorphMany
+    public function teachers() : MorphToMany
     {
-        return $this->morphMany(TeacherCoursePivot::class, 'model');
+        return $this->morphToMany(Teacher::class, 'teachable');
     }
 
     public function students() : BelongsToMany

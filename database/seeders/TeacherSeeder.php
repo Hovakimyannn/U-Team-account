@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use App\Models\Course;
 use App\Models\Group;
 use App\Models\Student;
-use App\Models\StudentGroupPivot;
+use App\Models\GroupStudent;
 use App\Models\Teacher;
-use App\Models\TeacherCoursePivot;
+use App\Models\Teachable;
 use Illuminate\Database\Seeder;
 
 
@@ -55,14 +55,14 @@ class TeacherSeeder extends Seeder
 
                 $data[] = [
                     'teacher_id' => $teacherId,
-                    'model_type' => $model,
-                    'model_id'   => $modelId,
+                    'teachable_type' => $model,
+                    'teachable_id'   => $modelId,
             ];
                 $index++;
             }
 
         }
 
-        TeacherCoursePivot::insert($data);
+        Teachable::insert($data);
     }
 }

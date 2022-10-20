@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Group;
 use App\Models\Student;
-use App\Models\StudentGroupPivot;
+use App\Models\GroupStudent;
 use Illuminate\Database\Seeder;
 
 
@@ -66,6 +66,6 @@ class StudentSeeder extends Seeder
             }
         }
 
-        StudentGroupPivot::insert($data);
+        GroupStudent::insert($data);
     }
 }
