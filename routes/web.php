@@ -30,8 +30,7 @@ Route::controller(AuthController::class)
         Route::post('/download', 'download');
         Route::get('/user', 'getCurrentUser');
         Route::post('/{role}/login', 'login')
-            ->where('role', '^(student|admin|teacher)')
-            ->middleware('guest');
+            ->where('role', '^(student|admin|teacher)');
         Route::post('/logout', 'logout');
     });
 

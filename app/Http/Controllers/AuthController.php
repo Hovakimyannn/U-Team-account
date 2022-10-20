@@ -48,6 +48,11 @@ class AuthController extends Controller
 
     public function login(Request $request) : JsonResponse
     {
+        if (Auth::check())
+        {
+            $this->authorize('check-if-auth',[self::class]);
+        }
+
         $request->validate([
             'email'    => 'required|string',
             'password' => 'required|string',
@@ -72,6 +77,7 @@ class AuthController extends Controller
                 ],
             ], Response::HTTP_OK);
         }
+
 
         return new JsonResponse([
             'status'  => 'error',

@@ -21,7 +21,7 @@ class AdminPolicy
     public function isAdmin(Model $model) : Response
     {
         return $model::class === Admin::class
-            ? Response::allow()
-            : Response::deny('You do not own this request.');
+            ? $this->allow()
+            : $this->deny('You do not own this request.');
     }
 }
