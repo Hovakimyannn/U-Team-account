@@ -31,8 +31,6 @@ class AuthController extends Controller
                     'data' => [
                         array_merge(
                             $user->toArray(),
-//                            $this->studentRepository->getCourseNumber($user->id),
-//                            $this->studentRepository->getGroupName($user->id)
                         )
                     ],
                 ],
@@ -70,8 +68,6 @@ class AuthController extends Controller
                     'data' => [
                         array_merge(
                             $user->toArray(),
-//                            $this->studentRepository->getCourseNumber($user->id),
-//                            $this->studentRepository->getGroupName($user->id)
                         )
                     ],
                 ],
@@ -85,7 +81,7 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
-    public function download(Request $request)
+    public function downloadRegistrationFile(Request $request)
     {
         /**
          * @var \Illuminate\Http\UploadedFile $file

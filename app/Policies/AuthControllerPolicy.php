@@ -18,6 +18,6 @@ class AuthControllerPolicy
     {
         return !Auth::check()
             ? $this->allow()
-            : $this->deny('');
+            : $this->deny('already logged in');
     }
 }

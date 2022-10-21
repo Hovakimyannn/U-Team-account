@@ -21,7 +21,12 @@ class DetermineGuard
         $role = DB::query()
             ->select('role')
             ->from('sessions')
-            ->where('id', '=', $request->session()->getId())
+            ->where(
+                [
+                    ['id', '=', $request->session()->getId()],
+                    ['user_id', '<>', null]
+                ]
+            )
             ->value('role');
 
         if ($role) {
@@ -29,7 +34,6 @@ class DetermineGuard
 
             return $next($request);
         }
-
 
         $role = $request->role;
 

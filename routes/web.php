@@ -27,7 +27,8 @@ Route::get('/', function () {
 
 Route::controller(AuthController::class)
     ->group(function () {
-        Route::post('/download', 'download');
+        Route::post('/registrationFile', 'downloadRegistrationFile')
+            ->middleware('can:isAdmin,\App\Models\Admin');
         Route::get('/user', 'getCurrentUser');
         Route::post('/{role}/login', 'login')
             ->where('role', '^(student|admin|teacher)');
