@@ -46,10 +46,10 @@ class AuthController extends Controller
 
     public function login(Request $request) : JsonResponse
     {
-        if (Auth::check())
+      /*  if (Auth::check())
         {
-            $this->authorize('check-if-auth',[self::class]);
-        }
+            $this->authorize('checkIfAuth',[self::class]);
+        }*/
 
         $request->validate([
             'email'    => 'required|string',
@@ -83,16 +83,17 @@ class AuthController extends Controller
 
     public function downloadRegistrationFile(Request $request)
     {
+        $request->validate([
+            'file' => 'max:500|mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'
+        ]);
         /**
          * @var \Illuminate\Http\UploadedFile $file
          */
         $file = $request->file;
-
         $path = Storage::path($file->getClientOriginalName());
         $file->storeAs(null, $file->getClientOriginalName());
 
         $fileManagerVisitor = new FileManagerVisitor(new ExcelFileManager($path));
-
         $fileManager = $fileManagerVisitor->visitor;
         $data = $fileManager->read();
 
