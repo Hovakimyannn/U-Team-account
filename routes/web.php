@@ -27,12 +27,13 @@ Route::get('/', function () {
 
 Route::controller(AuthController::class)
     ->group(function () {
-        Route::post('/registrationFile', 'downloadRegistrationFile')
+        Route::post('/registration-file', 'downloadRegistrationFile')
             ->middleware('can:isAdmin,\App\Models\Admin');
-        Route::get('/user', 'getCurrentUser');
+        Route::get('/user', 'getCurrentUser');// no policy
         Route::post('/{role}/login', 'login')
-            ->where('role', '^(student|admin|teacher)');
-        Route::post('/logout', 'logout');
+            ->where('role', '^(student|admin|teacher)')
+            ->middleware('guest');
+        Route::post('/logout', 'logout'); // no policy
     });
 
 Route::controller(InstituteController::class)
@@ -49,31 +50,31 @@ Route::controller(InstituteController::class)
 Route::controller(GroupController::class)
     ->prefix('/group')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all groups
-        Route::post('/create', 'create');//create group
-        Route::get('/get', 'get');//get group by id
-        Route::patch('/edit', 'update');//edit group
-        Route::delete('/delete', 'destroy');//delete group
+        Route::get('/get-all', 'getAll');// not student
+        Route::post('/create', 'create');// admin
+        Route::get('/get', 'get');// not student
+        Route::patch('/edit', 'update');// admin
+        Route::delete('/delete', 'destroy');//admin
     });
 
 Route::controller(CourseController::class)
     ->prefix('/course')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all students
-        Route::post('/create', 'create');//create students
-        Route::get('/get', 'get');//get student
-        Route::patch('/edit', 'update');//edit student
-        Route::delete('/delete', 'destroy');//delete student
+        Route::get('/get-all', 'getAll');// not student
+        Route::post('/create', 'create');// admin
+        Route::get('/get', 'get');// not student
+        Route::patch('/edit', 'update');// admin
+        Route::delete('/delete', 'destroy');//admin
     });
 
 Route::controller(DepartmentController::class)
     ->prefix('/department')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all students
-        Route::post('/create', 'create');//create students
-        Route::get('/get', 'get');//get student
-        Route::patch('/edit', 'update');//edit student
-        Route::delete('/delete', 'destroy');//delete student
+        Route::get('/get-all', 'getAll');// admin
+        Route::post('/create', 'create');// admin
+        Route::get('/get', 'get');// admin
+        Route::patch('/edit', 'update');//admin
+        Route::delete('/delete', 'destroy');//admin
 
     });
 
@@ -81,31 +82,31 @@ Route::controller(AdminController::class)
     ->middleware('auth.session')
     ->prefix('/admin')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all students
-        Route::post('/create', 'create');//create students
-        Route::get('/get', 'get');//get student
-        Route::patch('/edit', 'update');//edit student
-        Route::delete('/delete', 'destroy');//delete student
+        Route::get('/get-all', 'getAll');//
+        Route::post('/create', 'create');//
+        Route::get('/get', 'get');//
+        Route::patch('/edit', 'update');//
+        Route::delete('/delete', 'destroy');//
     });
 
 Route::controller(StudentController::class)
     ->middleware('auth.session')
     ->prefix('/student')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all students
-        Route::post('/create', 'create');//create students
-        Route::get('/get', 'get');//get student
-        Route::patch('/edit', 'update');//edit student
-        Route::delete('/delete', 'destroy');//delete student
+        Route::get('/get-all', 'getAll');//admin
+        Route::post('/create', 'create');// admin
+        Route::get('/get', 'get');// no policy
+        Route::patch('/edit', 'update');// admin
+        Route::delete('/delete', 'destroy');//admin
     });
 
-Route::controller(TeacherController::class)
-    ->middleware('auth.session')
+Route::controller(TeacherController::class) // admin
+->middleware('auth.session')
     ->prefix('/teacher')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//get all students
-        Route::post('/create', 'create');//create students
-        Route::get('/get', 'get');//get student
-        Route::patch('/edit', 'update');//edit student
-        Route::delete('/delete', 'destroy');//delete student
+        Route::get('/get-all', 'getAll');
+        Route::post('/create', 'create');
+        Route::get('/get', 'get'); // no policy
+        Route::patch('/edit', 'update');
+        Route::delete('/delete', 'destroy');
     });
