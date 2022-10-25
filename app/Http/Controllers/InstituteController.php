@@ -44,6 +44,7 @@ class InstituteController extends Controller
 
         $institute = new Institute();
         $institute->name = $request->get('name');
+        $institute->save();
 
         return new JsonResponse($institute, JsonResponse::HTTP_CREATED);
     }

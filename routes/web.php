@@ -70,11 +70,11 @@ Route::controller(CourseController::class)
 Route::controller(DepartmentController::class)
     ->prefix('/department')
     ->group(function () {
-        Route::get('/get-all', 'getAll');// admin
+        Route::get('/getAll', 'index');// admin
         Route::post('/create', 'create');// admin
-        Route::get('/get', 'get');// admin
-        Route::patch('/edit', 'update');//admin
-        Route::delete('/delete', 'destroy');//admin
+        Route::get('/get/{id}', 'show');// admin
+        Route::patch('/edit/{id}', 'update');//admin
+        Route::delete('/delete/{id}', 'destroy');//admin
 
     });
 
