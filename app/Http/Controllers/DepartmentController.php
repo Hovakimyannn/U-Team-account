@@ -6,7 +6,6 @@ use App\Models\Department;
 use App\Repositories\DepartmentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {

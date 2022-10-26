@@ -60,10 +60,10 @@ Route::controller(GroupController::class)
 Route::controller(CourseController::class)
     ->prefix('/course')
     ->group(function () {
-        Route::get('/get-all', 'getAll');// not student
+        Route::get('/getAll', 'getAll');// not student
         Route::post('/create', 'create');// admin
-        Route::get('/get', 'get');// not student
-        Route::patch('/edit', 'update');// admin
+        Route::get('/get/{id}', 'show');// not student
+        Route::patch('/edit/{id}', 'update');// admin
         Route::delete('/delete', 'destroy');//admin
     });
 
