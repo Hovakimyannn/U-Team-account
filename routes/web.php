@@ -104,9 +104,9 @@ Route::controller(TeacherController::class) // admin
 ->middleware('auth.session')
     ->prefix('/teacher')
     ->group(function () {
-        Route::get('/get-all', 'getAll');
+        Route::get('/getAll', 'getAll');
         Route::post('/create', 'create');
-        Route::get('/get', 'get'); // no policy
-        Route::patch('/edit', 'update');
-        Route::delete('/delete', 'destroy');
+        Route::get('/get/{id}', 'show'); // no policy
+        Route::patch('/edit/{id}', 'update');
+        Route::delete('/delete/{id}', 'destroy');
     });
