@@ -2,28 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
+use App\Repositories\GroupRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
     /**
+     * @var \App\Repositories\GroupRepository
+     */
+    protected GroupRepository $groupRepository;
+
+    /**
+     * @param \App\Repositories\GroupRepository $groupRepository
+     */
+    public function __construct(GroupRepository $groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getAll()
+    public function getAll() : JsonResponse
     {
-        //
+        return new JsonResponse($this->groupRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request     $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'number' => 'required|int|min:3',
+            'parent_id' => 'int',
+            'course_id' => 'int',
+        ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $group = new Group();
+        $group->number = $request->get('number');
+        $group->parentId = $request->get('parentId') ?? null;
+
+        $group->course()->associate($request->get('courseId'));
+
+        $group->save();
+
+        return new JsonResponse($group, JsonResponse::HTTP_CREATED);
     }
 
 
@@ -31,11 +69,12 @@ class GroupController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id) : JsonResponse
     {
-        //
+        return new JsonResponse($this->groupRepository->find($id), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -43,22 +82,42 @@ class GroupController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'number' => 'int|min:3',
+            'parent_id' => 'int',
+        ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $group = $this->groupRepository->find($id);
+        $group->number = $request->get('number') ?? $group->number;
+        $group->parentId = $request->get('parentId') ?? $group->parentId;
+
+        $group->save();
+
+        return new JsonResponse($group, JsonResponse::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        //
-    }
+        $group = $this->groupRepository->find($id);
+        $group->delete();
 
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
 }

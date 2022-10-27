@@ -50,11 +50,11 @@ Route::controller(InstituteController::class)
 Route::controller(GroupController::class)
     ->prefix('/group')
     ->group(function () {
-        Route::get('/get-all', 'getAll');// not student
+        Route::get('/getAll', 'getAll');// not student
         Route::post('/create', 'create');// admin
-        Route::get('/get', 'get');// not student
-        Route::patch('/edit', 'update');// admin
-        Route::delete('/delete', 'destroy');//admin
+        Route::get('/get/{id}', 'show');// not student
+        Route::patch('/edit/{id}', 'update');// admin
+        Route::delete('/delete/{id}', 'destroy');//admin
     });
 
 Route::controller(CourseController::class)
@@ -64,7 +64,7 @@ Route::controller(CourseController::class)
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
         Route::patch('/edit/{id}', 'update');// admin
-        Route::delete('/delete', 'destroy');//admin
+        Route::delete('/delete/{id}', 'destroy');//admin
     });
 
 Route::controller(DepartmentController::class)

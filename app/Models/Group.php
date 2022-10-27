@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
- *  * @property mixed        $name
+ *  * @property mixed        $number
+ *  * @property mixed        $parentId
  */
 class Group extends Model
 {
@@ -26,7 +28,7 @@ class Group extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'number'
     ];
 
     /**
@@ -40,5 +42,10 @@ class Group extends Model
     public function students() : BelongsToMany
     {
         return $this->belongsToMany(Student::class);
+    }
+
+    public function course() :BelongsTo
+    {
+        return $this->belongsTo(Course::class);
     }
 }
