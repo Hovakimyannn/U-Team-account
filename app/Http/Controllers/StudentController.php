@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use App\Models\Teacher;
 use App\Repositories\StudentRepository;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use mysql_xdevapi\Exception;
 
 class StudentController extends Controller
 {
+    /**
+     * @var \App\Repositories\StudentRepository
+     */
     protected StudentRepository $studentRepository;
 
+    /**
+     * @param \App\Repositories\StudentRepository $studentRepository
+     */
     public function __construct(StudentRepository $studentRepository)
     {
         $this->studentRepository = $studentRepository;
@@ -36,7 +39,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'required|string|max:255',
@@ -68,7 +71,6 @@ class StudentController extends Controller
         return new JsonResponse($student, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -89,7 +91,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'string|max:255',

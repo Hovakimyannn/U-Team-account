@@ -39,7 +39,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'required|string|max:255',
@@ -66,7 +66,6 @@ class AdminController extends Controller
         return new JsonResponse($admin, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -87,7 +86,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'string|max:255',
@@ -111,7 +110,6 @@ class AdminController extends Controller
         $admin->save();
 
         return new JsonResponse($admin, JsonResponse::HTTP_OK);
-
     }
 
     /**
@@ -127,6 +125,5 @@ class AdminController extends Controller
         $admin->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-
     }
 }

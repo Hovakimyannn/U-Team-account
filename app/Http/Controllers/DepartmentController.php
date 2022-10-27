@@ -28,7 +28,7 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index() : JsonResponse
     {
         return new JsonResponse($this->departmentRepository->findAll(), JsonResponse::HTTP_OK);
     }
@@ -38,15 +38,14 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
 
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
         }
 
@@ -72,23 +71,21 @@ class DepartmentController extends Controller
         return new JsonResponse($this->departmentRepository->find($id), JsonResponse::HTTP_OK);
     }
 
-
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request,int  $id)
+    public function update(Request $request, int $id) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|min:3'
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
         }
 
@@ -102,11 +99,11 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id) : JsonResponse
     {
         $department = $this->departmentRepository->find($id);
         $department->delete();

@@ -22,8 +22,10 @@ class Admin extends Authenticatable
         Notifiable,
         AttributesModifier;
 
+    /**
+     * @var bool
+     */
     public $timestamps = true;
-
 
     /**
      * The attributes that are mass assignable.

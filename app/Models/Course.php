@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * @method static exists()
+ *
+ *  * @property mixed        $number
+ *  * @property mixed        $degree
+ *  * @property mixed        $type
  */
 class Course extends Model
 {
@@ -26,7 +30,7 @@ class Course extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'number',
         'degree',
         'type'
     ];

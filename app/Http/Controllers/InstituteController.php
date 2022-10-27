@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Validator;
 
 class InstituteController extends Controller
 {
+    /**
+     * @var \App\Repositories\InstituteRepository
+     */
     protected InstituteRepository $instituteRepository;
 
     /**
@@ -44,8 +47,7 @@ class InstituteController extends Controller
 
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
         }
 
@@ -55,7 +57,6 @@ class InstituteController extends Controller
 
         return new JsonResponse($institute, JsonResponse::HTTP_CREATED);
     }
-
 
     /**
      * Display the specified resource.
@@ -84,8 +85,7 @@ class InstituteController extends Controller
 
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
         }
 

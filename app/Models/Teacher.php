@@ -11,6 +11,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ *  * @property mixed        $firstName
+ *  * @property mixed        $lastName
+ *  * @property mixed        $patronymic
+ *  * @property mixed        $email
+ *  * @property mixed        $password
+ *  * @property mixed        $birthDate
+ *  * @property mixed        $position
+ */
 class Teacher extends Authenticatable
 {
     use
@@ -30,6 +39,8 @@ class Teacher extends Authenticatable
         'patronymic',
         'email',
         'password',
+        'birthDate',
+        'position'
     ];
 
     /**

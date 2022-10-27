@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Js;
 
 class TeacherController extends Controller
 {
@@ -40,7 +39,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'required|string|max:255',
@@ -70,9 +69,7 @@ class TeacherController extends Controller
         $teacher->save();
 
         return new JsonResponse($teacher, JsonResponse::HTTP_CREATED);
-
     }
-
 
     /**
      * Display the specified resource.
@@ -94,7 +91,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'firstName'  => 'string|max:255',
@@ -121,7 +118,6 @@ class TeacherController extends Controller
         $teacher->save();
 
         return new JsonResponse($teacher, JsonResponse::HTTP_OK);
-
     }
 
     /**
@@ -131,12 +127,11 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id)
+    public function destroy(int $id) : JsonResponse
     {
         $teacher = $this->teacherRepository->find($id);
         $teacher->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-
     }
 }
