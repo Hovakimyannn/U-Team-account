@@ -22,11 +22,14 @@ class ExcelFileManager implements FileManagerInterface
         return (new FastExcel)->import($this->path);
     }
 
-    public function moveToJson(Collection $data)
+    public function convertToJson(Collection $data) : void
     {
-        $jsonPath = preg_replace('/\..+$/', '.' . 'json', $this->path);
+        File::move($this->path, $this->getPath());
+        File::put($this->getPath()   , $data);
+    }
 
-        File::move($this->path, $jsonPath);
-        File::put($jsonPath, $data);
+    public function getPath() : string
+    {
+        return preg_replace('/\..+$/', '.' . 'json', $this->path);
     }
 }

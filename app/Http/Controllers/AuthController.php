@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Repositories\StudentRepository;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
+use App\Traits\RecordMessage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    use RecordMessage;
+
     protected StudentRepository $studentRepository;
 
     public function __construct(StudentRepository $studentRepository)
@@ -97,10 +100,13 @@ class AuthController extends Controller
 
         $fileManagerVisitor = new FileManagerVisitor(new ExcelFileManager($path));
 
-        $fileManager = $fileManagerVisitor->visitor;
+        $fileManager = $fileManagerVisitor->visit;
         $data = $fileManager->read();
+        $path = $fileManager->getPath();
 
         $fileManager->convertToJson($data);
+
+        $this->recordMessage($path);
     }
 
     public function register(mixed $userData) : Admin
