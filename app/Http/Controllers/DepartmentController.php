@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Repositories\DepartmentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
@@ -39,9 +40,15 @@ class DepartmentController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255'
+
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $department = new Department();
         $department->name = $request->get('name');
@@ -76,9 +83,14 @@ class DepartmentController extends Controller
      */
     public function update(Request $request,int  $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|min:3'
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $department = $this->departmentRepository->find($id);
         $department->name = $request->get('name');

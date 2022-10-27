@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use mysql_xdevapi\Exception;
 
 class StudentController extends Controller
@@ -37,14 +38,19 @@ class StudentController extends Controller
      */
     public function create(Request $request)
     {
-            $request->validate([
-                'firstName'  => 'required|string|max:255',
-                'lastName'   => 'required|string|max:255',
-                'patronymic' => 'required|string|max:255',
-                'birthDate'  => 'required|date',
-                'email'      => 'required|email|unique:students,email',
-                'password'   => 'required|confirmed|min:5'
-            ]);
+        $validator = Validator::make($request->all(), [
+            'firstName'  => 'required|string|max:255',
+            'lastName'   => 'required|string|max:255',
+            'patronymic' => 'required|string|max:255',
+            'birthDate'  => 'required|date',
+            'email'      => 'required|email|unique:students,email',
+            'password'   => 'required|confirmed|min:5'
+        ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $student = new Student();
         $student->firstName = $request->get('firstName');
@@ -85,13 +91,18 @@ class StudentController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'firstName'  => 'string|max:255',
             'lastName'   => 'string|max:255',
             'patronymic' => 'string|max:255',
             'birthDate'  => 'date',
             'email'      => 'email|unique:students,email',
         ]);
+
+        if($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $student = $this->studentRepository->find($id);
         $student->firstName = $request->get('firstName') ?? $student->firstName;

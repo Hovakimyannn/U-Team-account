@@ -6,6 +6,7 @@ use App\Models\Institute;
 use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class InstituteController extends Controller
 {
@@ -38,9 +39,15 @@ class InstituteController extends Controller
      */
     public function create(Request $request) : JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255'
+
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $institute = new Institute();
         $institute->name = $request->get('name');
@@ -72,9 +79,15 @@ class InstituteController extends Controller
      */
     public function update(Request $request, int $id) : JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:255'
+
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         /** @type  Institute $institute */
         $institute = $this->instituteRepository->find($id);

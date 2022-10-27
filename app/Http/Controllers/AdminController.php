@@ -7,6 +7,7 @@ use App\Repositories\AdminRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -40,13 +41,18 @@ class AdminController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'firstName'  => 'required|string|max:255',
             'lastName'   => 'required|string|max:255',
             'patronymic' => 'required|string|max:255',
             'email'      => 'required|email|unique:students,email',
             'password'   => 'required|confirmed|min:5'
         ]);
+
+        if($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $admin = new Admin();
         $admin->firstName = $request->get('firstName');
@@ -83,12 +89,17 @@ class AdminController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'firstName'  => 'string|max:255',
             'lastName'   => 'string|max:255',
             'patronymic' => 'string|max:255',
             'email'      => 'email|unique:students,email',
         ]);
+
+        if($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $admin = $this->adminRepository->find($id);
 

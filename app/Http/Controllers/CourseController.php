@@ -42,11 +42,16 @@ class CourseController extends Controller
      */
     public function create(Request $request) : JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'number' => 'required|int|min:3',
             'degree' => 'required|string',
             'type'   =>  'required|string',
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $course = new Course();
         $course->number = $request->get('number');
@@ -82,11 +87,16 @@ class CourseController extends Controller
      */
     public function update(Request $request, int  $id) : JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'number' => 'int|min:3',
             'degree' => 'string',
             'type' => 'string',
         ]);
+
+        if ($validator->fails())
+        {
+            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $course = $this->courseRepository->find($id);
         $course->number = $request->get('number') ?? $course->number;
