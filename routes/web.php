@@ -82,11 +82,11 @@ Route::controller(AdminController::class)
     ->middleware('auth.session')
     ->prefix('/admin')
     ->group(function () {
-        Route::get('/get-all', 'getAll');//
+        Route::get('/getAll', 'getAll');//
         Route::post('/create', 'create');//
-        Route::get('/get', 'get');//
-        Route::patch('/edit', 'update');//
-        Route::delete('/delete}', 'destroy');//
+        Route::get('/get/{id}', 'show');//
+        Route::patch('/edit/{id}', 'update');//
+        Route::delete('/delete/{id}', 'destroy');//
     });
 
 Route::controller(StudentController::class)

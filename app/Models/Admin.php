@@ -13,7 +13,6 @@ use Illuminate\Notifications\Notifiable;
  * @property mixed|string $password
  * @property mixed        $firstName
  * @property mixed        $lastName
- * @property mixed        $fatherName
  * @method static exists()
  */
 class Admin extends Authenticatable
