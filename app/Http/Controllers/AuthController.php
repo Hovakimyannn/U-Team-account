@@ -12,47 +12,54 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
     use RecordMessage;
 
+    /**
+     * @var \App\Repositories\StudentRepository
+     */
     protected StudentRepository $studentRepository;
 
+    /**
+     * @param \App\Repositories\StudentRepository $studentRepository
+     */
     public function __construct(StudentRepository $studentRepository)
     {
         $this->studentRepository = $studentRepository;
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCurrentUser(Request $request) : JsonResponse
     {
         if ($user = $request->user()) {
             return new JsonResponse([
-                'status' => 'success',
-                'user'   => [
-                    'data' => [
-                        array_merge(
-                            $user->toArray(),
-                        )
-                    ],
-                ],
-            ], Response::HTTP_OK);
+                'data' => $user
+            ], JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([
             'status'  => 'error',
             'message' => 'Unauthorized'
-        ], Response::HTTP_UNAUTHORIZED);
+        ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request) : JsonResponse
     {
-      /*  if (Auth::check())
-        {
-            $this->authorize('checkIfAuth',[self::class]);
-        }*/
+        /*  if (Auth::check())
+          {
+              $this->authorize('checkIfAuth',[self::class]);
+          }*/
 
         $request->validate([
             'email'    => 'required|string',
@@ -66,25 +73,22 @@ class AuthController extends Controller
             $user = Auth::user();
 
             return new JsonResponse([
-                'status' => 'success',
-                'user'   => [
-                    'data' => [
-                        array_merge(
-                            $user->toArray(),
-                        )
-                    ],
-                ],
-            ], Response::HTTP_OK);
+                'data' => $user
+            ], JsonResponse::HTTP_OK);
         }
-
 
         return new JsonResponse([
             'status'  => 'error',
             'message' => 'Unauthorized'
-        ], Response::HTTP_UNAUTHORIZED);
+        ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function downloadRegistrationFile(Request $request)
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function downloadRegistrationFile(Request $request) : JsonResponse
     {
         $request->validate([
             'file' => 'max:500|mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'
@@ -106,8 +110,17 @@ class AuthController extends Controller
         $fileManager->convertToJson($data);
 
         $this->recordMessage($path);
+
+        return new JsonResponse([
+            'status' => 'downloaded'
+        ], JsonResponse::HTTP_OK);
     }
 
+    /**
+     * @param mixed $userData
+     *
+     * @return \App\Models\Admin
+     */
     public function register(mixed $userData) : Admin
     {
         $user = new Admin();
@@ -123,6 +136,11 @@ class AuthController extends Controller
         return $user;
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request) : JsonResponse
     {
         Auth::logout();
@@ -131,9 +149,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return new JsonResponse([
-            'status'  => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        return new JsonResponse('', JsonResponse::HTTP_NO_CONTENT);
     }
 }

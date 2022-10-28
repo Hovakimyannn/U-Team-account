@@ -64,7 +64,6 @@ class GroupController extends Controller
         return new JsonResponse($group, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
      * Display the specified resource.
      *
