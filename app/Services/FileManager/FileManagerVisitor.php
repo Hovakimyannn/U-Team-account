@@ -4,10 +4,10 @@ namespace App\Services\FileManager;
 
 class FileManagerVisitor
 {
-    public FileManagerInterface $visitor;
+    public FileManagerInterface $visit;
 
-    public function __construct(FileManagerInterface $visitor)
+    public function __construct(FileManagerInterface $visit)
     {
-        $this->visitor = $visitor;
+        $this->visit = $visit;
     }
 }

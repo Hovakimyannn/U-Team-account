@@ -2,8 +2,10 @@
 
 namespace App\Services\FileManager;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class ExcelFileManager implements FileManagerInterface
@@ -20,15 +22,14 @@ class ExcelFileManager implements FileManagerInterface
         return (new FastExcel)->import($this->path);
     }
 
-    public function convertToJson(Collection $data)
+    public function convertToJson(Collection $data) : void
     {
-        $this->save($data->toJson());
+        File::move($this->path, $this->getPath());
+        File::put($this->getPath()   , $data);
     }
 
-    private function save(string $json)
+    public function getPath() : string
     {
-        $newPath = preg_replace('/\..+$/', '.'.'json', $this->path);
-        File::put($newPath, $json);
-        File::delete($this->path);
+        return preg_replace('/\..+$/', '.' . 'json', $this->path);
     }
 }

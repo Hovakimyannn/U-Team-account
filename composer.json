@@ -10,7 +10,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "rap2hpoutre/fast-excel": "^4.1"
+        "rap2hpoutre/fast-excel": "^4.1",
+        "ucraft-com/kafka-producer": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
