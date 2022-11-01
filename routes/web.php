@@ -6,9 +6,11 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstituteController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Uid\Factory\NameBasedUuidFactory;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,3 +112,13 @@ Route::controller(TeacherController::class) // admin
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');
     });
+
+Route::post('/forgot-password', [PasswordController::class, 'send'])
+    ->middleware(['guest'])
+    ->name('password.forgot');
+
+Route::post('/reset-password', [PasswordController::class, 'reset'])
+    ->middleware(['guest'])
+    ->name('password.reset');
+
+

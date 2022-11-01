@@ -39,4 +39,18 @@ class BaseRepository
     {
         return $this->model->all();
     }
+
+    /**
+     * Find single model by Email.
+     *
+     * @param string $email
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function findUserByEmail(string $email) : ?Model
+    {
+         return $this->model->newQuery()
+             ->where('email', $email)
+             ->first();
+    }
 }

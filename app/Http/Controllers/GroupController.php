@@ -113,7 +113,7 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id) : JsonResponse
     {
         $group = $this->groupRepository->find($id);
         $group->delete();
