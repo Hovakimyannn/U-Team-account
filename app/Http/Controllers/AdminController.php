@@ -41,11 +41,11 @@ class AdminController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'patronymic' => 'required|string|max:255',
-            'email'      => 'required|email|unique:students,email',
-            'password'   => 'required|confirmed|min:5'
+            'firstName'  => ['required', 'string', 'max:255'],
+            'lastName'   => ['required', 'string', 'max:255'],
+            'patronymic' => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'unique:students,email'],
+            'password'   => ['required', 'confirmed', 'min:5']
         ]);
 
         $admin = new Admin();
@@ -83,10 +83,10 @@ class AdminController extends Controller
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'string|max:255',
-            'lastName'   => 'string|max:255',
-            'patronymic' => 'string|max:255',
-            'email'      => 'email|unique:students,email',
+            'firstName'  => ['string', 'max:255'],
+            'lastName'   => ['string', 'max:255'],
+            'patronymic' => ['string', 'max:255'],
+            'email'      => ['email', 'unique:students,email'],
         ]);
 
         $admin = $this->adminRepository->find($id);

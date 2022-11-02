@@ -43,12 +43,14 @@ class StudentController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'patronymic' => 'required|string|max:255',
-            'birthDate'  => 'required|date',
-            'email'      => 'required|email|unique:students,email',
-            'password'   => 'required|confirmed|min:5'
+            'firstName'     => ['required', 'string', 'max:255'],
+            'lastName'      => ['required', 'string', 'max:255'],
+            'patronymic'    => ['required', 'string', 'max:255'],
+            'birthDate'     => ['required', 'date'],
+            'email'         => ['required', 'email', 'unique:students,email'],
+            'password'      => ['required', 'confirmed', 'min:5'],
+            'department_id' => ['required', 'int', 'exists:departments,id'],
+            'course_id'     => ['required', 'int', 'exists:courses,id']
         ]);
 
         $student = new Student();
@@ -70,7 +72,7 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -82,19 +84,23 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'string|max:255',
-            'lastName'   => 'string|max:255',
-            'patronymic' => 'string|max:255',
-            'birthDate'  => 'date',
-            'email'      => 'email|unique:students,email',
+            'firstName'     => ['string', 'max:255'],
+            'lastName'      => ['string', 'max:255'],
+            'patronymic'    => ['string', 'max:255'],
+            'birthDate'     => ['date'],
+            'email'         => ['email', 'unique:students,email'],
+            'department_id' => ['int', 'exists:departments,id'],
+            'course_id'     => ['int', 'exists:courses,id']
+
+
         ]);
 
         $student = $this->studentRepository->find($id);
@@ -112,7 +118,7 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

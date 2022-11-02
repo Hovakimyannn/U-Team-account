@@ -19,7 +19,7 @@ class PasswordController extends Controller
     public function send(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'email' => 'required|email',
+            'email' => ['required', 'email'],
         ]);
 
         $status = Password::sendResetLink(
@@ -45,9 +45,9 @@ class PasswordController extends Controller
     public function reset(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'token'    => 'required',
-            'email'    => 'required|exists:password_resets,email',
-            'password' => 'required|confirmed',
+            'token'    => ['required'],
+            'email'    => ['required', 'exists:password_resets,email'],
+            'password' => ['required', 'confirmed'],
         ]);
 
         $status = Password::reset(

@@ -42,8 +42,8 @@ class DepartmentController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'name' => 'required|string|max:255'
-
+            'name'         => ['required', 'string', 'max:255'],
+            'institute_id' => ['required', 'exists:institutes,id'],
         ]);
 
         $department = new Department();
@@ -79,8 +79,8 @@ class DepartmentController extends Controller
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'name' => 'required|string|max:255|min:3'
-
+            'name'         => ['required', 'string', 'max:255', 'min:3'],
+            'institute_id' => ['exists:institutes,id'],
         ]);
 
         $department = $this->departmentRepository->find($id);

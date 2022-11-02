@@ -35,16 +35,16 @@ class GroupController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param Request     $request
+     * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'number' => 'required|int|min:3',
-            'parent_id' => 'int',
-            'course_id' => 'int',
+            'number'    => ['required', 'int', 'min:3'],
+            'parent_id' => ['int', 'exists:groups,id'],
+            'course_id' => ['required', 'int', 'exists:courses,id'],
         ]);
 
         $group = new Group();
@@ -61,7 +61,7 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,16 +73,17 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'number' => 'int|min:3',
-            'parent_id' => 'int',
+            'number'    => ['int', 'min:3'],
+            'parent_id' => ['int', 'exists:groups,id'],
+            'course_id' => ['int', 'exists:courses,id'],
         ]);
 
         $group = $this->groupRepository->find($id);
@@ -97,7 +98,7 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

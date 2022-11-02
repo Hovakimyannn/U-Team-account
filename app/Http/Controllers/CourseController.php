@@ -45,9 +45,10 @@ class CourseController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'number' => 'required|int|min:3',
-            'degree' => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
-            'type' => [new Enum(CourseTypeEnum::class), 'required', 'string'],
+            'number'        => ['required','int','min:3'],
+            'degree'        => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
+            'type'          => [new Enum(CourseTypeEnum::class), 'required', 'string'],
+            'department_id' => ['required', 'exists:departments,id'],
         ]);
 
         $course = new Course();
@@ -65,7 +66,7 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -77,17 +78,19 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int  $id) : JsonResponse
+    public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'number' => 'int|min:3',
-            'degree' => [new Enum(CourseDegreeEnum::class), 'string'],
-            'type' => [new Enum(CourseTypeEnum::class), 'string'],
+            'number'        => ['int','min:3'],
+            'degree'        => [new Enum(CourseDegreeEnum::class), 'string'],
+            'type'          => [new Enum(CourseTypeEnum::class), 'string'],
+            'department_id' => ['exists:departments,id'],
+
         ]);
 
         $course = $this->courseRepository->find($id);
@@ -103,7 +106,7 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

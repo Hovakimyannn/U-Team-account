@@ -32,7 +32,7 @@ class TeacherController extends Controller
      */
     public function getAll() : JsonResponse
     {
-       return new JsonResponse($this->teacherRepository->findAll(), JsonResponse::HTTP_OK);
+        return new JsonResponse($this->teacherRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -45,13 +45,14 @@ class TeacherController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'patronymic' => 'required|string|max:255',
-            'birthDate'  => 'required|date',
-            'email'      => 'required|email|unique:students,email',
-            'password'   => 'required|confirmed|min:5',
-            'position'   => [new Enum(TeacherPositionEnum::class), 'required', 'string'],
+            'firstName'     => ['required', 'string', 'max:255'],
+            'lastName'      => ['required', 'string', 'max:255'],
+            'patronymic'    => ['required', 'string', 'max:255'],
+            'birthDate'     => ['required', 'date'],
+            'email'         => ['required', 'email', 'unique:students,email'],
+            'password'      => ['required', 'confirmed', 'min:5'],
+            'position'      => [new Enum(TeacherPositionEnum::class), 'required', 'string'],
+            'department_id' => ['required', 'int', 'exists:departments,id'],
         ]);
 
         $teacher = new Teacher();
@@ -72,7 +73,7 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -84,21 +85,21 @@ class TeacherController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'firstName'  => 'string|max:255',
-            'lastName'   => 'string|max:255',
-            'patronymic' => 'string|max:255',
-            'birthDate'  => 'date',
-            'email'      => 'email|unique:students,email',
-            'position'   => [new Enum(TeacherPositionEnum::class), 'string'],
-
+            'firstName'     => ['string', 'max:255'],
+            'lastName'      => ['string', 'max:255'],
+            'patronymic'    => ['string', 'max:255'],
+            'birthDate'     => ['date'],
+            'email'         => ['email', 'unique:students,email'],
+            'position'      => [new Enum(TeacherPositionEnum::class), 'string'],
+            'department_id' => ['int', 'exists:departments,id'],
         ]);
 
         $teacher = $this->teacherRepository->find($id);
@@ -118,7 +119,7 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

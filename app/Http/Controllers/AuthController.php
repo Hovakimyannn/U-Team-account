@@ -62,8 +62,8 @@ class AuthController extends Controller
           }*/
 
         $this->validate($request, [
-            'email'    => 'required|string',
-            'password' => 'required|string',
+            'email'    => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -91,7 +91,7 @@ class AuthController extends Controller
     public function downloadRegistrationFile(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'file' => 'max:500|mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'
+            'file' => ['max:500', 'mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'],
         ]);
 
         /**

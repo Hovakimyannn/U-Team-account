@@ -42,7 +42,7 @@ class InstituteController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'name' => 'required|string|max:255'
+            'name' => ['required', 'string', 'max:255']
         ]);
 
         $institute = new Institute();
@@ -75,8 +75,7 @@ class InstituteController extends Controller
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'name' => 'nullable|string|max:255'
-
+            'name' => ['string', 'max:255']
         ]);
 
         /** @type  Institute $institute */
