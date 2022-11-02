@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum TeacherPositionEnum
+enum TeacherPositionEnum: string
 {
-    const ASSISTANT = 'assistant';
-    const LECTURER = 'lecturer';
-    const ASSOCIATE_PROFESSOR = 'associate_professor';
-    const PROFESSOR = 'professors';
+    case ASSISTANT = 'assistant';
+    case LECTURER = 'lecturer';
+    case ASSOCIATE_PROFESSOR = 'associate_professor';
+    case PROFESSOR = 'professors';
 }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourseDegreeEnum;
+use App\Enums\CourseTypeEnum;
 use App\Models\Course;
 use App\Repositories\CourseRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class CourseController extends Controller
 {
@@ -43,8 +46,8 @@ class CourseController extends Controller
     {
         $this->validate($request, [
             'number' => 'required|int|min:3',
-            'degree' => 'required|string',
-            'type'   =>  'required|string',
+            'degree' => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
+            'type' => [new Enum(CourseTypeEnum::class), 'required', 'string'],
         ]);
 
         $course = new Course();
@@ -83,8 +86,8 @@ class CourseController extends Controller
     {
         $this->validate($request, [
             'number' => 'int|min:3',
-            'degree' => 'string',
-            'type' => 'string',
+            'degree' => [new Enum(CourseDegreeEnum::class), 'string'],
+            'type' => [new Enum(CourseTypeEnum::class), 'string'],
         ]);
 
         $course = $this->courseRepository->find($id);

@@ -2,9 +2,9 @@
 
 namespace App\Enums;
 
-enum CourseDegreeEnum
+enum CourseDegreeEnum: string
 {
-    const BACHELOR = 'bachelor';
-    const MASTER = 'master';
-    const PHD = 'phd';
+    case BACHELOR = 'bachelor';
+    case MASTER = 'master';
+    case PHD = 'PhD';
 }

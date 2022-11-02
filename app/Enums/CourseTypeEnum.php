@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-enum CourseTypeEnum
+enum CourseTypeEnum: string
 {
-    const AVAILABLE = 'available';
-    const REMOTELY = 'remotely';
+    case AVAILABLE = 'available';
+    case REMOTELY = 'remotely';
 }

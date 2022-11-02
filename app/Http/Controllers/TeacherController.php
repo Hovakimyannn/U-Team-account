@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TeacherPositionEnum;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Enum;
 
 class TeacherController extends Controller
 {
@@ -49,7 +51,7 @@ class TeacherController extends Controller
             'birthDate'  => 'required|date',
             'email'      => 'required|email|unique:students,email',
             'password'   => 'required|confirmed|min:5',
-            'position'   => 'required'
+            'position'   => [new Enum(TeacherPositionEnum::class), 'required', 'string'],
         ]);
 
         $teacher = new Teacher();
@@ -95,6 +97,8 @@ class TeacherController extends Controller
             'patronymic' => 'string|max:255',
             'birthDate'  => 'date',
             'email'      => 'email|unique:students,email',
+            'position'   => [new Enum(TeacherPositionEnum::class), 'string'],
+
         ]);
 
         $teacher = $this->teacherRepository->find($id);
