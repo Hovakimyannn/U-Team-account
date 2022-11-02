@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class PasswordController extends Controller
@@ -19,13 +18,9 @@ class PasswordController extends Controller
      */
     public function send(Request $request) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'email' => 'required|email',
         ]);
-
-        if ($validator->fails()) {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $status = Password::sendResetLink(
             $request->only('email')
@@ -49,15 +44,11 @@ class PasswordController extends Controller
      */
     public function reset(Request $request) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'token'    => 'required',
             'email'    => 'required|exists:password_resets,email',
             'password' => 'required|confirmed',
         ]);
-
-        if ($validator->fails()) {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $status = Password::reset(
             $request->only('email', 'password', 'token'),

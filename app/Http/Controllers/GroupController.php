@@ -6,7 +6,6 @@ use App\Models\Group;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
@@ -40,18 +39,13 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'number' => 'required|int|min:3',
             'parent_id' => 'int',
             'course_id' => 'int',
         ]);
-
-        if ($validator->fails())
-        {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $group = new Group();
         $group->number = $request->get('number');
@@ -84,17 +78,12 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'number' => 'int|min:3',
             'parent_id' => 'int',
         ]);
-
-        if ($validator->fails())
-        {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $group = $this->groupRepository->find($id);
         $group->number = $request->get('number') ?? $group->number;

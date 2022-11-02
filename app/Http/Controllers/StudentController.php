@@ -7,7 +7,6 @@ use App\Repositories\StudentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -43,7 +42,7 @@ class StudentController extends Controller
      */
     public function create(Request $request) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'firstName'  => 'required|string|max:255',
             'lastName'   => 'required|string|max:255',
             'patronymic' => 'required|string|max:255',
@@ -51,11 +50,6 @@ class StudentController extends Controller
             'email'      => 'required|email|unique:students,email',
             'password'   => 'required|confirmed|min:5'
         ]);
-
-        if ($validator->fails())
-        {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $student = new Student();
         $student->firstName = $request->get('firstName');
@@ -95,18 +89,13 @@ class StudentController extends Controller
      */
     public function update(Request $request, int $id) : JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'firstName'  => 'string|max:255',
             'lastName'   => 'string|max:255',
             'patronymic' => 'string|max:255',
             'birthDate'  => 'date',
             'email'      => 'email|unique:students,email',
         ]);
-
-        if($validator->fails())
-        {
-            return new JsonResponse($validator->errors(), JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $student = $this->studentRepository->find($id);
         $student->firstName = $request->get('firstName') ?? $student->firstName;

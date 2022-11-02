@@ -61,7 +61,7 @@ class AuthController extends Controller
               $this->authorize('checkIfAuth',[self::class]);
           }*/
 
-        $request->validate([
+        $this->validate($request, [
             'email'    => 'required|string',
             'password' => 'required|string',
         ]);
@@ -90,9 +90,10 @@ class AuthController extends Controller
      */
     public function downloadRegistrationFile(Request $request) : JsonResponse
     {
-        $request->validate([
+        $this->validate($request, [
             'file' => 'max:500|mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'
         ]);
+
         /**
          * @var \Illuminate\Http\UploadedFile $file
          */
