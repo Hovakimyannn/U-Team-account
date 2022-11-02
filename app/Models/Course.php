@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\CourseDegreeEnum;
+use App\Enums\CourseTypeEnum;
 use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 /**
  * @method static exists()
  *
- *  * @property mixed        $number
- *  * @property mixed        $degree
- *  * @property mixed        $type
+ *  * @property mixed $number
+ *  * @property mixed $degree
+ *  * @property mixed $type
  */
 class Course extends Model
 {
@@ -34,6 +36,11 @@ class Course extends Model
         'number',
         'degree',
         'type'
+    ];
+
+    protected $casts = [
+        'degree' => CourseDegreeEnum::class,
+        'type'   => CourseTypeEnum::class,
     ];
 
     /**
