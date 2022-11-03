@@ -22,5 +22,4 @@ class Teachable extends Model
      * @var array
      */
     protected $fillable = [];
-
 }

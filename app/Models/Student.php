@@ -68,16 +68,25 @@ class Student extends Authenticatable
         'course',
     ];
 
+    /**
+     * @return BelongsToMany
+     */
     public function groups() : BelongsToMany
     {
         return $this->belongsToMany(Group::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function course() : BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function department() : BelongsTo
     {
         return $this->belongsTo(Department::class);

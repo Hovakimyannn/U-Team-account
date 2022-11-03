@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *  * @property mixed        $name
- *  * @property mixed        $institute_id
+ *  * @property mixed $name
+ *  * @property mixed $institute_id
  */
 class Department extends Model
 {
@@ -34,7 +34,7 @@ class Department extends Model
     /**
      * @return BelongsTo
      */
-    public function institute() :BelongsTo
+    public function institute() : BelongsTo
     {
         return $this->belongsTo(Institute::class);
     }
@@ -45,5 +45,21 @@ class Department extends Model
     public function courses() : HasMany
     {
         return $this->hasMany(Course::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function students() : HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function teachers() : HasMany
+    {
+        return $this->hasMany(Teacher::class);
     }
 }

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
- *  * @property mixed        $number
- *  * @property mixed        $parentId
+ *  * @property mixed $number
+ *  * @property mixed $parentId
  */
 class Group extends Model
 {
@@ -39,13 +41,35 @@ class Group extends Model
         return $this->morphToMany(Teacher::class, 'teachable');
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function students() : BelongsToMany
     {
         return $this->belongsToMany(Student::class);
     }
 
-    public function course() :BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function course() : BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function children() : HasMany
+    {
+        return $this->hasMany(Group::class, 'parent_id', 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function parent() : HasOne
+    {
+        return $this->hasOne(Group::class, 'parent_id', 'id');
     }
 }
