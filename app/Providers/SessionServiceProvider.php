@@ -26,17 +26,4 @@ class SessionServiceProvider extends BaseSessionServiceProvider
             });
         });
     }
-
-
-    /**
-     * Register the session manager instance.
-     *
-     * @return void
-     */
-    protected function registerSessionManager()
-    {
-        $this->app->singleton('session', function ($app) {
-            return new SessionManager($app);
-        });
-    }
 }

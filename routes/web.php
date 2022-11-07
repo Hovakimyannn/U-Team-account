@@ -10,7 +10,6 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\Uid\Factory\NameBasedUuidFactory;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,10 +30,14 @@ Route::controller(AuthController::class)
     ->group(function () {
         Route::post('/registration-file', 'downloadRegistrationFile')
             ->middleware('can:isAdmin,\App\Models\Admin');
-        Route::get('/user', 'getCurrentUser');// no policy
+
+        Route::get('/user', 'getCurrentUser')
+        ->middleware('auth:web');// no policy
+
         Route::post('/{role}/login', 'login')
             ->where('role', '^(student|admin|teacher)')
             ->middleware('guest');
+
         Route::post('/logout', 'logout'); // no policy
     });
 

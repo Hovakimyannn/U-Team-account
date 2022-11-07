@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
-use App\Http\Controllers\AuthController;
-use App\Policies\AuthControllerPolicy;
+use App\Services\Auth\MultiGuard;
+use App\Services\Auth\MultiUserProvider;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+
+//use App\Policies\AuthControllerPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        AuthController::class => AuthControllerPolicy::class,
+//        AuthController::class => AuthControllerPolicy::class,
     ];
 
     /**
@@ -26,5 +29,16 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+      /*  Auth::provider('multiUser', function (Application $app, array $config) {
+            return new MultiUserProvider($app['hash']);
+        });*/
+
+        Auth::extend('multi', function (Application $app, $name, array $config) {
+            return new MultiGuard(
+                $name,
+                new MultiUserProvider($app['hash']),
+                $this->app['session.store']
+            );
+        });
     }
 }

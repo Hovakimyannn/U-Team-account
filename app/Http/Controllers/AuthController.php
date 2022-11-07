@@ -27,7 +27,7 @@ class AuthController extends Controller
      */
     public function __construct(StudentRepository $studentRepository)
     {
-        $this->studentRepository = $studentRepository;
+//        $this->studentRepository = $studentRepository;
     }
 
     /**
@@ -67,7 +67,7 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-
+        $credentials['role'] = $request->role;
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();
