@@ -53,10 +53,11 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(Request $request) : JsonResponse
+    public function login(Request $request, string $role) : JsonResponse
     {
-        /*  if (Auth::check())
+        /*if (Auth::check())
           {
               $this->authorize('checkIfAuth',[self::class]);
           }*/
@@ -66,8 +67,8 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $credentials = $request->only('email', 'password');
-        $credentials['role'] = $request->role;
+        $credentials = array_merge($request->only('email', 'password'), ['role' => $role]);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();

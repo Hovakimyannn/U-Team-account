@@ -18,13 +18,13 @@ class MultiUserProvider extends EloquentUserProvider
         parent::__construct($hasher, $model);
     }
 
-    public function retrieveById($credentials)
+    public function retrieveById($identifier)
     {
-        $this->setModel($credentials['role']);
+        $this->setModel($identifier['role']);
         $model = $this->createModel();
 
         return $this->newModelQuery($model)
-            ->where($model->getAuthIdentifierName(), $credentials['id'])
+            ->where($model->getAuthIdentifierName(), $identifier['id'])
             ->first();
     }
 
@@ -43,7 +43,7 @@ class MultiUserProvider extends EloquentUserProvider
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials) : ?Authenticatable
     {
         $this->setModel($credentials['role']);
 

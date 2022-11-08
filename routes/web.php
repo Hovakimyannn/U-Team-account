@@ -84,7 +84,7 @@ Route::controller(DepartmentController::class)
     });
 
 Route::controller(AdminController::class)
-    ->middleware('auth.session')
+    ->middleware('auth:web')
     ->prefix('/admin')
     ->group(function () {
         Route::get('/getAll', 'getAll');//
@@ -95,7 +95,7 @@ Route::controller(AdminController::class)
     });
 
 Route::controller(StudentController::class)
-    ->middleware('auth.session')
+    ->middleware('auth:web')
     ->prefix('/student')
     ->group(function () {
         Route::get('/getAll', 'getAll');//admin
