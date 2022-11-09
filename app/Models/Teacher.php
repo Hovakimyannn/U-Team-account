@@ -63,12 +63,6 @@ class Teacher extends Authenticatable
         'position'          => TeacherPositionEnum::class,
     ];
 
-    protected $with = [
-        'courses',
-        'groups',
-    ];
-
-
     public function courses()
     {
         return $this->morphedByMany(Course::class, 'teachable');

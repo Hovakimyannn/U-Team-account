@@ -8,7 +8,6 @@ use App\Models\Course;
 use App\Repositories\CourseRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Js;
 use Illuminate\Validation\Rules\Enum;
 
 class CourseController extends Controller
@@ -42,11 +41,12 @@ class CourseController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request) : JsonResponse
     {
         $this->validate($request, [
-            'number'        => ['required','int','min:3'],
+            'number'        => ['required', 'int', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
             'type'          => [new Enum(CourseTypeEnum::class), 'required', 'string'],
             'department_id' => ['required', 'exists:departments,id'],
@@ -83,22 +83,23 @@ class CourseController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
         $this->validate($request, [
-            'number'        => ['int','min:3'],
+            'number'        => ['int', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'string'],
             'type'          => [new Enum(CourseTypeEnum::class), 'string'],
             'department_id' => ['exists:departments,id'],
 
         ]);
 
+        /** @var \App\Models\Course $course */
         $course = $this->courseRepository->find($id);
-        $course->number = $request->get('number') ?? $course->number;
-        $course->degree = $request->get('degree') ?? $course->degree;
-        $course->type = $request->get('type') ?? $course->type;
-
+        $course->number = $request->get('number', $course->number);
+        $course->degree = $request->get('degree', $course->degree);
+        $course->type = $request->get('type', $course->type);
         $course->save();
 
         return new JsonResponse($course, JsonResponse::HTTP_OK);
