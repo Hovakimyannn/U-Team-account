@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Institute;
 use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
@@ -100,5 +101,18 @@ class InstituteController extends Controller
         $institute->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDepartments(int $id) : JsonResponse
+    {
+       return new JsonResponse(
+           $this->instituteRepository->getRelatedModels($id, 'departments'),
+           JsonResponse::HTTP_OK
+       );
     }
 }

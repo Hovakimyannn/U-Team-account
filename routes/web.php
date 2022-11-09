@@ -43,21 +43,25 @@ Route::controller(AuthController::class)
 
 Route::controller(InstituteController::class)
     ->prefix('/institute')
-    ->middleware('can:isAdmin,\App\Models\Admin')
+    ->middleware('auth:web')
+//    ->middleware('can:isAdmin,\App\Models\Admin')
     ->group(function () {
-        Route::get('/getAll', 'index');
+        Route::get('/get', 'index');
         Route::post('/create', 'create');
-        Route::get('/get', 'get');
-        Route::patch('/edit', 'update');
-        Route::delete('/delete', 'destroy');
+        Route::get('/get/{id}', 'show');
+        Route::get('/get/{id}/departments', 'departments');
+        Route::patch('/edit/{id}', 'update');
+        Route::delete('/delete/{id}', 'destroy');
     });
 
 Route::controller(GroupController::class)
     ->prefix('/group')
     ->group(function () {
-        Route::get('/getAll', 'getAll');// not student
+        Route::get('/get', 'getAll');// not student
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
+        Route::get('/get/{id}/students', 'getStudents');
+        Route::get('/get/{id}/teachers', 'getTeachers');
         Route::patch('/edit/{id}', 'update');// admin
         Route::delete('/delete/{id}', 'destroy');//admin
     });
@@ -65,9 +69,12 @@ Route::controller(GroupController::class)
 Route::controller(CourseController::class)
     ->prefix('/course')
     ->group(function () {
-        Route::get('/getAll', 'getAll');// not student
+        Route::get('/get', 'getAll');// not student
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
+        Route::get('/get/{id}/groups', 'getGroups');
+        Route::get('/get/{id}/students', 'getStudents');
+        Route::get('/get/{id}/teachers', 'getTeachers');
         Route::patch('/edit/{id}', 'update');// admin
         Route::delete('/delete/{id}', 'destroy');//admin
     });
@@ -75,9 +82,11 @@ Route::controller(CourseController::class)
 Route::controller(DepartmentController::class)
     ->prefix('/department')
     ->group(function () {
-        Route::get('/getAll', 'index');// admin
+        Route::get('/get', 'index');// admin
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// admin
+        Route::get('/get/{id}/courses', 'getCourses');
+        Route::get('/get/{id}/teachers', 'getTeachers');
         Route::patch('/edit/{id}', 'update');//admin
         Route::delete('/delete/{id}', 'destroy');//admin
 

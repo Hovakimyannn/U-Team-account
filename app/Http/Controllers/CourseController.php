@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Repositories\CourseRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Js;
 use Illuminate\Validation\Rules\Enum;
 
 class CourseController extends Controller
@@ -117,4 +118,34 @@ class CourseController extends Controller
 
         return new JsonResponse('deleted', JsonResponse::HTTP_NO_CONTENT);
     }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getGroups(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->courseRepository->getRelatedModels($id, 'groups'),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    public function getStudents(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->courseRepository->getRelatedModels($id, 'students'),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    public function getTeachers(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->courseRepository->getRelatedModels($id, 'teachers'),
+            JsonResponse::HTTP_OK
+        );
+    }
+
 }

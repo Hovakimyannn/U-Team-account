@@ -49,8 +49,22 @@ class BaseRepository
      */
     public function findUserByEmail(string $email) : ?Model
     {
-         return $this->model->newQuery()
-             ->where('email', $email)
-             ->first();
+        return $this->model->newQuery()
+            ->where('email', $email)
+            ->first();
+    }
+
+    /**
+     *
+     * Get Related Models
+     *
+     * @param int    $id
+     * @param string $relation
+     *
+     * @return \Illuminate\Support\Collection|null
+     */
+    public function getRelatedModels(int $id, string $relation) : ?Collection
+    {
+        return $this->find($id)->$relation;
     }
 }

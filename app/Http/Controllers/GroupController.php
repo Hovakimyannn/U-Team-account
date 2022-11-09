@@ -109,4 +109,30 @@ class GroupController extends Controller
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getStudents(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->groupRepository->getRelatedModels($id, 'students'),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTeachers(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->groupRepository->getRelatedModels($id, 'teachers'),
+            JsonResponse::HTTP_OK
+        );
+    }
 }

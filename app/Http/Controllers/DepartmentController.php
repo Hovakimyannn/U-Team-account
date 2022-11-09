@@ -104,4 +104,30 @@ class DepartmentController extends Controller
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCourses(int $id): JsonResponse
+    {
+        return new JsonResponse(
+            $this->departmentRepository->getRelatedModels($id, 'courses'),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTeachers(int $id) : JsonResponse
+    {
+        return new JsonResponse(
+            $this->departmentRepository->getRelatedModels($id, 'teachers'),
+            JsonResponse::HTTP_OK
+        );
+    }
 }
