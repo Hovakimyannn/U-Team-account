@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TeacherPositionEnum;
-use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
 
 class TeacherController extends Controller
@@ -36,41 +34,6 @@ class TeacherController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create(Request $request) : JsonResponse
-    {
-        $this->validate($request, [
-            'firstName'     => ['required', 'string', 'max:255'],
-            'lastName'      => ['required', 'string', 'max:255'],
-            'patronymic'    => ['required', 'string', 'max:255'],
-            'birthDate'     => ['required', 'date'],
-            'email'         => ['required', 'email', 'unique:students,email'],
-            'password'      => ['required', 'confirmed', 'min:5'],
-            'position'      => [new Enum(TeacherPositionEnum::class), 'required', 'string'],
-            'department_id' => ['required', 'int', 'exists:departments,id'],
-        ]);
-
-        $teacher = new Teacher();
-        $teacher->firstName = $request->get('firstName');
-        $teacher->lastName = $request->get('lastName');
-        $teacher->patronymic = $request->get('patronymic');
-        $teacher->birthDate = $request->get('birthDate');
-        $teacher->email = $request->get('email');
-        $teacher->position = $request->get('position');
-        $teacher->password = Hash::make($request->get('password'));
-
-        $teacher->department()->associate($request->get('department_id'));
-        $teacher->save();
-
-        return new JsonResponse($teacher, JsonResponse::HTTP_CREATED);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -89,6 +52,7 @@ class TeacherController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -102,15 +66,14 @@ class TeacherController extends Controller
             'department_id' => ['int', 'exists:departments,id'],
         ]);
 
+        /** @var \App\Models\Teacher $teacher */
         $teacher = $this->teacherRepository->find($id);
-
         $teacher->firstName = $request->get('firstName', $teacher->firstName);
         $teacher->lastName = $request->get('lastName', $teacher->lastName);
         $teacher->patronymic = $request->get('patronymic', $teacher->patronymic);
         $teacher->birthDate = $request->get('birthDate', $teacher->birthDate);
         $teacher->email = $request->get('email', $teacher->email);
         $teacher->position = $request->get('position', $teacher->position);
-
         $teacher->save();
 
         return new JsonResponse($teacher, JsonResponse::HTTP_OK);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Repositories\StudentRepository;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
@@ -16,19 +15,6 @@ use Illuminate\Support\Facades\Storage;
 class AuthController extends Controller
 {
     use RecordMessage;
-
-    /**
-     * @var \App\Repositories\StudentRepository
-     */
-    protected StudentRepository $studentRepository;
-
-    /**
-     * @param \App\Repositories\StudentRepository $studentRepository
-     */
-    public function __construct(StudentRepository $studentRepository)
-    {
-//        $this->studentRepository = $studentRepository;
-    }
 
     /**
      * @param \Illuminate\Http\Request $request
@@ -51,17 +37,13 @@ class AuthController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
+     * @param string                   $role
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request, string $role) : JsonResponse
     {
-        /*if (Auth::check())
-          {
-              $this->authorize('checkIfAuth',[self::class]);
-          }*/
-
         $this->validate($request, [
             'email'    => ['required', 'string'],
             'password' => ['required', 'string'],
@@ -88,6 +70,7 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function downloadRegistrationFile(Request $request) : JsonResponse
     {
@@ -95,9 +78,7 @@ class AuthController extends Controller
             'file' => ['max:500', 'mimes:ods,xls,xlsx,xltx,xlsm,xltm,xlam,xlsb'],
         ]);
 
-        /**
-         * @var \Illuminate\Http\UploadedFile $file
-         */
+        /** @var \Illuminate\Http\UploadedFile $file */
         $file = $request->file;
 
         $path = Storage::path($file->getClientOriginalName());
@@ -128,11 +109,9 @@ class AuthController extends Controller
         $user = new Admin();
         $user->firstName = $userData->firstName;
         $user->lastName = $userData->lastName;
-        $user->fatherName = $userData->fatherName;
+        $user->patronymic = $userData->patronymic;
         $user->email = $userData->email;
         $user->password = Hash::make($userData->password);
-        $user->assignRole($userData->role);
-        $user->assignDepartment($userData->department);
         $user->save();
 
         return $user;
@@ -146,9 +125,7 @@ class AuthController extends Controller
     public function logout(Request $request) : JsonResponse
     {
         Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return new JsonResponse('', JsonResponse::HTTP_NO_CONTENT);

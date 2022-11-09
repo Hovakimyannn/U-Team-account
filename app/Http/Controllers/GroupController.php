@@ -38,6 +38,7 @@ class GroupController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request) : JsonResponse
     {
@@ -49,10 +50,8 @@ class GroupController extends Controller
 
         $group = new Group();
         $group->number = $request->get('number');
-        $group->parentId = $request->get('parentId') ?? null;
-
+        $group->parentId = $request->get('parentId');
         $group->course()->associate($request->get('courseId'));
-
         $group->save();
 
         return new JsonResponse($group, JsonResponse::HTTP_CREATED);
@@ -77,6 +76,7 @@ class GroupController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -86,10 +86,10 @@ class GroupController extends Controller
             'course_id' => ['int', 'exists:courses,id'],
         ]);
 
+        /** @var \App\Models\Group $group */
         $group = $this->groupRepository->find($id);
         $group->number = $request->get('number', $group->number);
         $group->parentId = $request->get('parentId', $group->parentId);
-
         $group->save();
 
         return new JsonResponse($group, JsonResponse::HTTP_OK);

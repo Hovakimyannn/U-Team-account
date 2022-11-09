@@ -56,7 +56,6 @@ class CourseController extends Controller
         $course->number = $request->get('number');
         $course->degree = $request->get('degree');
         $course->type = $request->get('type');
-
         $course->department()->associate($request->get('department_id'));
         $course->save();
 
@@ -92,7 +91,6 @@ class CourseController extends Controller
             'degree'        => [new Enum(CourseDegreeEnum::class), 'string'],
             'type'          => [new Enum(CourseTypeEnum::class), 'string'],
             'department_id' => ['exists:departments,id'],
-
         ]);
 
         /** @var \App\Models\Course $course */
@@ -133,6 +131,11 @@ class CourseController extends Controller
         );
     }
 
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getStudents(int $id) : JsonResponse
     {
         return new JsonResponse(
@@ -141,6 +144,11 @@ class CourseController extends Controller
         );
     }
 
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTeachers(int $id) : JsonResponse
     {
         return new JsonResponse(
@@ -148,5 +156,4 @@ class CourseController extends Controller
             JsonResponse::HTTP_OK
         );
     }
-
 }

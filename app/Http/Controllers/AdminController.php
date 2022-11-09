@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Repositories\AdminRepository;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -37,6 +37,7 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request) : JsonResponse
     {
@@ -54,7 +55,6 @@ class AdminController extends Controller
         $admin->patronymic = $request->get('patronymic');
         $admin->email = $request->get('email');
         $admin->password = Hash::make($request->get('password'));
-
         $admin->save();
 
         return new JsonResponse($admin, JsonResponse::HTTP_CREATED);
@@ -79,6 +79,7 @@ class AdminController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -89,13 +90,12 @@ class AdminController extends Controller
             'email'      => ['email', 'unique:students,email'],
         ]);
 
+        /** @var \App\Models\Admin $admin */
         $admin = $this->adminRepository->find($id);
-
-        $admin->firstName = $request->get('firstName') ?? $admin->firstName;
-        $admin->lastName = $request->get('lastName') ?? $admin->lastName;
-        $admin->patronymic = $request->get('patronymic') ?? $admin->patronymic;
-        $admin->email = $request->get('email') ?? $admin->email;
-
+        $admin->firstName = $request->get('firstName', $admin->firstName);
+        $admin->lastName = $request->get('lastName', $admin->lastName);
+        $admin->patronymic = $request->get('patronymic', $admin->patronymic);
+        $admin->email = $request->get('email', $admin->email);
         $admin->save();
 
         return new JsonResponse($admin, JsonResponse::HTTP_OK);

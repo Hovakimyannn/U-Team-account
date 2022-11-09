@@ -15,6 +15,7 @@ class PasswordController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function send(Request $request) : JsonResponse
     {
@@ -41,6 +42,7 @@ class PasswordController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function reset(Request $request) : JsonResponse
     {

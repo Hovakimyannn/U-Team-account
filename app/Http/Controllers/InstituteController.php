@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
 use App\Models\Institute;
 use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
@@ -39,6 +38,7 @@ class InstituteController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request) : JsonResponse
     {
@@ -72,6 +72,7 @@ class InstituteController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -96,7 +97,6 @@ class InstituteController extends Controller
      */
     public function destroy(int $id) : JsonResponse
     {
-        /** @var Institute $institute */
         $institute = $this->instituteRepository->find($id);
         $institute->delete();
 

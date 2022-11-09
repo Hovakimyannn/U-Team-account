@@ -34,42 +34,6 @@ class StudentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create(Request $request) : JsonResponse
-    {
-        $this->validate($request, [
-            'firstName'     => ['required', 'string', 'max:255'],
-            'lastName'      => ['required', 'string', 'max:255'],
-            'patronymic'    => ['required', 'string', 'max:255'],
-            'birthDate'     => ['required', 'date'],
-            'email'         => ['required', 'email', 'unique:students,email'],
-            'password'      => ['required', 'confirmed', 'min:5'],
-            'department_id' => ['required', 'int', 'exists:departments,id'],
-            'course_id'     => ['required', 'int', 'exists:courses,id']
-        ]);
-
-        $student = new Student();
-        $student->firstName = $request->get('firstName');
-        $student->lastName = $request->get('lastName');
-        $student->patronymic = $request->get('patronymic');
-        $student->birthDate = $request->get('birthDate');
-        $student->email = $request->get('email');
-        $student->password = Hash::make($request->get('password'));
-
-        $student->department()->associate($request->get('department_id'));
-        $student->course()->associate($request->get('course_id'));
-
-        $student->save();
-
-        return new JsonResponse($student, JsonResponse::HTTP_CREATED);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -88,6 +52,7 @@ class StudentController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -99,17 +64,15 @@ class StudentController extends Controller
             'email'         => ['email', 'unique:students,email'],
             'department_id' => ['int', 'exists:departments,id'],
             'course_id'     => ['int', 'exists:courses,id']
-
-
         ]);
 
+        /** @var \App\Models\Student $student */
         $student = $this->studentRepository->find($id);
         $student->firstName = $request->get('firstName', $student->firstName);
         $student->lastName = $request->get('lastName',$student->lastName);
         $student->patronymic = $request->get('patronymic', $student->patronymic);
         $student->birthDate = $request->get('birthDate', $student->birthDate);
         $student->email = $request->get('email', $student->email);
-
         $student->save();
 
         return new JsonResponse($student, JsonResponse::HTTP_OK);

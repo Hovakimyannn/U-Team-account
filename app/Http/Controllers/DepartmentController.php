@@ -38,6 +38,7 @@ class DepartmentController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request) : JsonResponse
     {
@@ -48,9 +49,7 @@ class DepartmentController extends Controller
 
         $department = new Department();
         $department->name = $request->get('name');
-
         $department->institute()->associate($request->get('institute_id'));
-
         $department->save();
 
         return new JsonResponse($department, JsonResponse::HTTP_CREATED);
@@ -75,6 +74,7 @@ class DepartmentController extends Controller
      * @param int                      $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
@@ -83,6 +83,7 @@ class DepartmentController extends Controller
             'institute_id' => ['exists:institutes,id'],
         ]);
 
+        /** @var \App\Models\Department $department */
         $department = $this->departmentRepository->find($id);
         $department->name = $request->get('name', $department->name);
         $department->save();
@@ -110,7 +111,7 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCourses(int $id): JsonResponse
+    public function getCourses(int $id) : JsonResponse
     {
         return new JsonResponse(
             $this->departmentRepository->getRelatedModels($id, 'courses'),
