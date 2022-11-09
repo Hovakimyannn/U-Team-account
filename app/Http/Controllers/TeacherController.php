@@ -104,12 +104,12 @@ class TeacherController extends Controller
 
         $teacher = $this->teacherRepository->find($id);
 
-        $teacher->firstName = $request->get('firstName') ?? $teacher->firstName;
-        $teacher->lastName = $request->get('lastName') ?? $teacher->lastName;
-        $teacher->patronymic = $request->get('patronymic') ?? $teacher->patronymic;
-        $teacher->birthDate = $request->get('birthDate') ?? $teacher->birthDate;
-        $teacher->email = $request->get('email') ?? $teacher->email;
-        $teacher->position = $request->get('position') ?? $teacher->position;
+        $teacher->firstName = $request->get('firstName', $teacher->firstName);
+        $teacher->lastName = $request->get('lastName', $teacher->lastName);
+        $teacher->patronymic = $request->get('patronymic', $teacher->patronymic);
+        $teacher->birthDate = $request->get('birthDate', $teacher->birthDate);
+        $teacher->email = $request->get('email', $teacher->email);
+        $teacher->position = $request->get('position', $teacher->position);
 
         $teacher->save();
 
