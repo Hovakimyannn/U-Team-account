@@ -87,8 +87,8 @@ class GroupController extends Controller
         ]);
 
         $group = $this->groupRepository->find($id);
-        $group->number = $request->get('number') ?? $group->number;
-        $group->parentId = $request->get('parentId') ?? $group->parentId;
+        $group->number = $request->get('number', $group->number);
+        $group->parentId = $request->get('parentId', $group->parentId);
 
         $group->save();
 

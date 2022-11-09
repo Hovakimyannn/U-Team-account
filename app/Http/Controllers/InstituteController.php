@@ -81,7 +81,7 @@ class InstituteController extends Controller
 
         /** @type  Institute $institute */
         $institute = $this->instituteRepository->find($id);
-        $institute->name = $request->get('name');
+        $institute->name = $request->get('name', $institute->name);
         $institute->save();
 
         return new JsonResponse($institute);

@@ -84,7 +84,7 @@ class DepartmentController extends Controller
         ]);
 
         $department = $this->departmentRepository->find($id);
-        $department->name = $request->get('name');
+        $department->name = $request->get('name', $department->name);
         $department->save();
 
         return new JsonResponse($department, JsonResponse::HTTP_OK);

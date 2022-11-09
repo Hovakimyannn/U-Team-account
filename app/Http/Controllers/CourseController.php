@@ -95,9 +95,9 @@ class CourseController extends Controller
         ]);
 
         $course = $this->courseRepository->find($id);
-        $course->number = $request->get('number') ?? $course->number;
-        $course->degree = $request->get('degree') ?? $course->degree;
-        $course->type = $request->get('type') ?? $course->type;
+        $course->number = $request->get('number', $course->number);
+        $course->degree = $request->get('degree', $course->degree);
+        $course->type = $request->get('type',$course->type);
 
         $course->save();
 

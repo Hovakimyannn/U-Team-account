@@ -104,11 +104,11 @@ class StudentController extends Controller
         ]);
 
         $student = $this->studentRepository->find($id);
-        $student->firstName = $request->get('firstName') ?? $student->firstName;
-        $student->lastName = $request->get('lastName') ?? $student->lastName;
-        $student->patronymic = $request->get('patronymic') ?? $student->patronymic;
-        $student->birthDate = $request->get('birthDate') ?? $student->birthDate;
-        $student->email = $request->get('email') ?? $student->email;
+        $student->firstName = $request->get('firstName', $student->firstName);
+        $student->lastName = $request->get('lastName',$student->lastName);
+        $student->patronymic = $request->get('patronymic', $student->patronymic);
+        $student->birthDate = $request->get('birthDate', $student->birthDate);
+        $student->email = $request->get('email', $student->email);
 
         $student->save();
 
