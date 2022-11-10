@@ -10,6 +10,8 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MultiUserProvider extends EloquentUserProvider
 {
@@ -18,7 +20,12 @@ class MultiUserProvider extends EloquentUserProvider
         parent::__construct($hasher, $model);
     }
 
-    public function retrieveById($identifier)
+    /**
+     * @param $identifier
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function retrieveById($identifier) : Model|null
     {
         $this->setModel($identifier['role']);
         $model = $this->createModel();
@@ -27,15 +34,7 @@ class MultiUserProvider extends EloquentUserProvider
             ->where($model->getAuthIdentifierName(), $identifier['id'])
             ->first();
     }
-
-    public function retrieveByToken($identifier, $token)
-    {
-    }
-
-    public function updateRememberToken(Authenticatable $user, $token)
-    {
-    }
-
+    
     /**
      * Retrieve a user by the given credentials.
      *
@@ -87,7 +86,8 @@ class MultiUserProvider extends EloquentUserProvider
         $this->model = match ($model) {
             'student' => Student::class,
             'teacher' => Teacher::class,
-            'admin' => Admin::class
+            'admin' => Admin::class,
+            default => new ModelNotFoundException('User type not found')
         };
 
         return $this;
@@ -98,8 +98,8 @@ class MultiUserProvider extends EloquentUserProvider
      *
      * @return string
      */
-    public function getRole(): string
+    public function getRole() : string
     {
-        return strtolower(last(explode('\\',$this->model)));
+        return strtolower(last(explode('\\', $this->model)));
     }
 }

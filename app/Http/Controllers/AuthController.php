@@ -51,7 +51,7 @@ class AuthController extends Controller
 
         $credentials = array_merge($request->only('email', 'password'), ['role' => $role]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->get('remember'))) {
             $request->session()->regenerate();
             $user = Auth::user();
 

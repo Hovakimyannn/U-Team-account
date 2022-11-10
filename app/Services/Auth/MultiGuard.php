@@ -11,85 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MultiGuard extends SessionGuard
 {
-
     /**
-     * The name of the guard. Typically "web".
+     * The user provider implementation.
      *
-     * Corresponds to guard name in authentication configuration.
-     *
-     * @var string
+     * @var \App\Services\Auth\MultiUserProvider $provider
      */
-    protected $name;
-
-    /**
-     * The user we last attempted to retrieve.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    protected $lastAttempted;
-
-    /**
-     * Indicates if the user was authenticated via a recaller cookie.
-     *
-     * @var bool
-     */
-    protected $viaRemember = false;
-
-    /**
-     * The number of minutes that the "remember me" cookie should be valid for.
-     *
-     * @var int
-     */
-    protected $rememberDuration = 576000;
-
-    /**
-     * The session used by the guard.
-     *
-     * @var \Illuminate\Contracts\Session\Session
-     */
-    protected $session;
-
-    /**
-     * The Illuminate cookie creator service.
-     *
-     * @var \Illuminate\Contracts\Cookie\QueueingFactory
-     */
-    protected $cookie;
-
-    /**
-     * The request instance.
-     *
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-
-    /**
-     * The event dispatcher instance.
-     *
-     * @var \Illuminate\Contracts\Events\Dispatcher
-     */
-    protected $events;
-
-    /**
-     * The timebox instance.
-     *
-     * @var \Illuminate\Support\Timebox
-     */
-    protected $timebox;
-
-    /**
-     * Indicates if the logout method has been called.
-     *
-     * @var bool
-     */
-    protected $loggedOut = false;
-
-    /**
-     * Indicates if a token user retrieval has been attempted.
-     *
-     * @var bool
-     */
-    protected $recallAttempted = false;
+    protected $provider;
 
     public function __construct($name,
                                 MultiUserProvider $provider,
@@ -98,6 +25,8 @@ class MultiGuard extends SessionGuard
                                 Timebox $timebox = null)
     {
         parent::__construct($name, $provider, $session, $request, $timebox);
+
+        $this->setCookieJar(app('cookie'));
     }
 
     /**
@@ -182,7 +111,7 @@ class MultiGuard extends SessionGuard
      *
      * @return void
      */
-    public function login(AuthenticatableContract $user, $remember = false)
+    public function login(AuthenticatableContract $user, $remember = false) : void
     {
         $this->updateSession($user->getAuthIdentifier(), $this->provider->getRole());
 
