@@ -28,9 +28,9 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAll() : JsonResponse
+    public function index() : JsonResponse
     {
-        return new JsonResponse($this->studentRepository->findAll());
+        return new JsonResponse($this->studentRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
     /**

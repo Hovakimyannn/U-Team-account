@@ -29,9 +29,12 @@ class CourseController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function getAll() : JsonResponse
+    public function index() : JsonResponse
     {
+        $this->authorize('index', Course::class);
+
         return new JsonResponse($this->courseRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
@@ -42,9 +45,12 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Request $request) : JsonResponse
     {
+        $this->authorize('create', Course::class);
+
         $this->validate($request, [
             'number'        => ['required', 'int', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
@@ -69,9 +75,12 @@ class CourseController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(int $id) : JsonResponse
     {
+        $this->authorize('show', Course::class);
+
         return new JsonResponse($this->courseRepository->find($id), JsonResponse::HTTP_OK);
     }
 
@@ -83,9 +92,12 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
+        $this->authorize('update', Course::class);
+
         $this->validate($request, [
             'number'        => ['int', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'string'],
@@ -109,9 +121,12 @@ class CourseController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(int $id) : JsonResponse
     {
+        $this->authorize('destroy', Course::class);
+
         $course = $this->courseRepository->find($id);
         $course->delete();
 
@@ -122,9 +137,12 @@ class CourseController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function getGroups(int $id) : JsonResponse
     {
+        $this->authorize('getGroups', Course::class);
+
         return new JsonResponse(
             $this->courseRepository->getRelatedModels($id, 'groups'),
             JsonResponse::HTTP_OK
@@ -135,9 +153,12 @@ class CourseController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function getStudents(int $id) : JsonResponse
     {
+        $this->authorize('getStudents', Course::class);
+
         return new JsonResponse(
             $this->courseRepository->getRelatedModels($id, 'students'),
             JsonResponse::HTTP_OK
@@ -148,9 +169,12 @@ class CourseController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function getTeachers(int $id) : JsonResponse
     {
+        $this->authorize('getTeachers', Course::class);
+
         return new JsonResponse(
             $this->courseRepository->getRelatedModels($id, 'teachers'),
             JsonResponse::HTTP_OK

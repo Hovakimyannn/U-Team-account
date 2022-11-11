@@ -6,6 +6,7 @@ use App\Models\Institute;
 use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\In;
 
 class InstituteController extends Controller
 {
@@ -26,10 +27,13 @@ class InstituteController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index() : JsonResponse
     {
-        return new JsonResponse($this->instituteRepository->findAll());
+        $this->authorize('index', Institute::class);
+
+        return new JsonResponse($this->instituteRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -39,9 +43,12 @@ class InstituteController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Request $request) : JsonResponse
     {
+        $this->authorize('create', Institute::class);
+
         $this->validate($request, [
             'name' => ['required', 'string', 'max:255']
         ]);
@@ -59,9 +66,12 @@ class InstituteController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(int $id) : JsonResponse
     {
+        $this->authorize('show', Institute::class);
+
         return new JsonResponse($this->instituteRepository->find($id));
     }
 
@@ -73,9 +83,12 @@ class InstituteController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, int $id) : JsonResponse
     {
+        $this->authorize('update', Institute::class);
+
         $this->validate($request, [
             'name' => ['string', 'max:255']
         ]);
@@ -94,9 +107,12 @@ class InstituteController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(int $id) : JsonResponse
     {
+        $this->authorize('destroy', Institute::class);
+
         $institute = $this->instituteRepository->find($id);
         $institute->delete();
 
@@ -107,10 +123,13 @@ class InstituteController extends Controller
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function getDepartments(int $id) : JsonResponse
     {
-       return new JsonResponse(
+        $this->authorize('getDepartments', Institute::class);
+
+        return new JsonResponse(
            $this->instituteRepository->getRelatedModels($id, 'departments'),
            JsonResponse::HTTP_OK
        );

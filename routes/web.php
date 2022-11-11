@@ -29,27 +29,26 @@ Route::get('/', function () {
 Route::controller(AuthController::class)
     ->group(function () {
         Route::post('/registration-file', 'downloadRegistrationFile')
-            ->middleware('can:isAdmin,\App\Models\Admin');
+            ->middleware('can:is_admin');
 
         Route::get('/user', 'getCurrentUser')
-        ->middleware('auth:web');// no policy
+            ->middleware('auth:web');
 
         Route::post('/{role}/login', 'login')
             ->where('role', '^(student|admin|teacher)')
             ->middleware('guest');
 
-        Route::post('/logout', 'logout'); // no policy
+        Route::post('/logout', 'logout');
     });
 
 Route::controller(InstituteController::class)
     ->prefix('/institute')
     ->middleware('auth:web')
-//    ->middleware('can:isAdmin,\App\Models\Admin')
     ->group(function () {
         Route::get('/get', 'index');
         Route::post('/create', 'create');
         Route::get('/get/{id}', 'show');
-        Route::get('/get/{id}/departments', 'departments');
+        Route::get('/get/{id}/departments', 'getDepartments');
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');
     });
@@ -57,7 +56,7 @@ Route::controller(InstituteController::class)
 Route::controller(GroupController::class)
     ->prefix('/group')
     ->group(function () {
-        Route::get('/get', 'getAll');// not student
+        Route::get('/get', 'index');
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
         Route::get('/get/{id}/students', 'getStudents');
@@ -69,7 +68,7 @@ Route::controller(GroupController::class)
 Route::controller(CourseController::class)
     ->prefix('/course')
     ->group(function () {
-        Route::get('/get', 'getAll');// not student
+        Route::get('/get', 'index');// not student
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
         Route::get('/get/{id}/groups', 'getGroups');
@@ -96,7 +95,7 @@ Route::controller(AdminController::class)
     ->middleware('auth:web')
     ->prefix('/admin')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//
+        Route::get('/get', 'index');//
         Route::post('/create', 'create');//
         Route::get('/get/{id}', 'show');//
         Route::patch('/edit/{id}', 'update');//
@@ -107,7 +106,7 @@ Route::controller(StudentController::class)
     ->middleware('auth:web')
     ->prefix('/student')
     ->group(function () {
-        Route::get('/getAll', 'getAll');//admin
+        Route::get('/get', 'index');//admin
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// no policy
         Route::patch('/edit/{id}', 'update');// admin
@@ -115,10 +114,10 @@ Route::controller(StudentController::class)
     });
 
 Route::controller(TeacherController::class) // admin
-->middleware('auth.session')
+->middleware('auth:web')
     ->prefix('/teacher')
     ->group(function () {
-        Route::get('/getAll', 'getAll');
+        Route::get('/get', 'index');
         Route::post('/create', 'create');
         Route::get('/get/{id}', 'show'); // no policy
         Route::patch('/edit/{id}', 'update');

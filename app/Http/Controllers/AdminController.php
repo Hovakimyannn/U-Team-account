@@ -28,7 +28,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAll() : JsonResponse
+    public function index() : JsonResponse
     {
         return new JsonResponse($this->adminRepository->findAll(), JsonResponse::HTTP_OK);
     }
