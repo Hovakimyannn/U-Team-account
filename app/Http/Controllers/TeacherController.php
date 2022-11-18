@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TeacherPositionEnum;
+use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
 
 class TeacherController extends Controller
@@ -55,13 +57,14 @@ class TeacherController extends Controller
     public function create(Request $request): JsonResponse
     {
         $request->validate([
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'patronymic' => 'required|string|max:255',
-            'birthDate'  => 'required|date',
-            'email'      => 'required|email|unique:students,email',
-            'password'   => 'required|confirmed|min:5',
-            'position'   => 'required'
+            'firstName'  => ['required','string','max:255'],
+            'lastName'   => ['required','string','max:255'],
+            'patronymic' => ['required','string','max:255'],
+            'birthDate'  => ['required','date'],
+            'email'      => ['required','email','unique:students,email'],
+            'password'   => ['required','confirmed','min:5'],
+            'position'   => ['required'],
+            'department_id' => ['required', 'exists:departments,id'],
         ]);
 
         $teacher = new Teacher();
