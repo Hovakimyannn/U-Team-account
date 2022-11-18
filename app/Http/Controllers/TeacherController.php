@@ -46,6 +46,41 @@ class TeacherController extends Controller
     }
 
     /**
+     *Show the form for creating a new resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request): JsonResponse
+    {
+        $request->validate([
+            'firstName'  => 'required|string|max:255',
+            'lastName'   => 'required|string|max:255',
+            'patronymic' => 'required|string|max:255',
+            'birthDate'  => 'required|date',
+            'email'      => 'required|email|unique:students,email',
+            'password'   => 'required|confirmed|min:5',
+            'position'   => 'required'
+        ]);
+
+        $teacher = new Teacher();
+        $teacher->firstName = $request->get('firstName');
+        $teacher->lastName = $request->get('lastName');
+        $teacher->patronymic = $request->get('patronymic');
+        $teacher->birthDate = $request->get('birthDate');
+        $teacher->email = $request->get('email');
+        $teacher->position = $request->get('position');
+        $teacher->password = Hash::make($request->get('password'));
+
+        $teacher->department()->associate($request->get('department_id'));
+        $teacher->save();
+
+        return new JsonResponse($teacher, JsonResponse::HTTP_CREATED);
+
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
