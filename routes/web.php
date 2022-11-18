@@ -88,7 +88,6 @@ Route::controller(DepartmentController::class)
         Route::get('/get/{id}/teachers', 'getTeachers');
         Route::patch('/edit/{id}', 'update');//admin
         Route::delete('/delete/{id}', 'destroy');//admin
-
     });
 
 Route::controller(AdminController::class)
@@ -114,7 +113,7 @@ Route::controller(StudentController::class)
     });
 
 Route::controller(TeacherController::class) // admin
-->middleware('auth:web')
+    ->middleware('auth:web')
     ->prefix('/teacher')
     ->group(function () {
         Route::get('/get', 'index');

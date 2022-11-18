@@ -112,6 +112,6 @@ class CoursePolicy
      */
     public function getTeachers(User $user) : Response
     {
-        $this->allow();
+       return $this->allow();
     }
 }
