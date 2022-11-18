@@ -55,12 +55,15 @@ class StudentController extends Controller
     public function create(Request $request) : JsonResponse
     {
         $request->validate([
-            'firstName'  => 'required|string|max:255',
-            'lastName'   => 'required|string|max:255',
-            'patronymic' => 'required|string|max:255',
-            'birthDate'  => 'required|date',
-            'email'      => 'required|email|unique:students,email',
-            'password'   => 'required|confirmed|min:5'
+            'firstName'  => ['required','string','max:255'],
+            'lastName'   => ['required','string','max:255'],
+            'patronymic' => ['required','string','max:255'],
+            'birthDate'  => ['required','date'],
+            'email'      => ['required','email','unique:students,email'],
+            'password'   => ['required','confirmed','min:5'],
+            'department_id' => ['required', 'exists:departments,id'],
+            'course_id'  => ['required', 'exists:courses,id'],
+            'groups.*.group_id' => ['required', 'exists:groups,id' ]
         ]);
 
         $student = new Student();
@@ -73,7 +76,7 @@ class StudentController extends Controller
 
         $student->department()->associate($request->get('department_id'));
         $student->course()->associate($request->get('course_id'));
-
+        $student->groups()->sync($request->get('groups'));
         $student->save();
 
         return new JsonResponse($student, JsonResponse::HTTP_CREATED);
