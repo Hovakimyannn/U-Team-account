@@ -61,8 +61,7 @@ class AuthController extends Controller
         }
 
         return new JsonResponse([
-            'status'  => 'error',
-            'message' => 'Unauthorized'
+            'message' => 'Invalid credentials'
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
