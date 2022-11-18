@@ -46,6 +46,40 @@ class StudentController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request) : JsonResponse
+    {
+        $request->validate([
+            'firstName'  => 'required|string|max:255',
+            'lastName'   => 'required|string|max:255',
+            'patronymic' => 'required|string|max:255',
+            'birthDate'  => 'required|date',
+            'email'      => 'required|email|unique:students,email',
+            'password'   => 'required|confirmed|min:5'
+        ]);
+
+        $student = new Student();
+        $student->firstName = $request->get('firstName');
+        $student->lastName = $request->get('lastName');
+        $student->patronymic = $request->get('patronymic');
+        $student->birthDate = $request->get('birthDate');
+        $student->email = $request->get('email');
+        $student->password = Hash::make($request->get('password'));
+
+        $student->department()->associate($request->get('department_id'));
+        $student->course()->associate($request->get('course_id'));
+
+        $student->save();
+
+        return new JsonResponse($student, JsonResponse::HTTP_CREATED);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
