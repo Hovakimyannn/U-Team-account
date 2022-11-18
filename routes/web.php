@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentInvitationController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +122,13 @@ Route::controller(TeacherController::class) // admin
         Route::get('/get/{id}', 'show'); // no policy
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');
+    });
+
+Route::controller(StudentInvitationController::class)
+    ->prefix('/invitation')
+    ->group(function () {
+        Route::get('/get', 'index');
+        Route::post('/create', 'create');// admin
     });
 
 Route::post('/forgot-password', [PasswordController::class, 'send'])
