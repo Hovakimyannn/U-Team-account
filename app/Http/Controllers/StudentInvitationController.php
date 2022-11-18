@@ -33,8 +33,6 @@ class StudentInvitationController extends Controller
             'patronymic' => ['required','string','max:255'],
             'birthDate'  => ['required','date'],
             'email'      => ['required','email','unique:students,email'],
-            'password'   => ['required','confirmed','min:5'],
-            'institute_id' => ['required', 'exists:institutes,id'],
             'department_id' => ['required', 'exists:departments,id'],
             'course_id'  => ['required', 'exists:courses,id'],
             'group_id' => ['required', 'exists:groups,id'],
@@ -46,11 +44,13 @@ class StudentInvitationController extends Controller
         $invitation->patronymic = $request->get('patronymic');
         $invitation->birthDate = $request->get('birthDate');
         $invitation->email = $request->get('email');
+        $invitation->token = 'sdfghjk';
 
-        $invitation->institute()->associate($request->get('institute_id'));
         $invitation->department()->associate($request->get('department_id'));
         $invitation->course()->associate($request->get('course_id'));
-        $invitation->groups()->sync($request->get('group_id'));
+        $invitation->group()->associate($request->get('group_id'));
+        $invitation->save();
+        return new JsonResponse($invitation, JsonResponse::HTTP_CREATED);
     }
 
     /**

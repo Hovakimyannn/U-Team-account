@@ -52,9 +52,9 @@ class StudentInvitation extends Model
         'subgroup_id',
     ];
 
-    public function groups() : BelongsToMany
+    public function group() : BelongsTo
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsTo(Group::class);
     }
 
     /**
@@ -73,8 +73,4 @@ class StudentInvitation extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function institute() : BelongsTo
-    {
-        return $this->belongsTo(Institute::class);
-    }
 }

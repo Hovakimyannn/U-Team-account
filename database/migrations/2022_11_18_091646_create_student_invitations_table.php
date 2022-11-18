@@ -20,13 +20,10 @@ return new class extends Migration
             $table->string('patronymic');
             $table->date('birth_date');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->unsignedBigInteger('institute_id');
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('course_id');
             $table->unsignedBigInteger('group_id');
             $table->string('token');
-            $table->foreign('institute_id')->references('id')->on('institutes');
             $table->foreign('department_id')->references('id')->on('departments');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('group_id')->references('id')->on('groups');
