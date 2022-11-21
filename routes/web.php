@@ -6,8 +6,10 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstituteController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentInvitationController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +40,22 @@ Route::controller(AuthController::class)
             ->where('role', '^(student|admin|teacher)')
             ->middleware('guest');
 
-        Route::post('/logout', 'logout');
+        Route::post('/logout', 'logout')
+            ->middleware('auth:web');
+
+
+    });
+
+Route::controller(StudentInvitationController::class)
+    ->group(function () {
+        Route::get('/get-invitations', 'get');
+
+        Route::post('/send-invitation', 'sendInvitation');
+
+        Route::get('/resend-invitation/{id}', 'resendInvitation');
+
+        Route::get('/accept/invitation/{token}', 'acceptInvitation')
+            ->name('invitation.accept');
     });
 
 Route::controller(InstituteController::class)
@@ -113,7 +130,7 @@ Route::controller(StudentController::class)
     });
 
 Route::controller(TeacherController::class) // admin
-    ->middleware('auth:web')
+->middleware('auth:web')
     ->prefix('/teacher')
     ->group(function () {
         Route::get('/get', 'index');

@@ -12,11 +12,17 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @method static exists()
  *
- *  * @property mixed        $firstName
- *  * @property mixed        $lastName
- *  * @property mixed        $patronymic
- *  * @property mixed        $email
- *  * @property mixed        $birthDate
+ * @property mixed      $firstName
+ * @property mixed      $lastName
+ * @property mixed      $patronymic
+ * @property mixed      $email
+ * @property mixed      $birthDate
+ * @property mixed      $password
+ * @property mixed      $instituteId
+ * @property mixed      $departmentId
+ * @property mixed      $courseId
+ * @property mixed      $groupId
+ * @property bool|mixed $token
  *
  */
 class StudentInvitation extends Model

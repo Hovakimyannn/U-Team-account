@@ -6,11 +6,16 @@ use App\Models\Admin;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -128,5 +133,43 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return new JsonResponse('', JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    public function resendInvitation(Request $request)
+    {
+
+        dd(URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            [
+                'id'   => $request->user()->getKey(),
+                'hash' => sha1($request->user()->getEmailForVerification()),
+            ]
+        ));
+    }
+
+    public function verify(Request $request) : RedirectResponse
+    {//1668774740
+//        dd(Carbon::createFromTimestamp(1668774740)->toDateString());
+        dd(Carbon::now()->timestamp - 1668774740>=0);
+        dd($request->route('hash'));
+        if (!hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
+            return redirect(config('project.client_url').'/verification/failed');
+        }
+
+        if (!hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
+            return redirect(config('project.client_url').'/verification/failed');
+        }
+
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect(config('project.dashboard_client_url'));
+        }
+/** @var \App\Models\Student  $user */
+        $user = $request->user();
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
+
+        return redirect(config('project.dashboard_client_url'));
     }
 }

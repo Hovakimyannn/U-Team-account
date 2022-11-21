@@ -101,6 +101,10 @@ return [
         ],
     ],
 
+    'verification' => [
+        'expire' => 43200 // 30 day
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout

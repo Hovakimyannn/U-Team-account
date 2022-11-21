@@ -2,43 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\StudentInvitation;
+use App\Notifications\Invite;
+use App\Repositories\StudentInvitationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 
 class StudentInvitationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var \App\Repositories\StudentInvitationRepository
      */
-    public function index()
+    protected StudentInvitationRepository $studentInvitationRepository;
+
+    /**
+     * @param \App\Repositories\StudentInvitationRepository $studentInvitationRepository
+     */
+    public function __construct(StudentInvitationRepository $studentInvitationRepository)
     {
-        //
+        $this->studentInvitationRepository = $studentInvitationRepository;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @param \Illuminate\Http\Request $request
      *
-     * @param Request $request
-     *
-//     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function create(Request $request) //: JsonResponse
+    public function sendInvitation(Request $request) : JsonResponse
     {
-        $request->validate([
-            'firstName'  => ['required','string','max:255'],
-            'lastName'   => ['required','string','max:255'],
-            'patronymic' => ['required','string','max:255'],
-            'birthDate'  => ['required','date'],
-            'email'      => ['required','email','unique:students,email'],
-            'password'   => ['required','confirmed','min:5'],
-            'institute_id' => ['required', 'exists:institutes,id'],
-            'department_id' => ['required', 'exists:departments,id'],
-            'course_id'  => ['required', 'exists:courses,id'],
-            'group_id' => ['required', 'exists:groups,id'],
+        $this->validate($request, [
+            'firstName'    => ['required', 'string'],
+            'lastName'     => ['required', 'string'],
+            'patronymic'   => ['required', 'string'],
+            'birthDate'    => ['required', 'date'],
+            'email'        => ['required', 'email', 'unique:students,email', 'unique:student_invitations,email'],
+            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
+            'departmentId' => ['required', 'int', 'exists:departments,id'],
+            'courseId'     => ['required', 'int', 'exists:courses,id'],
+            'groupId'      => ['required', 'int', 'exists:groups,id'],
         ]);
+
+        $token = $this->createToken($request->get('email'));
 
         $invitation = new StudentInvitation();
         $invitation->firstName = $request->get('firstName');
@@ -46,66 +57,155 @@ class StudentInvitationController extends Controller
         $invitation->patronymic = $request->get('patronymic');
         $invitation->birthDate = $request->get('birthDate');
         $invitation->email = $request->get('email');
+        $invitation->instituteId = $request->get('instituteId');
+        $invitation->departmentId = $request->get('departmentId');
+        $invitation->courseId = $request->get('courseId');
+        $invitation->groupId = $request->get('groupId');
+        $invitation->token = $token;
+        $invitation->save();
 
-        $invitation->institute()->associate($request->get('institute_id'));
-        $invitation->department()->associate($request->get('department_id'));
-        $invitation->course()->associate($request->get('course_id'));
-        $invitation->groups()->sync($request->get('group_id'));
+        $this->sendMail($invitation->email, $this->createUrl($token));
+
+        return new JsonResponse([
+            'message' => 'Invitation sent'
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $token
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function acceptInvitation(Request $request, string $token) : JsonResponse
     {
-        //
+        $data = json_decode(decrypt($token));
+
+        if ($this->checkInvitationIsExpire($data->expires)) {
+            return new JsonResponse([
+                'message' => 'Your invitation is expires'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        /** @var StudentInvitation $invitation */
+        $invitation = $this->studentInvitationRepository->findUserByEmail($data->email);
+
+        if (!$invitation) {
+            return new JsonResponse([
+                'message' => 'You dont have invitation'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $student = new Student();
+        $student->firstName = $invitation->firstName;
+        $student->lastName = $invitation->lastName;
+        $student->patronymic = $invitation->patronymic;
+        $student->birthDate = $invitation->birthDate;
+        $student->email = $invitation->email;
+        $student->password = Hash::make($request->get('password'));
+        $student->department()->associate($invitation->departmentId);
+        $student->course()->associate($invitation->courseId);
+        $student->save();
+        $student->groups()->sync($invitation->groupId);
+
+        $invitation->delete();
+
+        return new JsonResponse([
+            'message' => 'Student registered'
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
-     * Display the specified resource.
+     * @param $id
      *
-     * @param  \App\Models\StudentInvitation  $studentInvitation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(StudentInvitation $studentInvitation)
+    public function resendInvitation($id) : JsonResponse
     {
-        //
+        /** @var StudentInvitation $invitation */
+        $invitation = $this->studentInvitationRepository->find($id);
+        $token = $this->createToken($invitation->email);
+
+        if (!$invitation) {
+            return new JsonResponse([
+                'message' => 'Something went wrong'
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $data = json_decode(decrypt($invitation->token));
+
+        if (!$this->checkInvitationIsExpire($data->expires)) {
+            $this->sendMail($data->email, $this->createUrl($token));
+
+            return new JsonResponse([
+                'message' => 'Invitation sent'
+            ], JsonResponse::HTTP_OK);
+        }
+
+
+        $invitation->token = $token;
+        $invitation->save();
+
+        $this->sendMail(
+            $invitation->email,
+            $this->createUrl($token)
+        );
+
+        return new JsonResponse([
+            'message' => 'Invitation sent'
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\StudentInvitation  $studentInvitation
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(StudentInvitation $studentInvitation)
+    public function get() : JsonResponse
     {
-        //
+        return new JsonResponse($this->studentInvitationRepository->findAll(), JsonResponse::HTTP_OK);
+    }
+
+    protected function sendMail($email, $url)
+    {
+        Notification::route('mail', $email)
+            ->notify(new Invite($url));
     }
 
     /**
-     * Update the specified resource in storage.
+     * If expire return true
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StudentInvitation  $studentInvitation
-     * @return \Illuminate\Http\Response
+     * @param int $unixTime
+     *
+     * @return bool
      */
-    public function update(Request $request, StudentInvitation $studentInvitation)
+    protected function checkInvitationIsExpire(int $unixTime) : bool
     {
-        //
+        return Carbon::now()->timestamp > $unixTime;
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param $token
      *
-     * @param  \App\Models\StudentInvitation  $studentInvitation
-     * @return \Illuminate\Http\Response
+     * @return string
      */
-    public function destroy(StudentInvitation $studentInvitation)
+    protected function createUrl($token) : string
     {
-        //
+        return URL::temporarySignedRoute(
+            'invitation.accept',
+            0,
+            ['token' => $token]
+        );
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return string
+     */
+    protected function createToken(string $email) : string
+    {
+        return encrypt(json_encode([
+            'expires' => Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp,
+            'email'   => $email
+        ]));
     }
 }

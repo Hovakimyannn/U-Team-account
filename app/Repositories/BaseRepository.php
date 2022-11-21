@@ -45,7 +45,7 @@ class BaseRepository
      *
      * @param string $email
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findUserByEmail(string $email) : ?Model
     {
