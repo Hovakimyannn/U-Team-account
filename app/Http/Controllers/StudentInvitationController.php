@@ -102,7 +102,7 @@ class StudentInvitationController extends Controller
         $student->patronymic = $invitation->patronymic;
         $student->birthDate = $invitation->birthDate;
         $student->email = $invitation->email;
-        $student->password = Hash::make($request->get('password'));
+        $student->password = Hash::make($request->get('password'));//sxal
         $student->department()->associate($invitation->departmentId);
         $student->course()->associate($invitation->courseId);
         $student->save();
