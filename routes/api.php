@@ -77,7 +77,6 @@ Route::controller(AdminController::class)
     ->prefix('/admin')
     ->group(function () {
         Route::get('/get', 'index');//
-        Route::post('/create', 'create');//
         Route::get('/get/{id}', 'show');//
         Route::patch('/edit/{id}', 'update');//
         Route::delete('/delete/{id}', 'destroy');//
@@ -88,7 +87,6 @@ Route::controller(StudentController::class)
     ->prefix('/student')
     ->group(function () {
         Route::get('/get', 'index');//admin
-        Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// no policy
         Route::patch('/edit/{id}', 'update');// admin
         Route::delete('/delete/{id}', 'destroy');//admin
@@ -99,7 +97,6 @@ Route::controller(TeacherController::class) // admin
     ->prefix('/teacher')
     ->group(function () {
         Route::get('/get', 'index');
-        Route::post('/create', 'create');
         Route::get('/get/{id}', 'show'); // no policy
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');
