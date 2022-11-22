@@ -41,26 +41,29 @@ Route::controller(AuthController::class)
 
         Route::post('/logout', 'logout')
             ->middleware('auth:web');
-
-
     });
 
 Route::controller(StudentInvitationController::class)
     ->group(function () {
-        Route::get('/get-invitations', 'get');
+        Route::get('/get-invitations', 'get')
+            ->middleware('can:is_admin');
 
-        Route::post('/send-invitation', 'sendInvitation');
+        Route::post('/send-invitation', 'sendInvitation')
+            ->middleware('can:is_admin');
 
-        Route::get('/resend-invitation/{id}', 'resendInvitation');
+        Route::get('/resend-invitation/{id}', 'resendInvitation')
+            ->middleware('can:is_admin');
 
-        Route::get('/accept/invitation', 'getStudentByInvitation');
+        Route::get('/accept/invitation', 'getStudentByInvitation')
+            ->middleware('guest');
 
-        Route::post('/accept/invitation', 'acceptInvitation');
+        Route::post('/accept/invitation', 'acceptInvitation')
+            ->middleware('guest');
     });
 
 Route::controller(InstituteController::class)
-    ->prefix('/institute')
     ->middleware('auth:web')
+    ->prefix('/institute')
     ->group(function () {
         Route::get('/get', 'index');
         Route::post('/create', 'create');
@@ -71,6 +74,7 @@ Route::controller(InstituteController::class)
     });
 
 Route::controller(GroupController::class)
+    ->middleware('auth:web')
     ->prefix('/group')
     ->group(function () {
         Route::get('/get', 'index');
@@ -83,6 +87,7 @@ Route::controller(GroupController::class)
     });
 
 Route::controller(CourseController::class)
+    ->middleware('auth:web')
     ->prefix('/course')
     ->group(function () {
         Route::get('/get', 'index');// not student
@@ -96,6 +101,7 @@ Route::controller(CourseController::class)
     });
 
 Route::controller(DepartmentController::class)
+    ->middleware('auth:web')
     ->prefix('/department')
     ->group(function () {
         Route::get('/get', 'index');// admin
