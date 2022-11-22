@@ -37,7 +37,6 @@ Route::controller(AuthController::class)
     });
 
 Route::controller(StudentInvitationController::class)
-    ->middleware('auth:web')
     ->group(function () {
         Route::get('/get-invitations', 'get')
             ->middleware('can:is_admin');
