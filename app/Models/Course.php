@@ -11,13 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-
 /**
  * @method static exists()
  *
- *  * @property mixed $number
- *  * @property mixed $degree
- *  * @property mixed $type
+ * @property int $number
+ * @property CourseDegreeEnum $degree
+ * @property CourseTypeEnum $type
  */
 class Course extends Model
 {
@@ -68,8 +67,8 @@ class Course extends Model
         return $this->hasMany(Group::class);
     }
 
-    /*
-     * @return HasMany
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function students() : HasMany
     {

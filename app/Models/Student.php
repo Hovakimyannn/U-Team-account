@@ -14,12 +14,12 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @method static exists()
  *
- *  * @property mixed        $firstName
- *  * @property mixed        $lastName
- *  * @property mixed        $patronymic
- *  * @property mixed        $email
- *  * @property mixed        $password
- *  * @property mixed        $birthDate
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
+ * @property string $email
+ * @property string $password
+ * @property string $birthDate
  *
  */
 class Student extends Authenticatable

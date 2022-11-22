@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
- *  * @property mixed $number
- *  * @property mixed $parentId
+ * @property int $number
+ * @property int $parentId
  */
 class Group extends Model
 {

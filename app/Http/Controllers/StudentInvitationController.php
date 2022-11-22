@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Invitation;
-use App\Models\Student;
 use App\Models\StudentInvitation;
 use App\Repositories\StudentInvitationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class StudentInvitationController extends Controller
 {

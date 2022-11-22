@@ -12,17 +12,17 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @method static exists()
  *
- * @property mixed      $firstName
- * @property mixed      $lastName
- * @property mixed      $patronymic
- * @property mixed      $email
- * @property mixed      $birthDate
- * @property mixed      $password
- * @property mixed      $instituteId
- * @property mixed      $departmentId
- * @property mixed      $courseId
- * @property mixed      $groupId
- * @property bool|mixed $token
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
+ * @property string $email
+ * @property string $birthDate
+ * @property string $password
+ * @property int    $instituteId
+ * @property int    $departmentId
+ * @property int    $courseId
+ * @property int    $groupId
+ * @property string $token
  *
  */
 class StudentInvitation extends Model
@@ -58,6 +58,9 @@ class StudentInvitation extends Model
         'subgroup_id',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function groups() : BelongsToMany
     {
         return $this->belongsToMany(Group::class);
@@ -79,6 +82,9 @@ class StudentInvitation extends Model
         return $this->belongsTo(Department::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function institute() : BelongsTo
     {
         return $this->belongsTo(Institute::class);

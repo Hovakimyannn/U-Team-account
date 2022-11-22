@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *  * @property mixed $name
- *  * @property mixed $institute_id
+ * @property string $name
+ * @property int $institute_id
  */
 class Department extends Model
 {
