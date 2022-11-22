@@ -12,7 +12,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\URL;
 
 class StudentInvitationController extends Controller
 {
@@ -73,22 +72,20 @@ class StudentInvitationController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string                   $token
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function acceptInvitation(Request $request, string $token) : JsonResponse
+    public function acceptInvitation(Request $request) : JsonResponse
     {
-        $data = json_decode(decrypt($token));
+        $this->validate($request, [
+            'password' => ['required', 'confirmed', 'min:5'],
+        ]);
 
-        if ($this->checkInvitationIsExpire($data->expires)) {
-            return new JsonResponse([
-                'message' => 'Your invitation is expires'
-            ], JsonResponse::HTTP_NOT_FOUND);
-        }
+        $token = $request->get('token');
 
         /** @var StudentInvitation $invitation */
-        $invitation = $this->studentInvitationRepository->findUserByEmail($data->email);
+        $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
 
         if (!$invitation) {
             return new JsonResponse([
@@ -102,7 +99,7 @@ class StudentInvitationController extends Controller
         $student->patronymic = $invitation->patronymic;
         $student->birthDate = $invitation->birthDate;
         $student->email = $invitation->email;
-        $student->password = Hash::make($request->get('password'));//sxal
+        $student->password = Hash::make($request->get('password'));
         $student->department()->associate($invitation->departmentId);
         $student->course()->associate($invitation->courseId);
         $student->save();
@@ -112,6 +109,37 @@ class StudentInvitationController extends Controller
 
         return new JsonResponse([
             'message' => 'Student registered'
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getStudentByInvitation(Request $request) : JsonResponse
+    {
+        $token = $request->query('token');
+
+        /** @var StudentInvitation $invitation */
+        $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
+
+        if (!$invitation) {
+            return new JsonResponse([
+                'message' => 'You dont have invitation'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode(decrypt($token));
+
+        if ($this->checkInvitationIsExpire($data->expires)) {
+            return new JsonResponse([
+                'message' => 'Your invitation is expires'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse([
+            $invitation
         ], JsonResponse::HTTP_OK);
     }
 
@@ -142,7 +170,6 @@ class StudentInvitationController extends Controller
             ], JsonResponse::HTTP_OK);
         }
 
-
         $invitation->token = $token;
         $invitation->save();
 
@@ -164,6 +191,12 @@ class StudentInvitationController extends Controller
         return new JsonResponse($this->studentInvitationRepository->findAll(), JsonResponse::HTTP_OK);
     }
 
+    /**
+     * @param $email
+     * @param $url
+     *
+     * @return void
+     */
     protected function sendMail($email, $url)
     {
         Notification::route('mail', $email)
@@ -189,11 +222,7 @@ class StudentInvitationController extends Controller
      */
     protected function createUrl($token) : string
     {
-        return URL::temporarySignedRoute(
-            'invitation.accept',
-            0,
-            ['token' => $token]
-        );
+        return env('CLIENT_URL')."/accept/invitation?token=$token";
     }
 
     /**

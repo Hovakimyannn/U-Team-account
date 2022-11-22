@@ -6,7 +6,6 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstituteController;
-use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentInvitationController;
@@ -54,8 +53,9 @@ Route::controller(StudentInvitationController::class)
 
         Route::get('/resend-invitation/{id}', 'resendInvitation');
 
-        Route::get('/accept/invitation/{token}', 'acceptInvitation')
-            ->name('invitation.accept');
+        Route::get('/accept/invitation', 'getStudentByInvitation');
+
+        Route::post('/accept/invitation', 'acceptInvitation');
     });
 
 Route::controller(InstituteController::class)
