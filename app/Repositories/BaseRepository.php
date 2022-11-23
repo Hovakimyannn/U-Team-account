@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -55,6 +56,22 @@ class BaseRepository
     }
 
     /**
+     * Find single model bt given criteria.
+     *
+     * @param array $criteria
+     *
+     * @param bool  $firstOrFail
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function findOneBy(array $criteria, bool $firstOrFail = true) : ?Model
+    {
+        $query = $this->applyCriteria($criteria);
+
+        return $firstOrFail ? $query->firstOrFail() : $query->first();
+    }
+
+    /**
      *
      * Get Related Models
      *
@@ -66,5 +83,28 @@ class BaseRepository
     public function getRelatedModels(int $id, string $relation) : ?Collection
     {
         return $this->find($id)->$relation;
+    }
+
+
+    /**
+     * Apply given criteria to eloquent builder.
+     *
+     * @param array                                                                                       $criteria
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Eloquent\Builder
+     */
+    protected function applyCriteria(array $criteria)
+    {
+        $query = $this->model->newQuery();
+
+        foreach ($criteria as $criterion) {
+            if (is_array($criterion[1])) {
+                $query->whereIn(...$criterion);
+            } else {
+                $query->where(...$criterion);
+            }
+        }
+
+        return $query;
     }
 }

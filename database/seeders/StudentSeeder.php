@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Group;
-use App\Models\Student;
 use App\Models\GroupStudent;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
-
 
 class StudentSeeder extends Seeder
 {
@@ -65,7 +64,6 @@ class StudentSeeder extends Seeder
                 ];
             }
         }
-
         GroupStudent::insert($data);
     }
 }

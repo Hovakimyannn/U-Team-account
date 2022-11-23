@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
+use App\Http\Controllers\Traits\Invitation;
 use App\Models\StudentInvitation;
-use App\Notifications\Invite;
 use App\Repositories\StudentInvitationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\URL;
 
 class StudentInvitationController extends Controller
 {
+    use Invitation;
+
     /**
      * @var \App\Repositories\StudentInvitationRepository
      */
@@ -73,12 +69,56 @@ class StudentInvitationController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string                   $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function acceptInvitation(Request $request) : JsonResponse
+    {
+        $this->validate($request, [
+            'password' => ['required', 'confirmed', 'min:5'],
+        ]);
+
+        $token = $request->get('token');
+
+        /** @var StudentInvitation $invitation */
+        $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
+
+        if (!$invitation) {
+            return new JsonResponse([
+                'message' => 'You dont have invitation'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $invitation->password = $request->get('password');
+
+        $student = StudentController::create($invitation);
+
+        $invitation->delete();
+
+        return new JsonResponse([
+            $student
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function acceptInvitation(Request $request, string $token) : JsonResponse
+    public function getStudentByInvitation(Request $request) : JsonResponse
     {
+        $token = $request->query('token');
+
+        /** @var StudentInvitation $invitation */
+        $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
+
+        if (!$invitation) {
+            return new JsonResponse([
+                'message' => 'You dont have invitation'
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
         $data = json_decode(decrypt($token));
 
         if ($this->checkInvitationIsExpire($data->expires)) {
@@ -87,31 +127,8 @@ class StudentInvitationController extends Controller
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        /** @var StudentInvitation $invitation */
-        $invitation = $this->studentInvitationRepository->findUserByEmail($data->email);
-
-        if (!$invitation) {
-            return new JsonResponse([
-                'message' => 'You dont have invitation'
-            ], JsonResponse::HTTP_NOT_FOUND);
-        }
-
-        $student = new Student();
-        $student->firstName = $invitation->firstName;
-        $student->lastName = $invitation->lastName;
-        $student->patronymic = $invitation->patronymic;
-        $student->birthDate = $invitation->birthDate;
-        $student->email = $invitation->email;
-        $student->password = Hash::make($request->get('password'));//sxal
-        $student->department()->associate($invitation->departmentId);
-        $student->course()->associate($invitation->courseId);
-        $student->save();
-        $student->groups()->sync($invitation->groupId);
-
-        $invitation->delete();
-
         return new JsonResponse([
-            'message' => 'Student registered'
+            $invitation
         ], JsonResponse::HTTP_OK);
     }
 
@@ -123,8 +140,7 @@ class StudentInvitationController extends Controller
     public function resendInvitation($id) : JsonResponse
     {
         /** @var StudentInvitation $invitation */
-        $invitation = $this->studentInvitationRepository->find($id);
-        $token = $this->createToken($invitation->email);
+        $invitation = $this->studentInvitationRepository->find($id, false);
 
         if (!$invitation) {
             return new JsonResponse([
@@ -135,21 +151,21 @@ class StudentInvitationController extends Controller
         $data = json_decode(decrypt($invitation->token));
 
         if (!$this->checkInvitationIsExpire($data->expires)) {
-            $this->sendMail($data->email, $this->createUrl($token));
+            $this->sendMail($data->email, $this->createUrl($invitation->token));
 
             return new JsonResponse([
                 'message' => 'Invitation sent'
             ], JsonResponse::HTTP_OK);
         }
 
-
-        $invitation->token = $token;
-        $invitation->save();
-
+        $token = $this->createToken($invitation->email);
         $this->sendMail(
             $invitation->email,
             $this->createUrl($token)
         );
+
+        $invitation->token = $token;
+        $invitation->save();
 
         return new JsonResponse([
             'message' => 'Invitation sent'
@@ -162,50 +178,5 @@ class StudentInvitationController extends Controller
     public function get() : JsonResponse
     {
         return new JsonResponse($this->studentInvitationRepository->findAll(), JsonResponse::HTTP_OK);
-    }
-
-    protected function sendMail($email, $url)
-    {
-        Notification::route('mail', $email)
-            ->notify(new Invite($url));
-    }
-
-    /**
-     * If expire return true
-     *
-     * @param int $unixTime
-     *
-     * @return bool
-     */
-    protected function checkInvitationIsExpire(int $unixTime) : bool
-    {
-        return Carbon::now()->timestamp > $unixTime;
-    }
-
-    /**
-     * @param $token
-     *
-     * @return string
-     */
-    protected function createUrl($token) : string
-    {
-        return URL::temporarySignedRoute(
-            'invitation.accept',
-            0,
-            ['token' => $token]
-        );
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return string
-     */
-    protected function createToken(string $email) : string
-    {
-        return encrypt(json_encode([
-            'expires' => Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp,
-            'email'   => $email
-        ]));
     }
 }
