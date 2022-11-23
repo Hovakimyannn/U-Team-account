@@ -2,30 +2,18 @@
 
 namespace App\Services\CustomPasswordBrokerManager;
 
-
 use App\Services\Auth\MultiUserProvider;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
-use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use InvalidArgumentException;
 
 class CustomPasswordBrokerManager extends PasswordBrokerManager
 {
     /**
-     * @param $app
-     */
-    public function __construct(
-        $app,
-    )
-    {
-        parent::__construct($app);
-    }
-
-    /**
      * @param $name
      *
      * @return \App\Services\CustomPasswordBrokerManager\PasswordBroker
      */
-    protected function resolve($name)
+    protected function resolve($name) : PasswordBroker
     {
         $config = $this->getConfig($name);
 
@@ -37,7 +25,7 @@ class CustomPasswordBrokerManager extends PasswordBrokerManager
         // aggregate service of sorts providing a convenient interface for resets.
         return new PasswordBroker(
             $this->createTokenRepository($config),
-           new MultiUserProvider(app('hash')),
+            new MultiUserProvider(app('hash')),
         );
     }
 }
