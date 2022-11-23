@@ -6,21 +6,16 @@ use App\Models\Admin;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Auth\Passwords\PasswordBroker as PassBroker;
-use Illuminate\Auth\Passwords\TokenRepositoryInterface;
-use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class PasswordBroker extends PassBroker
 {
-
-    public function __construct(
-        TokenRepositoryInterface $tokens,
-        UserProvider $users
-    )
-    {
-        parent::__construct($tokens,$users);
-    }
-
-    public function getUser(array $credentials)
+    /**
+     * @param array $credentials
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getUser(array $credentials) : Model
     {
          return Admin::where('email', $credentials['email'])->first() ??
                 Student::where('email', $credentials['email'])->first() ??
