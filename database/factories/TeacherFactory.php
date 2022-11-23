@@ -2,11 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Course;
-use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class TeacherFactory extends Factory
 {
@@ -26,7 +23,7 @@ class TeacherFactory extends Factory
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => $this->faker->sha1(),
-            'department_id' => $this->faker->randomNumber([1, 38]),
+            'department_id' => $this->faker->numberBetween(1, 38),
             'position' => $this->faker->randomElement(
                 [
                     'assistant',

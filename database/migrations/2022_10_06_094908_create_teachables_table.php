@@ -18,6 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('teacher_id');
             $table->morphs('teachable');
             $table->timestamps();
+            $table->foreign('teacher_id')
+                ->references('id')
+                ->on('teachers')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
