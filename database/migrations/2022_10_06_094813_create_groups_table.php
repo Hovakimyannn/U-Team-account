@@ -15,11 +15,19 @@ return new class extends Migration {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('groups');
             $table->integer('number');
             $table->unsignedBigInteger('course_id');
-            $table->foreign('course_id')->references('id')->on('courses');
             $table->timestamps();
+            $table->foreign('course_id')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('groups')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

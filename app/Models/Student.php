@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Traits\AttributesModifier;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,12 +14,12 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @method static exists()
  *
- *  * @property mixed        $firstName
- *  * @property mixed        $lastName
- *  * @property mixed        $patronymic
- *  * @property mixed        $email
- *  * @property mixed        $password
- *  * @property mixed        $birthDate
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
+ * @property string $email
+ * @property string $password
+ * @property string $birthDate
  *
  */
 class Student extends Authenticatable
@@ -26,6 +27,7 @@ class Student extends Authenticatable
     use
         HasFactory,
         Notifiable,
+        MustVerifyEmail,
         AttributesModifier;
 
     /**

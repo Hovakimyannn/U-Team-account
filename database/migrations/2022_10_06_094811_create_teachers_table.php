@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\TeacherPositionEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,8 +23,21 @@ return new class extends Migration {
             $table->string('password');
             $table->rememberToken();
             $table->unsignedBigInteger('department_id');
-            $table->string('position');
+            $table->enum(
+                'position',
+                [
+                    'assistant',
+                    'lecturer',
+                    'associate_professor',
+                    'professors'
+                ]
+            );
             $table->timestamps();
+            $table->foreign('department_id')
+                ->references('id')
+                ->on('departments')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

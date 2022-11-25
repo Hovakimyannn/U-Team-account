@@ -2,27 +2,32 @@
 
 namespace App\Models;
 
-use App\Enums\TeacherPositionEnum;
 use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * @method static exists()
+ *
  * @property string $firstName
  * @property string $lastName
  * @property string $patronymic
  * @property string $email
- * @property string $password
  * @property string $birthDate
- * @property TeacherPositionEnum $position
+ * @property string $password
+ * @property int    $instituteId
+ * @property int    $departmentId
+ * @property int    $courseId
+ * @property int    $groupId
+ * @property string $token
+ *
  */
-class Teacher extends Authenticatable
+class StudentInvitation extends Model
 {
     use
-        HasApiTokens,
         HasFactory,
         Notifiable,
         AttributesModifier;
@@ -38,8 +43,7 @@ class Teacher extends Authenticatable
         'patronymic',
         'email',
         'password',
-        'birthDate',
-        'position'
+        'birthDate'
     ];
 
     /**
@@ -48,41 +52,41 @@ class Teacher extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'department_id',
+        'course_id',
+        'group_id',
+        'subgroup_id',
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'position'          => TeacherPositionEnum::class,
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
-     */
-    public function courses()
+    public function groups() : BelongsToMany
     {
-        return $this->morphedByMany(Course::class, 'teachable');
+        return $this->belongsToMany(Group::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return BelongsTo
      */
-    public function groups()
+    public function course() : BelongsTo
     {
-        return $this->morphedByMany(Group::class, 'teachable');
+        return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function department() : BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function department() : BelongsTo
+    public function institute() : BelongsTo
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Institute::class);
     }
 }

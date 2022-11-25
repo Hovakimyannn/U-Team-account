@@ -60,8 +60,8 @@ return [
     */
 
     'providers' => [
-        'multiUser' => [
-            'driver' => 'multi',
+        'multi' => [
+            'driver' => 'multiUser',
         ],
     ],
 
@@ -82,23 +82,27 @@ return [
 
     'passwords' => [
         'students' => [
-            'provider' => 'students',
+            'provider' => 'multi',
             'table'    => 'password_resets',
             'expire'   => 60,
             'throttle' => 60,
         ],
         'teachers' => [
-            'provider' => 'teachers',
+            'provider' => 'multi',
             'table'    => 'password_resets',
             'expire'   => 60,
             'throttle' => 60,
         ],
         'admins'   => [
-            'provider' => 'admins',
+            'provider' => 'multi',
             'table'    => 'password_resets',
             'expire'   => 60,
             'throttle' => 60,
         ],
+    ],
+
+    'verification' => [
+        'expire' => 43200 // 30 day
     ],
 
     /*
