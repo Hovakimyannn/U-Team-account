@@ -53,7 +53,6 @@ class StudentInvitationController extends Controller
         $invitation->patronymic = $request->get('patronymic');
         $invitation->birthDate = $request->get('birthDate');
         $invitation->email = $request->get('email');
-        $invitation->instituteId = $request->get('instituteId');
         $invitation->departmentId = $request->get('departmentId');
         $invitation->courseId = $request->get('courseId');
         $invitation->groupId = $request->get('groupId');
