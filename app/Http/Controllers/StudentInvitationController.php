@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Traits\Invitation;
 use App\Models\StudentInvitation;
 use App\Repositories\StudentInvitationRepository;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
