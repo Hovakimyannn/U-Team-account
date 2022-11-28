@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Traits\Invitation;
 use App\Models\StudentInvitation;
 use App\Repositories\StudentInvitationRepository;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -86,7 +87,7 @@ class StudentInvitationController extends Controller
 
         if (!$invitation) {
             return new JsonResponse([
-                'message' => 'You dont have invitation'
+                'message' => 'You don\'t have an invitation'
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
@@ -115,7 +116,7 @@ class StudentInvitationController extends Controller
 
         if (!$invitation) {
             return new JsonResponse([
-                'message' => 'You dont have invitation'
+                'message' => 'You don\'t have an invitation'
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
@@ -123,7 +124,7 @@ class StudentInvitationController extends Controller
 
         if ($this->checkInvitationIsExpire($data->expires)) {
             return new JsonResponse([
-                'message' => 'Your invitation is expires'
+                'message' => 'Your invitation has expired'
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
