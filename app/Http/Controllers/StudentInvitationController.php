@@ -42,7 +42,7 @@ class StudentInvitationController extends Controller
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'int', 'exists:courses,id'],
-            'groupId'      => ['required', 'int', 'exists:groups,id'],
+            'groupId'      => ['required', 'int', 'exists:groups,id','unique:groups,parent_id'],
         ]);
 
         $token = $this->createToken($request->get('email'));
