@@ -25,7 +25,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $token
  *
  */
-class StudentInvitation extends Model
+class Invitation extends Model
 {
     use
         HasFactory,

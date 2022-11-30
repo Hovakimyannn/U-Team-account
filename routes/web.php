@@ -41,7 +41,7 @@ Route::controller(StudentInvitationController::class)
         Route::get('/get-invitations', 'get')
             ->middleware('can:is_admin');
 
-        Route::post('/send-invitation', 'sendInvitation')
+        Route::post('/{role}/send-invitation', 'sendInvitation')
             ->middleware('can:is_admin');
 
         Route::get('/resend-invitation/{id}', 'resendInvitation')

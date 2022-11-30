@@ -2,45 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Traits\Invitation;
+use App\Http\Controllers\Traits\Invite;
 use App\Models\Group;
-use App\Models\StudentInvitation;
-use App\Repositories\StudentInvitationRepository;
+use App\Models\Invitation;
+use App\Repositories\InvitationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class StudentInvitationController extends Controller
 {
-    use Invitation;
+    use Invite;
 
     /**
-     * @var \App\Repositories\StudentInvitationRepository
+     * @var \App\Repositories\InvitationRepository
      */
-    protected StudentInvitationRepository $studentInvitationRepository;
+    protected InvitationRepository $studentInvitationRepository;
 
     /**
-     * @param \App\Repositories\StudentInvitationRepository $studentInvitationRepository
+     * @param \App\Repositories\InvitationRepository $studentInvitationRepository
      */
-    public function __construct(StudentInvitationRepository $studentInvitationRepository)
+    public function __construct(InvitationRepository $studentInvitationRepository)
     {
         $this->studentInvitationRepository = $studentInvitationRepository;
     }
 
     /**
      * @param \Illuminate\Http\Request $request
+     * @param string                   $role
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function sendInvitation(Request $request) : JsonResponse
+    public function sendInvitation(Request $request, string $role) : JsonResponse
     {
         $this->validate($request, [
             'firstName'    => ['required', 'string'],
             'lastName'     => ['required', 'string'],
             'patronymic'   => ['required', 'string'],
             'birthDate'    => ['required', 'date'],
-            'email'        => ['required', 'email', 'unique:students,email', 'unique:student_invitations,email'],
+            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'int', 'exists:courses,id'],
@@ -50,23 +51,28 @@ class StudentInvitationController extends Controller
 
         $token = $this->createToken($request->get('email'));
 
-        $invitation = new StudentInvitation();
-        $invitation->firstName = $request->get('firstName');
-        $invitation->lastName = $request->get('lastName');
-        $invitation->patronymic = $request->get('patronymic');
-        $invitation->birthDate = $request->get('birthDate');
+        $invitation = new Invitation();
         $invitation->email = $request->get('email');
-        $invitation->departmentId = $request->get('departmentId');
-        $invitation->courseId = $request->get('courseId');
-        $invitation->groupId = $request->get('groupId');
         $invitation->token = $token;
+        $invitation->role = $role;
+        $invitation->payload = $this->preparePayload($request->all());
         $invitation->save();
 
         $this->sendMail($invitation->email, $this->createUrl($token));
 
         return new JsonResponse([
-            'message' => 'Invitation sent'
+            'message' => 'Invite sent'
         ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return bool|string
+     */
+    private function preparePayload(array $data) : bool|string
+    {
+        return json_encode($data);
     }
 
     /**
@@ -83,7 +89,7 @@ class StudentInvitationController extends Controller
 
         $token = $request->get('token');
 
-        /** @var StudentInvitation $invitation */
+        /** @var Invitation $invitation */
         $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
 
         if (!$invitation) {
@@ -92,15 +98,33 @@ class StudentInvitationController extends Controller
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        $invitation->password = $request->get('password');
+        $data = json_decode($invitation->payload);
+        $data->password = $request->get('password');
 
-        $student = StudentController::create($invitation);
+        /** @var Controller $controller */
+        $controller = $this->findOutController($invitation->role);
+        $student = $controller::create($data);
 
         $invitation->delete();
 
         return new JsonResponse([
             $student
         ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return string
+     */
+    protected function findOutController(string $role): string
+    {
+        return match($role){
+            'admin' => AdminController::class,
+            'student' => StudentController::class,
+            'teacher' => TeacherController::class,
+            'default' => new \Exception()
+        };
     }
 
     /**
@@ -112,7 +136,7 @@ class StudentInvitationController extends Controller
     {
         $token = $request->query('token');
 
-        /** @var StudentInvitation $invitation */
+        /** @var Invitation $invitation */
         $invitation = $this->studentInvitationRepository->findOneBy([['token', $token]], false);
 
         if (!$invitation) {
@@ -141,7 +165,7 @@ class StudentInvitationController extends Controller
      */
     public function resendInvitation($id) : JsonResponse
     {
-        /** @var StudentInvitation $invitation */
+        /** @var Invitation $invitation */
         $invitation = $this->studentInvitationRepository->find($id, false);
 
         if (!$invitation) {
@@ -156,7 +180,7 @@ class StudentInvitationController extends Controller
             $this->sendMail($data->email, $this->createUrl($invitation->token));
 
             return new JsonResponse([
-                'message' => 'Invitation sent'
+                'message' => 'Invite sent'
             ], JsonResponse::HTTP_OK);
         }
 
@@ -170,7 +194,7 @@ class StudentInvitationController extends Controller
         $invitation->save();
 
         return new JsonResponse([
-            'message' => 'Invitation sent'
+            'message' => 'Invite sent'
         ], JsonResponse::HTTP_OK);
     }
 
