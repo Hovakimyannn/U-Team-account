@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use App\Models\StudentInvitation;
+use App\Models\Invitation;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use stdClass;
 
 class StudentController extends Controller
 {
@@ -49,11 +50,11 @@ class StudentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param \App\Models\StudentInvitation $invitation
+     * @param \stdClass $invitation
      *
      * @return \App\Models\Student
      */
-    public static function create(StudentInvitation $invitation) : Student
+    public static function create(stdClass $invitation) : Student
     {
         $student = new Student();
         $student->firstName = $invitation->firstName;

@@ -39,15 +39,15 @@ class AdminController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function create(Request $request) : JsonResponse
+    public static function create(Request $request) : JsonResponse
     {
-        $this->validate($request, [
+       /* $this->validate($request, [
             'firstName'  => ['required', 'string', 'max:255'],
             'lastName'   => ['required', 'string', 'max:255'],
             'patronymic' => ['required', 'string', 'max:255'],
             'email'      => ['required', 'email', 'unique:students,email'],
             'password'   => ['required', 'confirmed', 'min:5']
-        ]);
+        ]);*/
 
         $admin = new Admin();
         $admin->firstName = $request->get('firstName');

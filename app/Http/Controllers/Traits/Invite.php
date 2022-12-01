@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Notifications\Invite;
+use App\Notifications\Invite as BaseInvite;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
 
-trait Invitation
+trait Invite
 {
     /**
      * @param string $email
@@ -53,6 +53,6 @@ trait Invitation
     protected function sendMail($email, $url)
     {
         Notification::route('mail', $email)
-            ->notify(new Invite($url));
+            ->notify(new BaseInvite($url));
     }
 }
