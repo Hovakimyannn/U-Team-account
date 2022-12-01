@@ -124,7 +124,7 @@ class InvitationController extends Controller
             'firstName'  => ['required', 'string', 'max:255'],
             'lastName'   => ['required', 'string', 'max:255'],
             'patronymic' => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'unique:students,email'],
+            'email'      => ['required', 'email', 'unique:admins,email', 'unique:invitations,email'],
         ];
     }
 
@@ -170,7 +170,7 @@ class InvitationController extends Controller
 
         $invitation->delete();
 
-        return new JsonResponse($user,JsonResponse::HTTP_OK);
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
     }
 
     /**
