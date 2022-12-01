@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\StudentInvitationController;
+use App\Http\Controllers\InvitationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,7 +36,7 @@ Route::controller(AuthController::class)
             ->middleware('auth:web');
     });
 
-Route::controller(StudentInvitationController::class)
+Route::controller(InvitationController::class)
     ->group(function () {
         Route::get('/get-invitations', 'get')
             ->middleware('can:is_admin');

@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class StudentInvitationController extends Controller
+class InvitationController extends Controller
 {
     use Invite;
 
@@ -36,18 +36,7 @@ class StudentInvitationController extends Controller
      */
     public function sendInvitation(Request $request, string $role) : JsonResponse
     {
-        $this->validate($request, [
-            'firstName'    => ['required', 'string'],
-            'lastName'     => ['required', 'string'],
-            'patronymic'   => ['required', 'string'],
-            'birthDate'    => ['required', 'date'],
-            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
-            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
-            'departmentId' => ['required', 'int', 'exists:departments,id'],
-            'courseId'     => ['required', 'int', 'exists:courses,id'],
-            'groupId'      => ['required', 'int', 'exists:groups,id'],
-            'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
-        ]);
+        $this->validate($request, $this->validateInvitation($request, $role));
 
         $token = $this->createToken($request->get('email'));
 
@@ -63,6 +52,86 @@ class StudentInvitationController extends Controller
         return new JsonResponse([
             'message' => 'Invite sent'
         ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param $request
+     * @param $role
+     *
+     * @return array|\Exception
+     */
+    protected function validateInvitation($request, $role) : \Exception|array
+    {
+        return match ($role) {
+            'admin' => $this->adminValidation($request),
+            'student' => $this->studentValidation($request),
+            'teacher' => $this->teacherValidation($request),
+            default => new \Exception()
+        };
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    protected function studentValidation(Request $request) : array
+    {
+        return [
+            'firstName'    => ['required', 'string'],
+            'lastName'     => ['required', 'string'],
+            'patronymic'   => ['required', 'string'],
+            'birthDate'    => ['required', 'date'],
+            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
+            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
+            'departmentId' => ['required', 'int', 'exists:departments,id'],
+            'courseId'     => ['required', 'int', 'exists:courses,id'],
+            'groupId'      => ['required', 'int', 'exists:groups,id'],
+            'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
+        ];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    protected function teacherValidation(Request $request) : array
+    {
+        return [
+            'firstName'    => ['required', 'string'],
+            'lastName'     => ['required', 'string'],
+            'patronymic'   => ['required', 'string'],
+            'position'     => ['required', 'in:assistant,lecturer,associate_professor,professors'],
+            'birthDate'    => ['required', 'date'],
+            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
+            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
+            'departmentId' => ['required', 'int', 'exists:departments,id'],
+            'courseId'     => ['required', 'array', 'exists:courses,id'],
+            'groupId'      => ['required', 'array', 'exists:groups,id'],
+            'subgroupId'   => ['required', 'array', 'exists:groups,id']
+        ];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    protected function adminValidation(Request $request) : array
+    {
+        return [
+//            'firstName'    => ['required', 'string'],
+//            'lastName'     => ['required', 'string'],
+//            'patronymic'   => ['required', 'string'],
+//            'birthDate'    => ['required', 'date'],
+//            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
+//            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
+//            'departmentId' => ['required', 'int', 'exists:departments,id'],
+//            'courseId'     => ['required', 'int', 'exists:courses,id'],
+//            'groupId'      => ['required', 'int', 'exists:groups,id'],
+//            'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
+        ];
     }
 
     /**
@@ -103,13 +172,11 @@ class StudentInvitationController extends Controller
 
         /** @var Controller $controller */
         $controller = $this->findOutController($invitation->role);
-        $student = $controller::create($data);
+        $user = $controller::create($data);
 
         $invitation->delete();
 
-        return new JsonResponse([
-            $student
-        ], JsonResponse::HTTP_OK);
+        return new JsonResponse($user,JsonResponse::HTTP_OK);
     }
 
     /**
@@ -117,13 +184,13 @@ class StudentInvitationController extends Controller
      *
      * @return string
      */
-    protected function findOutController(string $role): string
+    protected function findOutController(string $role) : string
     {
-        return match($role){
+        return match ($role) {
             'admin' => AdminController::class,
             'student' => StudentController::class,
             'teacher' => TeacherController::class,
-            'default' => new \Exception()
+            default => new \Exception()
         };
     }
 

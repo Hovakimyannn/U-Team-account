@@ -23,6 +23,8 @@ use Illuminate\Notifications\Notifiable;
  * @property int    $courseId
  * @property int    $groupId
  * @property string $token
+ * @property string $role
+ * @property string $payload
  *
  */
 class Invitation extends Model
