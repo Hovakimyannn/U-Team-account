@@ -109,7 +109,6 @@ class InvitationController extends Controller
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'array', 'exists:courses,id'],
             'groupId'      => ['required', 'array', 'exists:groups,id'],
-            'subgroupId'   => ['required', 'array', 'exists:groups,id']
         ];
     }
 

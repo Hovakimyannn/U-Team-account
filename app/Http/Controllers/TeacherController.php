@@ -67,7 +67,7 @@ class TeacherController extends Controller
         $teacher->department()->associate($invitation->departmentId);
         $teacher->save();
         $teacher->courses()->sync($invitation->courseId);
-        $teacher->groups()->sync(array_merge($invitation->groupId,$invitation->subgroupId));
+        $teacher->groups()->sync($invitation->groupId);
 
         return $teacher;
     }
