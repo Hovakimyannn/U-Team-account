@@ -121,16 +121,10 @@ class InvitationController extends Controller
     protected function adminValidation(Request $request) : array
     {
         return [
-//            'firstName'    => ['required', 'string'],
-//            'lastName'     => ['required', 'string'],
-//            'patronymic'   => ['required', 'string'],
-//            'birthDate'    => ['required', 'date'],
-//            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
-//            'instituteId'  => ['required', 'int', 'exists:institutes,id'],
-//            'departmentId' => ['required', 'int', 'exists:departments,id'],
-//            'courseId'     => ['required', 'int', 'exists:courses,id'],
-//            'groupId'      => ['required', 'int', 'exists:groups,id'],
-//            'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
+            'firstName'  => ['required', 'string', 'max:255'],
+            'lastName'   => ['required', 'string', 'max:255'],
+            'patronymic' => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'unique:admins,email', 'unique:invitations,email'],
         ];
     }
 
@@ -176,7 +170,7 @@ class InvitationController extends Controller
 
         $invitation->delete();
 
-        return new JsonResponse($user,JsonResponse::HTTP_OK);
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
     }
 
     /**
