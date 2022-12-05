@@ -193,7 +193,7 @@ class InvitationController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getStudentByInvitation(Request $request) : JsonResponse
+    public function getUserByInvitation(Request $request) : JsonResponse
     {
         $token = $request->query('token');
 
