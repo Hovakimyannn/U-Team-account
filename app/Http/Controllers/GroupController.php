@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Group;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;
@@ -154,6 +155,21 @@ class GroupController extends Controller
         return new JsonResponse(
             $this->groupRepository->getRelatedModels($id, 'teachers'),
             JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * Returned all groups with their courses.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function getCourse() : JsonResponse
+    {
+        $this->authorize('getCourse', Group::class);
+        return new JsonResponse(
+            $this->groupRepository->findAllByWith(['course']),
+        JsonResponse::HTTP_OK
         );
     }
 }

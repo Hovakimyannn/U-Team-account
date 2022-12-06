@@ -107,4 +107,19 @@ class BaseRepository
 
         return $query;
     }
+
+    /**
+     * Find many models with given relations.
+     *
+     * @param array $relations
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findAllByWith(array $relations) : \Illuminate\Database\Eloquent\Collection
+    {
+        $query = $this->model->newQuery();
+        $query->with($relations);
+
+        return $query->get();
+    }
 }

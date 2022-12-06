@@ -37,6 +37,7 @@ Route::controller(GroupController::class)
     ->prefix('/group')
     ->group(function () {
         Route::get('/get', 'index');
+        Route::get('/get-course', 'getCourse');
         Route::post('/create', 'create');// admin
         Route::get('/get/{id}', 'show');// not student
         Route::get('/get/{id}/students', 'getStudents');
