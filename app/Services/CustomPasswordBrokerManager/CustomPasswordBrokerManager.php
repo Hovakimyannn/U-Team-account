@@ -2,6 +2,10 @@
 
 namespace App\Services\CustomPasswordBrokerManager;
 
+use App\Models\Admin;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Repositories\ResetPasswordRepository;
 use App\Services\Auth\MultiUserProvider;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use InvalidArgumentException;
@@ -26,6 +30,7 @@ class CustomPasswordBrokerManager extends PasswordBrokerManager
         return new PasswordBroker(
             $this->createTokenRepository($config),
             new MultiUserProvider(app('hash')),
+            new ResetPasswordRepository(new Admin(), new Student(), new Teacher())
         );
     }
 }

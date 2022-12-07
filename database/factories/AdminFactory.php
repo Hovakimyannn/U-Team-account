@@ -18,7 +18,7 @@ class AdminFactory extends Factory
             'firstName' => $this->faker->name(),
             'lastName' => $this->faker->lastName(),
             'patronymic' => $this->faker->name(),
-            'email' => 'admin@u_team.com',
+            'email' => 'admin@u-team.com',
             'emailVerifiedAt' => now(),
             'password' => Hash::make('password'),
             'rememberToken' => $this->faker->sha1(),
