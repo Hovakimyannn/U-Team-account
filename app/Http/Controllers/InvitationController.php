@@ -104,7 +104,7 @@ class InvitationController extends Controller
             'patronymic'   => ['required', 'string'],
             'position'     => ['required', 'in:assistant,lecturer,associate_professor,professors'],
             'birthDate'    => ['required', 'date'],
-            'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
+            'email'        => ['required', 'email', 'unique:teachers,email', 'unique:invitations,email'],
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'array', 'exists:courses,id'],

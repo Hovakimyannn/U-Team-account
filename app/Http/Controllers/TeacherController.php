@@ -88,7 +88,7 @@ class TeacherController extends Controller
             'lastName'      => ['string', 'max:255'],
             'patronymic'    => ['string', 'max:255'],
             'birthDate'     => ['date'],
-            'email'         => ['email', 'unique:students,email'],
+            'email'         => ['email', 'unique:teachers,email'],
             'position'      => [new Enum(TeacherPositionEnum::class), 'string'],
             'department_id' => ['int', 'exists:departments,id'],
         ]);
