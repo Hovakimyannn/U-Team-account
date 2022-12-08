@@ -94,7 +94,7 @@ class GroupController extends Controller
         $this->authorize('update', Group::class);
 
         $this->validate($request, [
-            'number'    => ['int', 'min:3'],
+            'number'    => ['int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['int', 'exists:courses,id'],
         ]);
