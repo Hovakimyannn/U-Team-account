@@ -50,7 +50,7 @@ class GroupController extends Controller
         $this->authorize('create', Group::class);
 
         $this->validate($request, [
-            'number'    => ['required', 'int', 'min:3'],
+            'number'    => ['required', 'int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['required', 'int', 'exists:courses,id'],
         ]);
