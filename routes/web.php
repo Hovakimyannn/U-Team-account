@@ -1,14 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PasswordController;
-<<<<<<< HEAD
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\StudentInvitationController;
-use App\Http\Controllers\TeacherController;
-=======
 use App\Http\Controllers\InvitationController;
->>>>>>> 4d7e6f0282267cec8528a3a34e161a258a46e0d0
+use App\Http\Controllers\PasswordController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,12 +55,6 @@ Route::controller(InvitationController::class)
             ->middleware('guest');
     });
 
-Route::controller(StudentInvitationController::class)
-    ->prefix('/invitation')
-    ->group(function () {
-        Route::get('/get', 'index');
-        Route::post('/create', 'create');// admin
-    });
 
 Route::post('/forgot-password', [PasswordController::class, 'send'])
     ->middleware(['guest'])
