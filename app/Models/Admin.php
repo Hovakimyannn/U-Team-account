@@ -8,11 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * @property string       $email
- * @property mixed|string $password
- * @property string       $firstName
- * @property string       $lastName
- * @property string       $patronymic
+ * @property string $email
+ * @property string $password
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
  * @method static exists()
  */
 class Admin extends Authenticatable

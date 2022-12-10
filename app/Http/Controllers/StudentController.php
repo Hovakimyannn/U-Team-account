@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Invitation;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use stdClass;
 
 class StudentController extends Controller
 {
@@ -48,38 +50,25 @@ class StudentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \stdClass $invitation
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Models\Student
      */
-    public function create(Request $request) : JsonResponse
+    public static function create(stdClass $invitation) : Student
     {
-        $request->validate([
-            'firstName'  => ['required','string','max:255'],
-            'lastName'   => ['required','string','max:255'],
-            'patronymic' => ['required','string','max:255'],
-            'birthDate'  => ['required','date'],
-            'email'      => ['required','email','unique:students,email'],
-            'password'   => ['required','confirmed','min:5'],
-            'department_id' => ['required', 'exists:departments,id'],
-            'course_id'  => ['required', 'exists:courses,id'],
-            'groups.*.group_id' => ['required', 'exists:groups,id' ]
-        ]);
-
         $student = new Student();
-        $student->firstName = $request->get('firstName');
-        $student->lastName = $request->get('lastName');
-        $student->patronymic = $request->get('patronymic');
-        $student->birthDate = $request->get('birthDate');
-        $student->email = $request->get('email');
-        $student->password = Hash::make($request->get('password'));
-
-        $student->department()->associate($request->get('department_id'));
-        $student->course()->associate($request->get('course_id'));
-        $student->groups()->sync($request->get('groups'));
+        $student->firstName = $invitation->firstName;
+        $student->lastName = $invitation->lastName;
+        $student->patronymic = $invitation->patronymic;
+        $student->birthDate = $invitation->birthDate;
+        $student->email = $invitation->email;
+        $student->password = Hash::make($invitation->password);
+        $student->department()->associate($invitation->departmentId);
+        $student->course()->associate($invitation->courseId);
         $student->save();
+        $student->groups()->sync($invitation->groupId);
 
-        return new JsonResponse($student, JsonResponse::HTTP_CREATED);
+        return $student;
     }
 
     /**

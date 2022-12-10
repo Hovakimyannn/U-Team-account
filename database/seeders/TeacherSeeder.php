@@ -4,12 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\Group;
-use App\Models\Student;
-use App\Models\GroupStudent;
-use App\Models\Teacher;
 use App\Models\Teachable;
+use App\Models\Teacher;
 use Illuminate\Database\Seeder;
-
 
 class TeacherSeeder extends Seeder
 {
@@ -22,7 +19,7 @@ class TeacherSeeder extends Seeder
     {
         $teacherIds = [];
 
-           Teacher::factory(100)->create()
+        Teacher::factory(100)->create()
             ->each(function ($teacher) use (&$teacherIds) {
                 $teacherIds[] = $teacher->id;
             });
@@ -32,6 +29,7 @@ class TeacherSeeder extends Seeder
 
     /**
      * @param $teacherIds
+     *
      * @return void
      */
     private function insertStudentGroupPivot($teacherIds) : void
@@ -43,9 +41,9 @@ class TeacherSeeder extends Seeder
         foreach ($teacherIds as $teacherId) {
             $index = 0;
             while ($index < 3) {
-                $model = array_rand(['Course','Group']);
+                $model = array_rand(['Course', 'Group']);
 
-                if($model === 0) {
+                if ($model === 0) {
                     $model = 'Course';
                     $modelId = rand(1, $maxCourse);
                 } else {
@@ -54,15 +52,13 @@ class TeacherSeeder extends Seeder
                 }
 
                 $data[] = [
-                    'teacher_id' => $teacherId,
+                    'teacher_id'     => $teacherId,
                     'teachable_type' => $model,
                     'teachable_id'   => $modelId,
-            ];
+                ];
                 $index++;
             }
-
         }
-
         Teachable::insert($data);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\TeacherPositionEnum;
 use App\Models\Traits\AttributesModifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,13 +11,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- *  * @property mixed $firstName
- *  * @property mixed $lastName
- *  * @property mixed $patronymic
- *  * @property mixed $email
- *  * @property mixed $password
- *  * @property mixed $birthDate
- *  * @property mixed $position
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
+ * @property string $email
+ * @property string $password
+ * @property string $birthDate
+ * @property TeacherPositionEnum $position
  */
 class Teacher extends Authenticatable
 {
@@ -63,11 +62,17 @@ class Teacher extends Authenticatable
         'position'          => TeacherPositionEnum::class,
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
     public function courses()
     {
         return $this->morphedByMany(Course::class, 'teachable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
     public function groups()
     {
         return $this->morphedByMany(Group::class, 'teachable');

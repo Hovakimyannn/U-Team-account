@@ -45,7 +45,7 @@ class AuthController extends Controller
     public function login(Request $request, string $role) : JsonResponse
     {
         $this->validate($request, [
-            'email'    => ['required', 'string'],
+            'email'    => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
@@ -96,24 +96,6 @@ class AuthController extends Controller
         return new JsonResponse([
             'status' => 'downloaded'
         ], JsonResponse::HTTP_OK);
-    }
-
-    /**
-     * @param mixed $userData
-     *
-     * @return \App\Models\Admin
-     */
-    public function register(mixed $userData) : Admin
-    {
-        $user = new Admin();
-        $user->firstName = $userData->firstName;
-        $user->lastName = $userData->lastName;
-        $user->patronymic = $userData->patronymic;
-        $user->email = $userData->email;
-        $user->password = Hash::make($userData->password);
-        $user->save();
-
-        return $user;
     }
 
     /**

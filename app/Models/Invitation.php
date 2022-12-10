@@ -12,14 +12,22 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @method static exists()
  *
- *  * @property mixed        $firstName
- *  * @property mixed        $lastName
- *  * @property mixed        $patronymic
- *  * @property mixed        $email
- *  * @property mixed        $birthDate
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $patronymic
+ * @property string $email
+ * @property string $birthDate
+ * @property string $password
+ * @property int    $instituteId
+ * @property int    $departmentId
+ * @property int    $courseId
+ * @property int    $groupId
+ * @property string $token
+ * @property string $role
+ * @property string $payload
  *
  */
-class StudentInvitation extends Model
+class Invitation extends Model
 {
     use
         HasFactory,
@@ -52,7 +60,14 @@ class StudentInvitation extends Model
         'subgroup_id',
     ];
 
+<<<<<<< HEAD:app/Models/StudentInvitation.php
     public function group() : BelongsTo
+=======
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function groups() : BelongsToMany
+>>>>>>> 4d7e6f0282267cec8528a3a34e161a258a46e0d0:app/Models/Invitation.php
     {
         return $this->belongsTo(Group::class);
     }
@@ -73,4 +88,14 @@ class StudentInvitation extends Model
         return $this->belongsTo(Department::class);
     }
 
+<<<<<<< HEAD:app/Models/StudentInvitation.php
+=======
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function institute() : BelongsTo
+    {
+        return $this->belongsTo(Institute::class);
+    }
+>>>>>>> 4d7e6f0282267cec8528a3a34e161a258a46e0d0:app/Models/Invitation.php
 }

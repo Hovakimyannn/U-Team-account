@@ -34,27 +34,18 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \stdClass $invitation
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function create(Request $request) : JsonResponse
+    public static function create(\stdClass $invitation) : JsonResponse
     {
-        $this->validate($request, [
-            'firstName'  => ['required', 'string', 'max:255'],
-            'lastName'   => ['required', 'string', 'max:255'],
-            'patronymic' => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'unique:students,email'],
-            'password'   => ['required', 'confirmed', 'min:5']
-        ]);
-
         $admin = new Admin();
-        $admin->firstName = $request->get('firstName');
-        $admin->lastName = $request->get('lastName');
-        $admin->patronymic = $request->get('patronymic');
-        $admin->email = $request->get('email');
-        $admin->password = Hash::make($request->get('password'));
+        $admin->firstName = $invitation->firstName;
+        $admin->lastName = $invitation->lastName;
+        $admin->patronymic = $invitation->patronymic;
+        $admin->email = $invitation->email;
+        $admin->password = Hash::make($invitation->password);
         $admin->save();
 
         return new JsonResponse($admin, JsonResponse::HTTP_CREATED);
@@ -87,7 +78,7 @@ class AdminController extends Controller
             'firstName'  => ['string', 'max:255'],
             'lastName'   => ['string', 'max:255'],
             'patronymic' => ['string', 'max:255'],
-            'email'      => ['email', 'unique:students,email'],
+            'email'      => ['email', 'unique:admins,email'],
         ]);
 
         /** @var \App\Models\Admin $admin */

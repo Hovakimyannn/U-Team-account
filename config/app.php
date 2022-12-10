@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Yerevan',
 
     /*
     |--------------------------------------------------------------------------
@@ -178,7 +178,7 @@ return [
         Illuminate\Redis\RedisServiceProvider::class,
 //        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         App\Providers\CustomPasswordResetServiceProvider::class,
-        App\Providers\SessionServiceProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,

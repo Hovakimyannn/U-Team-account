@@ -104,4 +104,15 @@ class GroupPolicy
     {
         return $this->allow();
     }
+
+    /**
+     *
+     * @param \Illuminate\Foundation\Auth\User $user
+     *
+     * @return \Illuminate\Auth\Access\Response
+     */
+    public function getCourse(User $user) : Response
+    {
+        return $this->allow();
+    }
 }

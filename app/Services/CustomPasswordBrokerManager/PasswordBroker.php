@@ -2,28 +2,37 @@
 
 namespace App\Services\CustomPasswordBrokerManager;
 
-use App\Models\Admin;
-use App\Models\Student;
-use App\Models\Teacher;
+use App\Repositories\ResetPasswordRepository;
 use Illuminate\Auth\Passwords\PasswordBroker as PassBroker;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class PasswordBroker extends PassBroker
 {
+    /**
+     * @var \App\Repositories\ResetPasswordRepository
+     */
+    protected ResetPasswordRepository $resetPasswordRepository;
 
-    public function __construct(
-        TokenRepositoryInterface $tokens,
-        UserProvider $users
-    )
+    /**
+     * @param \Illuminate\Auth\Passwords\TokenRepositoryInterface $tokens
+     * @param \Illuminate\Contracts\Auth\UserProvider             $users
+     * @param \App\Repositories\ResetPasswordRepository           $resetPasswordRepository
+     */
+    public function __construct(TokenRepositoryInterface $tokens, UserProvider $users, ResetPasswordRepository $resetPasswordRepository)
     {
-        parent::__construct($tokens,$users);
+        $this->resetPasswordRepository = $resetPasswordRepository;
+        parent::__construct($tokens, $users);
     }
 
-    public function getUser(array $credentials)
+    /**
+     * @param array $credentials
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function getUser(array $credentials) : ?Model
     {
-         return Admin::where('email', $credentials['email'])->first() ??
-                Student::where('email', $credentials['email'])->first() ??
-                Teacher::where('email', $credentials['email'])->first();
+        return $this->resetPasswordRepository->findModelByEmail($credentials['email']);
     }
 }

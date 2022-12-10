@@ -27,10 +27,6 @@ class PasswordController extends Controller
             $request->only('email')
         );
 
-        if ($status === 'passwords.user') {
-            $status = Password::RESET_LINK_SENT;
-        }
-
         if ($status == Password::RESET_LINK_SENT) {
             return new JsonResponse(['message' => trans($status)], JsonResponse::HTTP_OK);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Group;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;
@@ -49,7 +50,7 @@ class GroupController extends Controller
         $this->authorize('create', Group::class);
 
         $this->validate($request, [
-            'number'    => ['required', 'int', 'min:3'],
+            'number'    => ['required', 'int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['required', 'int', 'exists:courses,id'],
         ]);
@@ -93,7 +94,7 @@ class GroupController extends Controller
         $this->authorize('update', Group::class);
 
         $this->validate($request, [
-            'number'    => ['int', 'min:3'],
+            'number'    => ['int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['int', 'exists:courses,id'],
         ]);
@@ -154,6 +155,21 @@ class GroupController extends Controller
         return new JsonResponse(
             $this->groupRepository->getRelatedModels($id, 'teachers'),
             JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * Returned all groups with their courses.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function getCourse() : JsonResponse
+    {
+        $this->authorize('getCourse', Group::class);
+        return new JsonResponse(
+            $this->groupRepository->findAllByWith(['course']),
+        JsonResponse::HTTP_OK
         );
     }
 }

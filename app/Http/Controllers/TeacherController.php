@@ -50,37 +50,26 @@ class TeacherController extends Controller
     /**
      *Show the form for creating a new resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \stdClass $invitation
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Models\Teacher
      */
-    public function create(Request $request): JsonResponse
+    public static function create(\stdClass $invitation) : Teacher
     {
-        $request->validate([
-            'firstName'  => ['required','string','max:255'],
-            'lastName'   => ['required','string','max:255'],
-            'patronymic' => ['required','string','max:255'],
-            'birthDate'  => ['required','date'],
-            'email'      => ['required','email','unique:students,email'],
-            'password'   => ['required','confirmed','min:5'],
-            'position'   => ['required'],
-            'department_id' => ['required', 'exists:departments,id'],
-        ]);
-
         $teacher = new Teacher();
-        $teacher->firstName = $request->get('firstName');
-        $teacher->lastName = $request->get('lastName');
-        $teacher->patronymic = $request->get('patronymic');
-        $teacher->birthDate = $request->get('birthDate');
-        $teacher->email = $request->get('email');
-        $teacher->position = $request->get('position');
-        $teacher->password = Hash::make($request->get('password'));
-
-        $teacher->department()->associate($request->get('department_id'));
+        $teacher->firstName = $invitation->firstName;
+        $teacher->lastName = $invitation->lastName;
+        $teacher->patronymic = $invitation->patronymic;
+        $teacher->birthDate = $invitation->birthDate;
+        $teacher->email = $invitation->email;
+        $teacher->position = $invitation->position;
+        $teacher->password = Hash::make($invitation->password);
+        $teacher->department()->associate($invitation->departmentId);
         $teacher->save();
+        $teacher->courses()->sync($invitation->courseId);
+        $teacher->groups()->sync($invitation->groupId);
 
-        return new JsonResponse($teacher, JsonResponse::HTTP_CREATED);
-
+        return $teacher;
     }
 
     /**
@@ -99,7 +88,7 @@ class TeacherController extends Controller
             'lastName'      => ['string', 'max:255'],
             'patronymic'    => ['string', 'max:255'],
             'birthDate'     => ['date'],
-            'email'         => ['email', 'unique:students,email'],
+            'email'         => ['email', 'unique:teachers,email'],
             'position'      => [new Enum(TeacherPositionEnum::class), 'string'],
             'department_id' => ['int', 'exists:departments,id'],
         ]);

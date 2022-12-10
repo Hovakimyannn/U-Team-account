@@ -24,8 +24,17 @@ return new class extends Migration {
             $table->rememberToken();
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('course_id');
-            $table->foreign('course_id')->references('id')->on('courses');
             $table->timestamps();
+            $table->foreign('course_id')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('department_id')
+                ->references('id')
+                ->on('departments')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
