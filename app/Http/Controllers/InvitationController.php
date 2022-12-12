@@ -86,7 +86,7 @@ class InvitationController extends Controller
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'int', 'exists:courses,id'],
-            'groupId'      => ['required', 'int', 'exists:groups,id'],
+            'groupId'      => ['int', 'exists:groups,id'],
             'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
         ];
     }
@@ -107,8 +107,8 @@ class InvitationController extends Controller
             'email'        => ['required', 'email', 'unique:teachers,email', 'unique:invitations,email'],
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
-            'courseId'     => ['required', 'array', 'exists:courses,id'],
-            'groupId'      => ['required', 'array', 'exists:groups,id'],
+            'courseId'     => ['array', 'exists:courses,id'],
+            'groupId'      => ['array', 'exists:groups,id'],
         ];
     }
 
