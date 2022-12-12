@@ -57,8 +57,8 @@ class GroupController extends Controller
 
         $group = new Group();
         $group->number = $request->get('number');
-        $group->parentId = $request->get('parentId');
-        $group->course()->associate($request->get('courseId'));
+        $group->parentId = $request->get('parent_id');
+        $group->course()->associate($request->get('course_id'));
         $group->save();
 
         return new JsonResponse($group, JsonResponse::HTTP_CREATED);
