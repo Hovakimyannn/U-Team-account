@@ -6,6 +6,8 @@ use App\Http\Controllers\Traits\Invite;
 use App\Models\Group;
 use App\Models\Invitation;
 use App\Repositories\InvitationRepository;
+use App\Rules\BirthDateRule;
+use App\Rules\EmptyInstituteRule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -81,7 +83,7 @@ class InvitationController extends Controller
             'firstName'    => ['required', 'string'],
             'lastName'     => ['required', 'string'],
             'patronymic'   => ['required', 'string'],
-            'birthDate'    => ['required', 'date'],
+            'birthDate'    => ['required', 'date', new BirthDateRule],
             'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
@@ -103,7 +105,7 @@ class InvitationController extends Controller
             'lastName'     => ['required', 'string'],
             'patronymic'   => ['required', 'string'],
             'position'     => ['required', 'in:assistant,lecturer,associate_professor,professors'],
-            'birthDate'    => ['required', 'date'],
+            'birthDate'    => ['required', 'date', new BirthDateRule],
             'email'        => ['required', 'email', 'unique:students,email', 'unique:invitations,email'],
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
