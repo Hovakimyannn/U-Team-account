@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
     public function run()
     {
         if (!Admin::exists()) {
-            // email    => admin@u_team.com
+            // email    => admin@u-team.com
             // password => 'password'
             Admin::factory(1)->create();
         }

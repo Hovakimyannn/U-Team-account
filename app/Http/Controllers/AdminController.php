@@ -78,7 +78,7 @@ class AdminController extends Controller
             'firstName'  => ['string', 'max:255'],
             'lastName'   => ['string', 'max:255'],
             'patronymic' => ['string', 'max:255'],
-            'email'      => ['email', 'unique:students,email'],
+            'email'      => ['email', 'unique:admins,email'],
         ]);
 
         /** @var \App\Models\Admin $admin */

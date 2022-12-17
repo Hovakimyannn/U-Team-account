@@ -50,8 +50,7 @@ Route::controller(InvitationController::class)
         Route::get('/accept/invitation', 'getUserByInvitation')
             ->middleware('guest');
 
-        Route::post('/accept/invitation', 'acceptInvitation')
-            ->middleware('guest');
+        Route::post('/accept/invitation', 'acceptInvitation');
     });
 
 Route::post('/forgot-password', [PasswordController::class, 'send'])

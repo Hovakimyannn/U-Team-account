@@ -50,15 +50,15 @@ class GroupController extends Controller
         $this->authorize('create', Group::class);
 
         $this->validate($request, [
-            'number'    => ['required', 'int', 'min:3'],
+            'number'    => ['required', 'int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['required', 'int', 'exists:courses,id'],
         ]);
 
         $group = new Group();
         $group->number = $request->get('number');
-        $group->parentId = $request->get('parentId');
-        $group->course()->associate($request->get('courseId'));
+        $group->parentId = $request->get('parent_id');
+        $group->course()->associate($request->get('course_id'));
         $group->save();
 
         return new JsonResponse($group, JsonResponse::HTTP_CREATED);
@@ -94,7 +94,7 @@ class GroupController extends Controller
         $this->authorize('update', Group::class);
 
         $this->validate($request, [
-            'number'    => ['int', 'min:3'],
+            'number'    => ['int', 'min:1'],
             'parent_id' => ['int', 'exists:groups,id'],
             'course_id' => ['int', 'exists:courses,id'],
         ]);
