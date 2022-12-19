@@ -66,7 +66,10 @@ class StudentController extends Controller
         $student->department()->associate($invitation->departmentId);
         $student->course()->associate($invitation->courseId);
         $student->save();
-        $student->groups()->sync($invitation->groupId);
+
+        if( isset($invitation->groupId)) {
+            $student->groups()->sync($invitation->groupId);
+        }
 
         return $student;
     }

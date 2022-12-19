@@ -88,8 +88,8 @@ class InvitationController extends Controller
             'instituteId'  => ['required', 'int', 'exists:institutes,id'],
             'departmentId' => ['required', 'int', 'exists:departments,id'],
             'courseId'     => ['required', 'int', 'exists:courses,id'],
-            'groupId'      => ['int', 'exists:groups,id'],
-            'subgroupId'   => Rule::requiredIf(fn() => Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())
+            'groupId'      => ['int', Rule::requiredIf(fn() => Group::where('course_id', $request->get('courseId'))->get()->isNotEmpty())],
+            'subgroupId'   => ['int', Rule::requiredIf(fn() => $request->get('groupId') && Group::where('parent_id', $request->get('groupId'))->get()->isNotEmpty())]
         ];
     }
 
