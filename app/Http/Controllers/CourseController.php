@@ -52,7 +52,7 @@ class CourseController extends Controller
         $this->authorize('create', Course::class);
 
         $this->validate($request, [
-            'number'        => ['required', 'int', 'min:3'],
+            'number'        => ['required', 'string', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'required', 'string'],
             'type'          => [new Enum(CourseTypeEnum::class), 'required', 'string'],
             'department_id' => ['required', 'exists:departments,id'],
@@ -99,7 +99,7 @@ class CourseController extends Controller
         $this->authorize('update', Course::class);
 
         $this->validate($request, [
-            'number'        => ['int', 'min:3'],
+            'number'        => ['string', 'min:3'],
             'degree'        => [new Enum(CourseDegreeEnum::class), 'string'],
             'type'          => [new Enum(CourseTypeEnum::class), 'string'],
             'department_id' => ['exists:departments,id'],
