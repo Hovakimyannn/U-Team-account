@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Services\Auth\MultiUserProvider;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
@@ -24,8 +26,10 @@ class AuthController extends Controller
     public function getCurrentUser(Request $request) : JsonResponse
     {
         if ($user = $request->user()) {
+            $user->reole = $this->getRole($user->email);
+
             return new JsonResponse([
-                'data' => $user
+                'data' => $user,
             ], JsonResponse::HTTP_OK);
         }
 
@@ -35,6 +39,25 @@ class AuthController extends Controller
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
+    /**
+     * Get current users role
+     *
+     * @param string $email
+     *
+     * @return string|null
+     */
+    private function getRole(string $email) : ?string
+    {
+        $users = [Student::class, Admin::class, Teacher::class];
+
+        foreach ($users as $user) {
+            $model = $user::where('email', $email)->first();
+            if($model != null){
+                return strtolower(last(explode('\\', $user)));
+            }
+        }
+        return null;
+    }
     /**
      * @param \Illuminate\Http\Request $request
      * @param string                   $role
