@@ -26,7 +26,7 @@ class AuthController extends Controller
     public function getCurrentUser(Request $request) : JsonResponse
     {
         if ($user = $request->user()) {
-            $user->reole = $this->getRole($user->email);
+            $user->reole = $this->getCurrentUserRole($user->email);
 
             return new JsonResponse([
                 'data' => $user,
@@ -46,7 +46,7 @@ class AuthController extends Controller
      *
      * @return string|null
      */
-    private function getRole(string $email) : ?string
+    private function getCurrentUserRole(string $email) : ?string
     {
         $users = [Student::class, Admin::class, Teacher::class];
 
