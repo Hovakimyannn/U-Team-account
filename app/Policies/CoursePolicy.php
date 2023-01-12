@@ -35,9 +35,7 @@ class CoursePolicy
      */
     public function show(User $user) : Response
     {
-        return $user::class !== Student::class ?
-            $this->allow() :
-            $this->deny('Don\'t allow');
+        return $this->allow();
     }
 
     /**

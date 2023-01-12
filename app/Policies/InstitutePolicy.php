@@ -32,11 +32,9 @@ class InstitutePolicy
      *
      * @return \Illuminate\Auth\Access\Response
      */
-    public function show(User $user) : Response
+    public function show() : Response
     {
-        return $user::class === Admin::class ?
-            $this->allow() :
-            $this->deny('Don\'t allow');
+        return $this->allow();
     }
 
     /**

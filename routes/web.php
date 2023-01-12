@@ -47,8 +47,7 @@ Route::controller(InvitationController::class)
         Route::get('/resend-invitation/{id}', 'resendInvitation')
             ->middleware('can:is_admin');
 
-        Route::get('/accept/invitation', 'getUserByInvitation')
-            ->middleware('guest');
+        Route::get('/accept/invitation', 'getUserByInvitation');
 
         Route::post('/accept/invitation', 'acceptInvitation');
     });
