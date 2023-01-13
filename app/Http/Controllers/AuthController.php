@@ -29,7 +29,7 @@ class AuthController extends Controller
             $user->role = $this->getCurrentUserRole($user->email);
 
             return new JsonResponse([
-                'data' => $user,
+                $user,
             ], JsonResponse::HTTP_OK);
         }
 
