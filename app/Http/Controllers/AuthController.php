@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Services\Auth\MultiUserProvider;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
@@ -28,9 +27,7 @@ class AuthController extends Controller
         if ($user = $request->user()) {
             $user->role = $this->getCurrentUserRole($user->email);
 
-            return new JsonResponse([
-                $user,
-            ], JsonResponse::HTTP_OK);
+            return new JsonResponse($user, JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([
@@ -52,12 +49,13 @@ class AuthController extends Controller
 
         foreach ($users as $user) {
             $model = $user::where('email', $email)->first();
-            if($model != null){
+            if ($model != null) {
                 return strtolower(last(explode('\\', $user)));
             }
         }
         return null;
     }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @param string                   $role
@@ -78,9 +76,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            return new JsonResponse([
-                'data' => $user
-            ], JsonResponse::HTTP_OK);
+            return new JsonResponse($user, JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([
