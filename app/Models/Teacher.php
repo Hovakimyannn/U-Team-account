@@ -62,6 +62,10 @@ class Teacher extends Authenticatable
         'position'          => TeacherPositionEnum::class,
     ];
 
+    protected $with = [
+        'courses',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */

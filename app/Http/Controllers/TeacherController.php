@@ -36,6 +36,26 @@ class TeacherController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function department(Request $request): JsonResponse
+    {
+        return new JsonResponse($request->user()->department, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function courses(Request $request): JsonResponse
+    {
+        return new JsonResponse($request->user()->courses, JsonResponse::HTTP_OK);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param int $id

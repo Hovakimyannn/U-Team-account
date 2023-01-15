@@ -88,6 +88,8 @@ Route::controller(StudentController::class)
     ->prefix('/student')
     ->group(function () {
         Route::get('/get', 'index');//admin
+        Route::get('/department', 'department');
+        Route::get('/course', 'course');
         Route::get('/get/{id}', 'show');// no policy
         Route::patch('/edit/{id}', 'update');// admin
         Route::delete('/delete/{id}', 'destroy');//admin
@@ -98,6 +100,8 @@ Route::controller(TeacherController::class) // admin
     ->prefix('/teacher')
     ->group(function () {
         Route::get('/get', 'index');
+        Route::get('/department', 'department');
+        Route::get('/courses', 'courses');
         Route::get('/get/{id}', 'show'); // no policy
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');

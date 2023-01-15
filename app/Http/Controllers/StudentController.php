@@ -30,7 +30,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index() : JsonResponse
+    public function index(): JsonResponse
     {
         return new JsonResponse($this->studentRepository->findAll(), JsonResponse::HTTP_OK);
     }
@@ -42,9 +42,29 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id) : JsonResponse
+    public function show(int $id): JsonResponse
     {
         return new JsonResponse($this->studentRepository->find($id), JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function department(Request $request): JsonResponse
+    {
+        return new JsonResponse($request->user()->department, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function course(Request $request): JsonResponse
+    {
+        return new JsonResponse($request->user()->course, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -54,7 +74,7 @@ class StudentController extends Controller
      *
      * @return \App\Models\Student
      */
-    public static function create(stdClass $invitation) : Student
+    public static function create(stdClass $invitation): Student
     {
         $student = new Student();
         $student->firstName = $invitation->firstName;
@@ -67,7 +87,7 @@ class StudentController extends Controller
         $student->course()->associate($invitation->courseId);
         $student->save();
 
-        if( isset($invitation->groupId)) {
+        if (isset($invitation->groupId)) {
             $student->groups()->sync($invitation->groupId);
         }
 
@@ -78,27 +98,27 @@ class StudentController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Request $request, int $id) : JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $this->validate($request, [
-            'firstName'     => ['string', 'max:255'],
-            'lastName'      => ['string', 'max:255'],
-            'patronymic'    => ['string', 'max:255'],
-            'birthDate'     => ['date'],
-            'email'         => ['email', 'unique:students,email'],
+            'firstName' => ['string', 'max:255'],
+            'lastName' => ['string', 'max:255'],
+            'patronymic' => ['string', 'max:255'],
+            'birthDate' => ['date'],
+            'email' => ['email', 'unique:students,email'],
             'department_id' => ['int', 'exists:departments,id'],
-            'course_id'     => ['int', 'exists:courses,id']
+            'course_id' => ['int', 'exists:courses,id']
         ]);
 
         /** @var \App\Models\Student $student */
         $student = $this->studentRepository->find($id);
         $student->firstName = $request->get('firstName', $student->firstName);
-        $student->lastName = $request->get('lastName',$student->lastName);
+        $student->lastName = $request->get('lastName', $student->lastName);
         $student->patronymic = $request->get('patronymic', $student->patronymic);
         $student->birthDate = $request->get('birthDate', $student->birthDate);
         $student->email = $request->get('email', $student->email);
@@ -114,7 +134,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id) : JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $student = $this->studentRepository->find($id);
         $student->delete();
