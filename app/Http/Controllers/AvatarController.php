@@ -52,13 +52,14 @@ class AvatarController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function show() : Response
+    public function show() : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $avatar = Auth::user()->avatar;
         $imagePath = storage_path('app/public/avatars/' . $avatar);
-        $image = File::get($imagePath);
+        $avatar = ['avatar' => $imagePath];
         $mimeType = File::mimeType($imagePath);
-       return \response($image, 200)->header('Content-Type',$mimeType);
+
+        return \response($avatar, 200)->header('Content-Type',$mimeType);
     }
 
     /**
