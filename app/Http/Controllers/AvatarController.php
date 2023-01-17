@@ -58,7 +58,6 @@ class AvatarController extends Controller
         $imagePath = storage_path('app/public/avatars/' . $avatar);
         $image = File::get($imagePath);
         $mimeType = File::mimeType($imagePath);
-
        return \response($image, 200)->header('Content-Type',$mimeType);
     }
 
