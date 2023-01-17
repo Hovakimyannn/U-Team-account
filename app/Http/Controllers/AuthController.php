@@ -28,9 +28,9 @@ class AuthController extends Controller
         if ($user = $request->user()) {
             $user->role = $this->getCurrentUserRole($user->email);
 
-            return new JsonResponse([
-                'data' => $user,
-            ], JsonResponse::HTTP_OK);
+            return new JsonResponse(
+                $user
+            , JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([
@@ -78,9 +78,9 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            return new JsonResponse([
-                'data' => $user
-            ], JsonResponse::HTTP_OK);
+            return new JsonResponse(
+                $user
+            , JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([

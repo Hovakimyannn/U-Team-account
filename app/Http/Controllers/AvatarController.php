@@ -41,7 +41,8 @@ class AvatarController extends Controller
         $user->avatar = $avatarName;
         $user->save();
 
-        return new JsonResponse($avatarName,JsonResponse::HTTP_CREATED);
+        $path = Storage::path($avatarName);
+        return new JsonResponse($path,JsonResponse::HTTP_CREATED);
     }
 
     /**
