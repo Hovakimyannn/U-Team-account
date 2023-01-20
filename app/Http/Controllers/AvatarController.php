@@ -26,40 +26,33 @@ class AvatarController extends Controller
             'avatar' => ['required', 'mimes:jpeg,png,jpg'],
         ]);
 
-        $avatar =  $request->file('avatar');
-
-        $globalPath = "public/avatars";
-       $fileName = Storage::put($globalPath, $avatar);
-       $avatarName = basename($fileName);
-
         $user = Auth::user();
 
-        if ($user->avatar) {
-            Storage::delete($globalPath . '/' . $user->avatar);
+        if (($avatar = $request->file('avatar')) != null) {
+            Storage::disk('avatar')->delete($user->avatar);
         }
+
+        $avatarName = $avatar->store('/', 'avatar');
 
         $user->avatar = $avatarName;
         $user->save();
 
-        $path = Storage::path($globalPath. '/' . $avatarName);
+        $path = Storage::path('avatar' . '/'.$avatarName);
+
         return new JsonResponse($path,JsonResponse::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show() : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+    public function show() : JsonResponse
     {
         $avatar = Auth::user()->avatar;
-        $imagePath = storage_path('app/public/avatars/' . $avatar);
-        $avatar = ['avatar' => $imagePath];
-        $mimeType = File::mimeType($imagePath);
+        $path = Storage::path('avatar' . '/' . $avatar);
 
-        return \response($avatar, 200)->header('Content-Type',$mimeType);
+        return new JsonResponse($path, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -71,10 +64,9 @@ class AvatarController extends Controller
      */
     public function destroy() : JsonResponse
     {
-        $globalPath = "public/avatars/";
         $avatar = Auth::user()->avatar;
-        if(Storage::exists($globalPath . $avatar)) {
-            Storage::delete($globalPath . $avatar);
+        if(Storage::exists('avatar' . '/' . $avatar)) {
+            Storage::disk('avatar')->delete($avatar);
         }
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
