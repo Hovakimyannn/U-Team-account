@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GroupController;
@@ -81,6 +82,7 @@ Route::controller(AdminController::class)
         Route::get('/get/{id}', 'show');//
         Route::patch('/edit/{id}', 'update');//
         Route::delete('/delete/{id}', 'destroy');//
+        Route::post('/avatar', 'storeAvatar');
     });
 
 Route::controller(StudentController::class)
@@ -105,4 +107,13 @@ Route::controller(TeacherController::class) // admin
         Route::get('/get/{id}', 'show'); // no policy
         Route::patch('/edit/{id}', 'update');
         Route::delete('/delete/{id}', 'destroy');
+    });
+
+Route::controller(AvatarController::class)
+    ->middleware('auth:web')
+    ->prefix('/avatar')
+    ->group(function () {
+        Route::post('/store', 'store');
+        Route::get('/get', 'show');
+        Route::delete('/delete', 'destroy');
     });
