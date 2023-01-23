@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
 use App\Models\Group;
 use App\Repositories\GroupRepository;
 use Illuminate\Http\JsonResponse;

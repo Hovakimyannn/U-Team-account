@@ -6,7 +6,6 @@ use App\Models\Institute;
 use App\Repositories\InstituteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\In;
 
 class InstituteController extends Controller
 {
@@ -72,7 +71,7 @@ class InstituteController extends Controller
     {
         $this->authorize('show', Institute::class);
 
-        return new JsonResponse($this->instituteRepository->find($id));
+        return new JsonResponse($this->instituteRepository->find($id), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -98,7 +97,7 @@ class InstituteController extends Controller
         $institute->name = $request->get('name', $institute->name);
         $institute->save();
 
-        return new JsonResponse($institute);
+        return new JsonResponse($institute, JsonResponse::HTTP_OK);
     }
 
     /**
