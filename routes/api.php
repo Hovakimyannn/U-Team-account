@@ -6,6 +6,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstituteController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -116,4 +117,14 @@ Route::controller(AvatarController::class)
         Route::post('/store', 'store');
         Route::get('/get', 'show');
         Route::delete('/delete', 'destroy');
+    });
+
+Route::controller(ScheduleController::class)
+    ->middleware('auth:web')
+    ->prefix('/schedule')
+    ->group(function () {
+        Route::post('/store', 'store');
+        Route::get('/get/{courseId}/{groupId}', 'show');
+        Route::get('/get', 'index');
+        Route::delete('/delete/{courseId}/{groupId}', 'destroy');
     });

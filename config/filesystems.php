@@ -30,6 +30,12 @@ return [
 
     'disks' => [
 
+        'schedule' => [
+            'driver' => 'local',
+            'root' => storage_path('app/schedule'),
+            'throw' => false,
+        ],
+
         'avatar' => [
             'driver' => 'local',
             'root' => storage_path('app/avatar'),
