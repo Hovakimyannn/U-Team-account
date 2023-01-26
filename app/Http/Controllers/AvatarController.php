@@ -24,7 +24,7 @@ class AvatarController extends Controller
 
         $user = Auth::user();
 
-        if (($avatar = $request->file('avatar')) != null) {
+        if (($avatar = $request->file('avatar')) != null && $user->avatar != null) {
             Storage::disk('avatar')->delete($user->avatar);
         }
 
