@@ -12,7 +12,7 @@ class AvatarController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -33,9 +33,9 @@ class AvatarController extends Controller
         $user->avatar = $avatarName;
         $user->save();
 
-        $path = Storage::path('avatar' . '/'.$avatarName);
+        $path = Storage::url('app/avatar/'.$avatarName);
 
-        return new JsonResponse($path,JsonResponse::HTTP_CREATED);
+        return new JsonResponse(asset($path), JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -46,22 +46,22 @@ class AvatarController extends Controller
     public function show() : JsonResponse
     {
         $avatar = Auth::user()->avatar;
-        $path = Storage::path('avatar' . '/' . $avatar);
+        $path = Storage::url('app/avatar/'.$avatar);
 
-        return new JsonResponse($path, JsonResponse::HTTP_OK);
+        return new JsonResponse(asset($path), JsonResponse::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @return JsonResponse
      */
     public function destroy() : JsonResponse
     {
         $avatar = Auth::user()->avatar;
-        if(Storage::exists('avatar' . '/' . $avatar)) {
+        if (Storage::exists('avatar'.'/'.$avatar)) {
             Storage::disk('avatar')->delete($avatar);
         }
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
