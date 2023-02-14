@@ -33,7 +33,7 @@ class AvatarController extends Controller
         $user->avatar = $avatarName;
         $user->save();
 
-        $path = Storage::url('app/avatar/'.$avatarName);
+        $path = Storage::url('avatar/'.$avatarName);
 
         return new JsonResponse(asset($path), JsonResponse::HTTP_CREATED);
     }
@@ -46,7 +46,7 @@ class AvatarController extends Controller
     public function show() : JsonResponse
     {
         $avatar = Auth::user()->avatar;
-        $path = Storage::url('app/avatar/'.$avatar);
+        $path = Storage::url('avatar/'.$avatar);
 
         return new JsonResponse(asset($path), JsonResponse::HTTP_OK);
     }
