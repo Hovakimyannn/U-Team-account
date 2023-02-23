@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\ScheduleCreatedEvent;
 use App\Models\Group;
+use App\Models\Schedule;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
@@ -27,43 +28,56 @@ class ScheduleController extends Controller
     {
         $this->validate($request,[
             'schedule'  => ['required', 'mimes:xls,xlsx,xlsb,ods'],
-            'teacherId' => ['exists:teachers,id', 'int'],
+            'role' => ['required', 'string'],  //Create new Enum for userRole
+            'userId' => ['exists:teachers,id', 'int'],
             'courseId' => ['exists:courses,id', 'int'],
             'groupId'  => [ 'int','exists:groups,id', Rule::requiredIf(fn() => Group::where('course_id', $request->get('courseId'))->get()->isNotEmpty())],
         ]);
 
-        $schedule = $request->file('schedule');
+        $scheduleFile = $request->file('schedule');
         $courseId = $request->get('courseId');
         $groupId = $request->get('groupId');
+        $userId = $request->get('userId');
+        $role = $request->get('role');
 
-        $subPath = sprintf('students/%s/%s',
-            $request->get('courseId'),
-            $request->get('groupId')
+        $subPath = sprintf('%s/%s/%s',
+            $request->get('roel'),
+            $courseId,
+            $groupId,
         );
 
-        if(!empty($request->get('teacherId'))){
-            $subPath = sprintf('teachers/%s',
-                $request->get('teacherId')
+        if(!empty($request->get('userId')) && $request->get('role') === 'teacher'){ // check this to enum
+            $subPath = sprintf('%s/%s',
+                $role,
+                $userId,
             );
         }
-
         $path = Storage::path(
             sprintf('schedule/%s', $subPath)
         );
 
-        if (File::exists($path)) {
-            $this->destroy($courseId, $groupId);
-        }
+//        change this
+//        if (File::exists($path)) {
+//            $this->destroy($courseId, $groupId);
+//        }
 
-        $schedule->store($subPath, 'schedule');
+        $scheduleFile->store($subPath, 'schedule');
         $filename = $this->getFileName($path);
         $path = $this->convertToJson($path, $filename);
-
         $storagePath = Storage::url(str_replace(storage_path().'/app/', '', $path));
+
+        $schedule = new Schedule();
+        $schedule->role = $role;
+        $schedule->userId = $userId;
+        $schedule->courseId = $courseId;
+        $schedule->groupId = $groupId;
+        $schedule->path = $storagePath;
+
+        $schedule->save();
 
         event(new ScheduleCreatedEvent($courseId, $groupId, asset($storagePath)));
 
-        return new JsonResponse($path, JsonResponse::HTTP_OK);
+        return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -84,7 +98,8 @@ class ScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $courseId
+     * @param int $groupId
      *
      * @return \Illuminate\Http\JsonResponse
      */
