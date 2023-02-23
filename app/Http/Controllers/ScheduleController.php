@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ScheduleCreatedEvent;
 use App\Models\Group;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
@@ -15,8 +16,6 @@ use Illuminate\Validation\Rule;
 use function sprintf;
 class ScheduleController extends Controller
 {
-    use RecordMessage;
-
     /**
      * Store a newly created resource in storage.
      *
@@ -51,6 +50,10 @@ class ScheduleController extends Controller
         $schedule->store('/' . $courseId . '/' . $groupId, 'schedule');
         $filename = $this->getFileName($path);
         $path = $this->convertToJson($path, $filename);
+
+        $storagePath = Storage::url(str_replace(storage_path().'/app/', '', $path));
+
+        event(new ScheduleCreatedEvent($courseId, $groupId, asset($storagePath)));
 
         return new JsonResponse($path, JsonResponse::HTTP_OK);
     }
