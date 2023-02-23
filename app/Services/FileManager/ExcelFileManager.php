@@ -25,7 +25,7 @@ class ExcelFileManager implements FileManagerInterface
     public function convertToJson(Collection $data) : void
     {
         File::move($this->path, $this->getPath());
-        File::put($this->getPath()   , $data);
+        File::put($this->getPath(), $data);
     }
 
     public function getPath() : string
