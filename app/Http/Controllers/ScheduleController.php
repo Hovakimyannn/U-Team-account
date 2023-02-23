@@ -28,7 +28,8 @@ class ScheduleController extends Controller
     {
         $this->validate($request,[
             'schedule'  => ['required', 'mimes:xls,xlsx,xlsb,ods'],
-            'courseId' => ['required','exists:courses,id', 'int'],
+            'teacherId' => ['exists:teachers,id', 'int'],
+            'courseId' => ['exists:courses,id', 'int'],
             'groupId'  => [ 'int','exists:groups,id', Rule::requiredIf(fn() => Group::where('course_id', $request->get('courseId'))->get()->isNotEmpty())],
         ]);
 
@@ -36,19 +37,26 @@ class ScheduleController extends Controller
         $courseId = $request->get('courseId');
         $groupId = $request->get('groupId');
 
+        $subPath = sprintf('students/%s/%s',
+            $request->get('courseId'),
+            $request->get('groupId')
+        );
+
+        if(!empty($request->get('teacherId'))){
+            $subPath = sprintf('teachers/%s',
+                $request->get('teacherId')
+            );
+        }
+
         $path = Storage::path(
-            sprintf(
-                'schedule/%s/%s',
-                $request->get('courseId'),
-                $request->get('groupId')
-            )
+            sprintf('schedule/%s', $subPath)
         );
 
         if (File::exists($path)) {
             $this->destroy($courseId, $groupId);
         }
 
-        $schedule->store('/' . $courseId . '/' . $groupId, 'schedule');
+        $schedule->store($subPath, 'schedule');
         $filename = $this->getFileName($path);
         $path = $this->convertToJson($path, $filename);
 
