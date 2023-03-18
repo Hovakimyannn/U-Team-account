@@ -20,7 +20,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string $email
  * @property string $password
  * @property string $birthDate
- *
+ * @property string $avatar
+ * @property string $thumbnail
  */
 class Student extends Authenticatable
 {
@@ -41,7 +42,9 @@ class Student extends Authenticatable
         'patronymic',
         'email',
         'password',
-        'birthDate'
+        'birthDate',
+        'avatar',
+        'thumbnail',
     ];
 
     /**

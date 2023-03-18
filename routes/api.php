@@ -126,5 +126,5 @@ Route::controller(ScheduleController::class)
         Route::post('/store', 'store');
         Route::get('/get/{courseId}/{groupId}', 'show');
         Route::get('/get', 'index');
-        Route::delete('/delete/{courseId}/{groupId}', 'destroy');
+        Route::delete('/delete/{id}', 'destroy');
     });

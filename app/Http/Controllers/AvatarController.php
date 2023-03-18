@@ -28,9 +28,12 @@ class AvatarController extends Controller
             Storage::disk('avatar')->delete($user->avatar);
         }
 
+        $thumbnail = $avatar->getClientOriginalName();
         $avatarName = $avatar->store('/', 'avatar');
 
         $user->avatar = $avatarName;
+        $user->thumbnail = $thumbnail;
+
         $user->save();
 
         $path = Storage::url('avatar/'.$avatarName);

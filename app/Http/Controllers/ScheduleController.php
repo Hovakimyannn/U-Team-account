@@ -41,7 +41,7 @@ class ScheduleController extends Controller
         $role = $request->get('role');
 
         $subPath = sprintf('%s/%s/%s',
-            $request->get('roel'),
+            $role,
             $courseId,
             $groupId,
         );
@@ -52,12 +52,16 @@ class ScheduleController extends Controller
                 $userId,
             );
         }
+
         $path = Storage::path(
             sprintf('schedule/%s', $subPath)
         );
 
 //        change this
 //        if (File::exists($path)) {
+//            dd($path);
+//            $a = Schedule::find($path);
+//            dd($a);
 //            $this->destroy($courseId, $groupId);
 //        }
 
@@ -75,7 +79,7 @@ class ScheduleController extends Controller
 
         $schedule->save();
 
-        event(new ScheduleCreatedEvent($courseId, $groupId, asset($storagePath)));
+//        event(new ScheduleCreatedEvent($courseId, $groupId, asset($storagePath)));
 
         return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
     }
@@ -87,7 +91,7 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $courseId, int $groupId) : JsonResponse
+    public function show(int $courseId, int $groupId) : JsonResponse // changeThis
     {
         $path = Storage::path( 'schedule' . '/' . $courseId . '/' . $groupId);
         $filename = $this->getFileName(Storage::path('schedule') . "/$courseId/$groupId");
@@ -103,15 +107,17 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $courseId, int $groupId) : JsonResponse
+    public function destroy(int $id) : JsonResponse
     {
-        $filename = $this->getFileName(Storage::path('schedule') . "/$courseId/$groupId");
-        Storage::disk('schedule')->delete(sprintf(
-            '/%s/%s/%s',
-            $courseId,
-            $groupId,
-            $filename
-        ));
+        //Look this
+        $schedule = Schedule::findOrFail($id);
+
+        $path = $schedule->path;
+        $explodesPath = explode('/', $path);
+        $teacherPath = implode('/', array_slice($explodesPath, 3));
+
+        Storage::disk('schedule')->delete($teacherPath);
+        $schedule->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

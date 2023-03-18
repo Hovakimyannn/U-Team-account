@@ -18,6 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $birthDate
  * @property TeacherPositionEnum $position
+ * @property string $avatar
+ * @property string $thumbnail
  */
 class Teacher extends Authenticatable
 {
@@ -39,7 +41,9 @@ class Teacher extends Authenticatable
         'email',
         'password',
         'birthDate',
-        'position'
+        'position',
+        'avatar',
+        'thumbnail',
     ];
 
     /**
