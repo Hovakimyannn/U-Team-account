@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ScheduleCreatedEvent;
 use App\Models\Group;
 use App\Models\Schedule;
+use App\Repositories\ScheduleRepository;
 use App\Services\FileManager\ExcelFileManager;
 use App\Services\FileManager\FileManagerVisitor;
 use App\Traits\RecordMessage;
@@ -17,6 +18,28 @@ use Illuminate\Validation\Rule;
 use function sprintf;
 class ScheduleController extends Controller
 {
+    /**
+     * @var \App\Repositories\ScheduleRepository
+     */
+    protected ScheduleRepository $scheduleRepository;
+
+    /**
+     * @param \App\Repositories\ScheduleRepository $scheduleRepository
+     */
+    public function __construct(ScheduleRepository $scheduleRepository)
+    {
+        $this->scheduleRepository = $scheduleRepository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index() : JsonResponse
+    {
+        return new JsonResponse($this->scheduleRepository->findAll(), JsonResponse::HTTP_OK);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -85,7 +108,7 @@ class ScheduleController extends Controller
 
         $schedule->save();
 
-        event(new ScheduleCreatedEvent($data, asset($storagePath)));
+//        event(new ScheduleCreatedEvent($data, asset($storagePath)));
 
         return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
     }
@@ -97,12 +120,11 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $courseId, int $groupId) : JsonResponse // changeThis
+    public function show(int $id) : JsonResponse // changeThis
     {
-        $path = Storage::path( 'schedule' . '/' . $courseId . '/' . $groupId);
-        $filename = $this->getFileName(Storage::path('schedule') . "/$courseId/$groupId");
+        $scedule = $this->scheduleRepository->find($id);
 
-        return new JsonResponse($path . '/' . $filename ,JsonResponse::HTTP_OK);
+        return new JsonResponse($scedule,JsonResponse::HTTP_OK);
     }
 
     /**
@@ -115,14 +137,15 @@ class ScheduleController extends Controller
      */
     public function destroy(int $id) : JsonResponse
     {
-        //Look this
-        $schedule = Schedule::findOrFail($id);
+        $schedule = $this->scheduleRepository->find($id);
 
         $path = $schedule->path;
         $explodesPath = explode('/', $path);
-        $teacherPath = implode('/', array_slice($explodesPath, 3));
+        $path = implode('/', array_slice($explodesPath, 3));
 
-        Storage::disk('schedule')->delete($teacherPath);
+        //delete from storage
+        Storage::disk('schedule')->delete($path);
+        //delete from model
         $schedule->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);

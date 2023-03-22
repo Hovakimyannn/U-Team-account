@@ -124,7 +124,7 @@ Route::controller(ScheduleController::class)
     ->prefix('/schedule')
     ->group(function () {
         Route::post('/store', 'store');
-        Route::get('/get/{courseId}/{groupId}', 'show');
+        Route::get('/get/{id}', 'show');
         Route::get('/get', 'index');
         Route::delete('/delete/{id}', 'destroy');
     });
