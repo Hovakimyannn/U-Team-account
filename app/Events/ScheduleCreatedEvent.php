@@ -10,8 +10,7 @@ class ScheduleCreatedEvent
      * @return void
      */
     public function __construct(
-        public int $courseId,
-        public int $groupId,
+        public array $data,
         public string $path,
     ) {
     }

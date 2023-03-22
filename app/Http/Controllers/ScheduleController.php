@@ -57,6 +57,12 @@ class ScheduleController extends Controller
             sprintf('schedule/%s', $subPath)
         );
 
+        $data = [
+            'userId'   => $userId,
+            'courseId' => $courseId,
+            'groupId'  => $groupId,
+        ];
+
 //        change this
 //        if (File::exists($path)) {
 //            dd($path);
@@ -79,7 +85,7 @@ class ScheduleController extends Controller
 
         $schedule->save();
 
-//        event(new ScheduleCreatedEvent($courseId, $groupId, asset($storagePath)));
+        event(new ScheduleCreatedEvent($data, asset($storagePath)));
 
         return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
     }

@@ -21,8 +21,7 @@ class RecordScheduleListener
         $this->recordMessage(
             json_encode(
                 [
-                    'courseId' => $event->courseId,
-                    'groupId'  => $event->groupId,
+                    'data' => $event->data,
                     'path'     => $event->path
                 ]
             )
