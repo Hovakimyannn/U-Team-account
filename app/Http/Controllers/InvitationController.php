@@ -41,6 +41,7 @@ class InvitationController extends Controller
         $this->validate($request, $this->validateInvitation($request, $role));
 
         $token = $this->createToken($request->get('email'));
+        $this->sendMail($request->get('email'), $this->createUrl($token));
 
         $invitation = new Invitation();
         $invitation->email = $request->get('email');
@@ -49,7 +50,6 @@ class InvitationController extends Controller
         $invitation->payload = $this->preparePayload($request->all());
         $invitation->save();
 
-        $this->sendMail($invitation->email, $this->createUrl($token));
 
         return new JsonResponse([
             'message' => 'Invite sent'
