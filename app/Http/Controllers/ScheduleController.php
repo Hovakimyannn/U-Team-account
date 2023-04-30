@@ -86,13 +86,17 @@ class ScheduleController extends Controller
             'groupId'  => $groupId,
         ];
 
-//        change this
-//        if (File::exists($path)) {
-//            dd($path);
-//            $a = Schedule::find($path);
-//            dd($a);
-//            $this->destroy($courseId, $groupId);
-//        }
+        if (File::exists($path)) {
+            if (!empty($userId) && 'teacher' === $role) {
+                $teacherSchedule = Schedule::where('user_id', '=', $userId)->first();
+                $this->destroy($teacherSchedule->id);
+            } else {
+                $studentSchedule = Schedule::where('course_id', '=', $courseId)
+                    ->where('group_id', '=', $groupId)
+                    ->first();
+                $this->destroy($studentSchedule->id);
+            }
+        }
 
         $scheduleFile->store($subPath, 'schedule');
         $filename = $this->getFileName($path);
@@ -108,7 +112,7 @@ class ScheduleController extends Controller
 
         $schedule->save();
 
-//        event(new ScheduleCreatedEvent($data, asset($storagePath)));
+        event(new ScheduleCreatedEvent($data, asset($storagePath)));
 
         return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
     }
