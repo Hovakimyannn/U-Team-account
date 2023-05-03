@@ -41,7 +41,7 @@ class InvitationController extends Controller
         $this->validate($request, $this->validateInvitation($request, $role));
 
         $token = $this->createToken($request->get('email'));
-        $this->sendMail($request->get('email'), $this->createUrl($token));
+        $this->sendUserInvitation($request->get('email'), $request->get('name'), $this->createUrl($token));
 
         $invitation = new Invitation();
         $invitation->email = $request->get('email');
