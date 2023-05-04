@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ThumbnailGenerator\ImageThumbnailGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class AvatarController extends Controller
 {
+    protected ImageThumbnailGenerator $imageThumbnailGenerator;
+
+    /**
+     * @param \App\Services\ThumbnailGenerator\ImageThumbnailGenerator $imageThumbnailGenerator\
+     */
+    public function __construct(ImageThumbnailGenerator $imageThumbnailGenerator) {
+        $this->imageThumbnailGenerator = $imageThumbnailGenerator;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -16,7 +27,7 @@ class AvatarController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request) : JsonResponse
+    public function store(Request $request) //: JsonResponse
     {
         $this->validate($request, [
             'avatar' => ['required', 'mimes:jpeg,png,jpg'],
@@ -26,17 +37,24 @@ class AvatarController extends Controller
 
         if (($avatar = $request->file('avatar')) != null && $user->avatar != null) {
             Storage::disk('avatar')->delete($user->avatar);
+            Storage::disk('avatar')->delete('thumbnail/' . $user->thumbnail);
         }
 
-        $thumbnail = $avatar->getClientOriginalName();
-        $avatarName = $avatar->store('/', 'avatar');
+        //Store Avatar picture
+        $avatarFile = $avatar->store('/', 'avatar');
 
-        $user->avatar = $avatarName;
-        $user->thumbnail = $thumbnail;
+        //generate avatars thumbnail
+        $thumbnail = $this->imageThumbnailGenerator->makeImage($avatar);
+        $this->imageThumbnailGenerator->imageResizer(50, 50, $thumbnail);
 
+        $filename = hash('sha256', $thumbnail->filename).'.'.$avatar->extension();
+        $thumbnail->save(storage_path('app/avatar/thumbnail/'.$filename));
+
+        $user->avatar = $avatarFile;
+        $user->thumbnail = $filename;
         $user->save();
 
-        $path = Storage::url('avatar/'.$avatarName);
+        $path = Storage::url('avatar/'.$avatarFile);
 
         return new JsonResponse(asset($path), JsonResponse::HTTP_CREATED);
     }

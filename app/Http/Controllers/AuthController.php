@@ -26,6 +26,7 @@ class AuthController extends Controller
     {
         if ($user = $request->user()) {
             $user->role = $this->getCurrentUserRole($user->email);
+            $user->thumbnail = asset(Storage::url('avatar/thumbnail/'.$user->thumbnail));
 
             return new JsonResponse($user, JsonResponse::HTTP_OK);
         }
