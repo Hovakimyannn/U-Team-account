@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class AvatarController extends Controller
 {
@@ -26,14 +25,19 @@ class AvatarController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request) //: JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $this->validate($request, [
             'avatar' => ['required', 'mimes:jpeg,png,jpg'],
         ]);
 
         $user = Auth::user();
+
+        if (!Storage::disk('avatar')->exists('thumbnail')){
+            Storage::disk('avatar')->makeDirectory('thumbnail');
+        }
 
         if (($avatar = $request->file('avatar')) != null && $user->avatar != null) {
             Storage::disk('avatar')->delete($user->avatar);
@@ -74,8 +78,6 @@ class AvatarController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param string $id
      *
      * @return JsonResponse
      */
