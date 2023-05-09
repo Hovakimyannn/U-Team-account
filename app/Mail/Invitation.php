@@ -21,7 +21,7 @@ class Invitation extends Mailable
             ->with([
                 'name' => $this->name,
                 'invitationLink' => $this->invitationLink,
-                'title' => 'Invitation to Join Our Website',
+                'title' => 'Invitation for joining our Website',
             ]);
     }
 }
