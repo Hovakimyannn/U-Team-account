@@ -124,11 +124,13 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id) : JsonResponse // changeThis
+    public function show(int $groupId) : JsonResponse // changeThis
     {
-        $scedule = $this->scheduleRepository->find($id);
 
-        return new JsonResponse($scedule,JsonResponse::HTTP_OK);
+        $schedule = Group::where('id', $groupId)->first()->course_id;
+
+
+        return new JsonResponse($schedule,JsonResponse::HTTP_OK);
     }
 
     /**
