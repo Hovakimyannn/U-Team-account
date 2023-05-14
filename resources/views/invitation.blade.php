@@ -203,7 +203,7 @@
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 32px;font-family:arial,helvetica,sans-serif;" align="left">
 
                                                 <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; color: #6d6c6c;">Here are your credentials to log in to U-Team:</span></p>
+                                                    <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; color: #6d6c6c;">Here are your Invitation link. Please go and join U-Team:</span></p>
                                                 </div>
 
                                             </td>
@@ -220,7 +220,7 @@
                                                 <div align="center">
                                                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="%reset_password_url%" style="height:37px; v-text-anchor:middle; width:110px;" arcsize="11%"  stroke="f" fillcolor="#3AAEE0"><w:anchorlock/><center style="color:#FFFFFF;font-family:arial,helvetica,sans-serif;"><![endif]-->
                                                     <a href="{{ $invitationLink }}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color:  #1890ff; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-                                                    <span style="display:block;padding:10px 20px;line-height:120%;"><span style="line-height: 16.8px;">Click Hear</span></span>
+                                                    <span style="display:block;padding:10px 20px;line-height:120%;"><span style="line-height: 16.8px;">Click Here</span></span>
                                                     </a>
                                                     <!--[if mso]></center></v:roundrect><![endif]-->
                                                 </div>
