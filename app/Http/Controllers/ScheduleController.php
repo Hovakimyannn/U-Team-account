@@ -104,6 +104,9 @@ class ScheduleController extends Controller
         $storagePath = Storage::url(str_replace(storage_path().'/app/', '', $path));
 
         $schedule = new Schedule();
+        $schedule->name = $scheduleFile->getClientOriginalName();
+        $schedule->size = $scheduleFile->getSize();
+        $schedule->extension = $scheduleFile->extension();
         $schedule->role = $role;
         $schedule->userId = $userId;
         $schedule->courseId = $courseId;
@@ -114,7 +117,9 @@ class ScheduleController extends Controller
 
         event(new ScheduleCreatedEvent($data, asset($storagePath)));
 
-        return new JsonResponse($storagePath, JsonResponse::HTTP_CREATED);
+        $schedule->storagePath = $storagePath;
+
+        return new JsonResponse($schedule, JsonResponse::HTTP_CREATED);
     }
 
     /**

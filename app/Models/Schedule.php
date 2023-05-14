@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 
 /**
+ * @property string $name
+ * @property string $size
+ * @property string $extension
  * @property string $role
  * @property integer $courseId
  * @property integer $groupId
@@ -23,6 +26,9 @@ class Schedule extends Model
 
     protected $fillable = [
         'path',
-        'role'
+        'role',
+        'name',
+        'extension',
+        'size'
     ];
 }
