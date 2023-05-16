@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TeacherPositionEnum;
 use App\Models\Traits\AttributesModifier;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -92,5 +93,15 @@ class Teacher extends Authenticatable
     public function department() : BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => asset('storage/avatar/thumbnail/'.$value),
+        );
     }
 }
