@@ -178,6 +178,27 @@ class ScheduleController extends Controller
     }
 
     /**
+     * Display a listing of the student resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllStudents() : JsonResponse
+    {
+        return new JsonResponse($this->scheduleRepository->findAll()->where('role', 'student'), JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Display a listing of the teacher resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllTeachers() : JsonResponse
+    {
+        return new JsonResponse($this->scheduleRepository->findAll()->where('role', 'teacher'), JsonResponse::HTTP_OK);
+
+    }
+
+    /**
      * Get generated file name
      *
      * @param $globalPath

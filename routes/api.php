@@ -127,4 +127,6 @@ Route::controller(ScheduleController::class)
         Route::get('/get/{id}', 'show');
         Route::get('/get', 'index');
         Route::delete('/delete/{id}', 'destroy');
+        Route::get('/students', 'getAllStudents');
+        Route::get('/teachers', 'getAllTeachers');
     });
