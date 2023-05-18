@@ -124,18 +124,20 @@ class ScheduleController extends Controller
         $schedule->size = $scheduleFile->getSize();
         $schedule->extension = $scheduleFile->extension();
         $schedule->role = $role;
-        $schedule->userId = $userId;
-        $schedule->courseId = $courseId;
-        $schedule->groupId = $groupId;
         $schedule->path = $storagePath;
 
+        $schedule->save();
+
+        $schedule->group()->associate($groupId);
+        $schedule->course()->associate($courseId);
+        $schedule->teacher()->associate($userId);
         $schedule->save();
 
         event(new ScheduleCreatedEvent($data, asset($storagePath)));
 
         $schedule->storagePath = $storagePath;
 
-        return new JsonResponse($schedule->with(['group', 'course'])->first(), JsonResponse::HTTP_CREATED);
+        return new JsonResponse($schedule, JsonResponse::HTTP_CREATED);
     }
 
     /**
