@@ -72,4 +72,12 @@ class Group extends Model
     {
         return $this->hasOne(Group::class, 'parent_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }

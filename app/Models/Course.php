@@ -74,4 +74,12 @@ class Course extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }

@@ -37,7 +37,7 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index() : JsonResponse
     {
         return new JsonResponse($this->scheduleRepository->findAll(), JsonResponse::HTTP_OK);
     }
@@ -49,7 +49,7 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request) : JsonResponse
     {
         $this->validate($request, [
             'schedule' => ['required', 'mimes:xls,xlsx,xlsb,ods'],
@@ -60,7 +60,7 @@ class ScheduleController extends Controller
                 'int',
                 'exists:groups,id',
                 Rule::requiredIf(
-                    fn () => Group::where('course_id', $request->get('courseId'))->get()->isNotEmpty()
+                    fn() => Group::where('course_id', $request->get('courseId'))->get()->isNotEmpty()
                 )
             ],
         ]);
@@ -91,9 +91,9 @@ class ScheduleController extends Controller
         );
 
         $data = [
-            'userId' => $userId,
+            'userId'   => $userId,
             'courseId' => $courseId,
-            'groupId' => $groupId,
+            'groupId'  => $groupId,
         ];
 
         if (File::exists($path)) {
@@ -135,7 +135,7 @@ class ScheduleController extends Controller
 
         $schedule->storagePath = $storagePath;
 
-        return new JsonResponse($schedule, JsonResponse::HTTP_CREATED);
+        return new JsonResponse($schedule->with(['group', 'course'])->first(), JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -145,7 +145,7 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $groupId): JsonResponse // changeThis
+    public function show(int $groupId) : JsonResponse // changeThis
     {
         $schedule = Group::where('id', $groupId)->first()->course_id;
 
@@ -161,7 +161,7 @@ class ScheduleController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id) : JsonResponse
     {
         $schedule = $this->scheduleRepository->find($id);
 
@@ -184,7 +184,7 @@ class ScheduleController extends Controller
      *
      * @return string
      */
-    private function getFileName($globalPath): string
+    private function getFileName($globalPath) : string
     {
         $file = File::files($globalPath);
         $file = array_pop($file);
@@ -200,7 +200,7 @@ class ScheduleController extends Controller
      *
      * @return string
      */
-    private function convertToJson($globalPath, $filename): string
+    private function convertToJson($globalPath, $filename) : string
     {
         $fileManagerVisitor = new FileManagerVisitor(new ExcelFileManager($globalPath.'/'.$filename));
         $fileManager = $fileManagerVisitor->visit;
