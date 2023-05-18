@@ -186,7 +186,7 @@ class ScheduleController extends Controller
      */
     public function getAllStudents() : JsonResponse
     {
-        return new JsonResponse($this->scheduleRepository->findAll()->where('role', 'student'), JsonResponse::HTTP_OK);
+        return new JsonResponse($this->scheduleRepository->findWith('role', 'student'), JsonResponse::HTTP_OK);
     }
 
     /**
@@ -196,8 +196,7 @@ class ScheduleController extends Controller
      */
     public function getAllTeachers() : JsonResponse
     {
-        return new JsonResponse($this->scheduleRepository->findAll()->where('role', 'teacher'), JsonResponse::HTTP_OK);
-
+        return new JsonResponse($this->scheduleRepository->findWith('role', 'teacher'), JsonResponse::HTTP_OK);
     }
 
     /**

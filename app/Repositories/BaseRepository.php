@@ -122,4 +122,17 @@ class BaseRepository
 
         return $query->get();
     }
+
+    /**
+     * Find many models with given key and value.
+     *
+     * @param $key
+     * @param $value
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findWith($key, $value):  \Illuminate\Database\Eloquent\Collection
+    {
+       return $this->model::where($key, $value)->get();
+    }
 }
